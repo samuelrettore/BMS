@@ -48,6 +48,9 @@ ex 7S ou 7 CELULAS
 #define aRefS6 3.89
 #define aRefS7 3.89
 
+//referencia tensao total do banco
+#define vbatRef 24.8
+
 //Define pino do arduino Vbat da bateria ou leitor total do banco
 #define pinoVbat 15
 

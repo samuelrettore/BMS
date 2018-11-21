@@ -10,7 +10,8 @@ public:
   void IinicializaModulo();
   void calibraInicio();
 private:
-
+  int numero_celulas = 0;
+  int vbat_tensao = 0;
 };
 
 #endif
