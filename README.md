@@ -1,4 +1,5 @@
-# BMS
+# RttBMS
+
 Projeto de Controle de carga de sistema solar 1,2,3,4,5,6,7S 
 
 Projeto com base no Projeto do Solar Souzam do youtube BMSDuino
