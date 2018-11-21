@@ -2,7 +2,7 @@
 /**
 * Projeto desenvolvido por Samuel Rettore
 * Baseado no projeto https://www.youtube.com/watch?v=0L6wfxrfS9M&t=1s
-* BMSDuino do Souzam
+* BMSDuino @autor Claudio - Souzam
 */
 #include "controle/Controle.h"
 #include "objetos/ObjCelula.h"
