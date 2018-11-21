@@ -12,6 +12,7 @@ void Controle::IinicializaModulo(){
   Serial.println("## -- Iniciou Setup -- ##");
   for(int i =0; i< numero_celulas; i++){
     Serial.print("Celula = ");
+    
     Serial.print(i);
   }
   float f = 10.5;
