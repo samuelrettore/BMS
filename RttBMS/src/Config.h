@@ -6,3 +6,5 @@ A2 - > 32
 ......
 */
 #define numero_celulas 7
+//Velocidade Serial
+#define velocidade_serial 115200 
