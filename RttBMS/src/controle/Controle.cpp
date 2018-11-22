@@ -16,15 +16,21 @@ void Controle::IinicializaModulo(){
   Serial.begin(velocidade_serial);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
-  ativaRedeDHCP();
+  //ativaRedeDHCP();
 
   //for(int i =0; i< numero_celulas; i++){
   //  Serial.print("Celula = ");
   //    Serial.print(i);
   //}
-  //float f = 10.5;
+  float x = 00.0;
+  EEPROM.get(0, x);
+  Serial.print("EEPROM Valor endereço 0 =  ");
+  Serial.println(x);
+
+  //float f = x+1;
   //EEPROM.begin();
   //EEPROM.put(0, f);
+  //Serial.println("EEPROM");
 
   Serial.println("## -- Fim Setup -- ##");
 }
