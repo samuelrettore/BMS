@@ -9,9 +9,9 @@ class Controle {
 public:
   void IinicializaModulo();
   void calibraInicio();
+  void ativaRedeDHCP();
 private:
   int numero_celulas = 0;
   int vbat_tensao = 0;
 };
-
-#endif
+  #endif

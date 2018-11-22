@@ -14,11 +14,11 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(led, HIGH);
-  delay(200);
-  digitalWrite(led, LOW);
-  delay(200);
-  Serial.print("teste = ");
-  Serial.println(i++);
+  //digitalWrite(led, HIGH);
+  //delay(200);
+  //digitalWrite(led, LOW);
+  //delay(200);
+  //Serial.print("teste = ");
+  //Serial.println(i++);
   // put your main code here, to run repeatedly:
 }
