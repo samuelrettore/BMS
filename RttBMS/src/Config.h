@@ -19,7 +19,7 @@ A1 - > 31
 A2 - > 32
 ......
 
-Define tensao inicial das celulas do banco usado para calculo, referencia da leitura
+Define tensao inicial(leitura multimetro) das celulas do banco usado para calculo, referencia da leitura
 SE VOCE DEFINIR 2 CELULAS o sistema entendera que seu banco terá duas celulas,
 se definir 7 usará mesma logica.
 
@@ -47,9 +47,23 @@ ex 7S ou 7 CELULAS
 #define aRefS5 3.89
 #define aRefS6 3.89
 #define aRefS7 3.89
+
 //referencia tensao total do banco
 #define vbatRef 24.8
 //Define pino do arduino Vbat da bateria ou leitor total do banco
 #define pinoVbat 15
+//Configuracao do alor referncial que a bms trabalha em mV
+#define bms 0.060
+//Tensao Minima BMS para de atuar
+#define min_voltage 24.0
+//Tensao Minima por celula
+#define min_voltage_cell 3.30
+
+/*
+  Outros dados
+*/
+//Configuracoes placa de rede.
+#define W5100_CS  10
+#define SDCARD_CS 4
 //Velocidade Serial Arduino
 #define velocidade_serial 115200

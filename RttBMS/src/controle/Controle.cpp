@@ -9,6 +9,7 @@
 
 EthernetClient client;
 
+
 /**
 * Metodo inicialização do modulo
 */
@@ -16,33 +17,53 @@ void Controle::IinicializaModulo(){
   Serial.begin(velocidade_serial);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
-  //ativaRedeDHCP();
-
-  //for(int i =0; i< numero_celulas; i++){
-  //  Serial.print("Celula = ");
-  //    Serial.print(i);
-  //}
-  float x = 00.0;
-  EEPROM.get(0, x);
-  Serial.print("EEPROM Valor endereço 0 =  ");
-  Serial.println(x);
-
-  //float f = x+1;
-  //EEPROM.begin();
-  //EEPROM.put(0, f);
-  //Serial.println("EEPROM");
-
+  ativaRedeDHCP();
+  verificaReferenciaCalculo();
   Serial.println("## -- Fim Setup -- ##");
 }
 
+//verifica referencias de leitura do calculo
+void Controle::verificaReferenciaCalculo(){
+  //Inicializa Numero de celulas
+  ObjCelula celulas[numero_celulas];
+  for(int i=0; i<numero_celulas;i++){
+      //Verifica se tem referencia registrada na EEprom
+      float x;
+      EEPROM.get(i, x);
+
+      //Cria Objeto.
+      ObjCelula obj;
+      obj.setNumeroCelula(i+1);
+      obj.setReferencia(x);
+      obj.setLeituraTensao(3.98);
+      celulas[i] = obj;
+  }
+
+  for(int i=0; i<numero_celulas;i++){
+    ObjCelula objj = celulas[i];
+    Serial.print("numero Celula = ");
+    Serial.println(objj.getNumeroCelula());
+    Serial.print("referencia = ");
+    Serial.println(objj.getReferencia());
+    Serial.print("Tensao = ");
+    Serial.println(objj.getLeituraTensao());
+    Serial.println();
+  }
+
+}
+
+
 /*
-* Calibração inicial.
+* Ativa rede / DHCP
 */
 void Controle::ativaRedeDHCP(){
-  #define ETH_CS  10
-  #define SD_CS  4
+  pinMode(SDCARD_CS, OUTPUT);
+  digitalWrite(SDCARD_CS, HIGH);
   Serial.println("Ativando DHCP");
-  byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED }; //physical mac address
+  byte mac[] = {
+    0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
+  };
+
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Erro ao configurar via DHCP");
     // no point in carrying on, so do nothing forevermore:
@@ -50,12 +71,11 @@ void Controle::ativaRedeDHCP(){
   }
   // print your local IP address:
   Serial.print("Endereço IP: ");
-  for (byte thisByte = 0; thisByte < 4; thisByte++) {
-    // print the value of each byte of the IP address:
-    Serial.print(Ethernet.localIP()[thisByte], DEC);
-    Serial.print(".");
-  }
-  Serial.println();
+  Serial.println(Ethernet.localIP());
+  Serial.print("Endereço gateway: ");
+  Serial.println(Ethernet.gatewayIP());
+  Serial.print("Endereço DNS: ");
+  Serial.println(Ethernet.dnsServerIP());
   Serial.println();
 }
 
@@ -69,7 +89,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -77,7 +97,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -85,7 +105,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -93,7 +113,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -101,7 +121,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -109,7 +129,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -117,7 +137,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -125,7 +145,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -133,7 +153,7 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
 
@@ -141,11 +161,10 @@ void Controle::calibraInicio(){
   numero_celulas++;
   Serial.print("Celula ");
   Serial.print(numero_celulas);
-  Serial.println(" ativa...");
+  Serial.println(" configurada...");
   #endif
   delay(300);
-  Serial.print("Total de Celulas atvas = ");
+  Serial.print("Total de Celulas configuradas = ");
   Serial.println(numero_celulas);
   delay(1000);
-
 }

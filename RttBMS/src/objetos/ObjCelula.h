@@ -5,10 +5,19 @@
 
 class ObjCelula {
   public:
-    float getLeitura();
-    void setLeitura(float leitura);
+    float getLeituraTensao();
+    float getLeituraTensaoAnterior();
+    void setLeituraTensao(float leitura);
+    float getReferencia();
+    void setReferencia(float referencia);
+    int getNumeroCelula();
+    void setNumeroCelula(int numero_celula);
 
   private:
-    float _leitura;
+    //Numero da celula
+    int _numero_celula;
+    float _referencia;
+    float _leitura_tensao;
+    float _tensao_anterior;
 };
 #endif
