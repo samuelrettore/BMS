@@ -4,9 +4,11 @@
 #include <Arduino.h>
 //#include "../objetos/ObjCelula.h"
 #include "../objetos/BancoBateria.h"
+#include "ControlaIO.h"
 
-class Controle {
+class Controle : public ControlaIO {
 public:
+  Controle();
   void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
   void ativaRedeDHCP();

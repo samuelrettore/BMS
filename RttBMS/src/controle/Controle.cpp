@@ -9,6 +9,10 @@
 #include <EEPROM.h>
 EthernetClient client;
 
+//Construtor
+Controle::Controle(){
+}
+
 /**
 * Metodo inicialização do modulo
 */
@@ -158,6 +162,8 @@ void Controle::calibraInicio(){
   delay(300);
   Serial.println("Configura portas de entrada e Saida");
   int porta_digital = 0;
+  
+  //Ativa Portas de ENtrada e Saida
   for(int i =1; i<=_bateria->getQuantidadeCelulas();i++){
     //pinMode(i, INPUT);
     Serial.print("Setando porta analogica A");
