@@ -1,13 +1,14 @@
 #include <Arduino.h>
 #include "controle/Controle.h"
-#include "objetos/ObjCelula.h"
+#include "objetos/BancoBateria.h"
 //Objeto Controle
 Controle ctrl;
+BancoBateria bateria;
 
 void setup() {
-  ctrl.IinicializaModulo();
+  ctrl.inicializaModulo(bateria);
 }
 
 void loop() {
-  
+  ctrl.ciloProcessamento();
 }

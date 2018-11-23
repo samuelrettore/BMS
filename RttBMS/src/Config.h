@@ -50,20 +50,23 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 #define aRefS7 3.89
 
 //referencia tensao total do banco
-#define vbatRef 24.8
+//#define vbatRef 24.8
 //Define pino do arduino Vbat da bateria ou leitor total do banco
-#define pinoVbat 15
+//#define pinoVbat 15
 //Configuracao do alor referncial que a bms trabalha em mV
-#define bms 0.060
+//---->#define bms 0.060
 //Tensao Minima BMS para de atuar
-#define min_voltage 24.0
+//---->#define min_voltage 24.0
 //Tensao Minima por celula
-#define min_voltage_cell 3.30
+//---->#define min_voltage_cell 3.30
 
 /*
   Outros dados
 */
-//Numero de amostras coletadas pelo sistema em cada porta analogica (leitura de tensao)
+/*Numero de amostras coletadas pelo sistema em cada porta analogica (leitura de tensao)
+Baseado no artigo asseguir -> Voltímetro com Arduino: como montar, programar e calibrar
+https://br-arduino.org/2015/06/voltimetro-com-arduino-como-montar-programar-e-calibrar.html
+*/
 #define AMOSTRAS 2000
 //Configuracoes placa de rede.
 #define W5100_CS  10

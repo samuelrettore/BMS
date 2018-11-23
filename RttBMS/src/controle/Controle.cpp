@@ -1,19 +1,19 @@
 #include "../Config.h"
 #include "Controle.h"
+#include "../objetos/BancoBateria.h"
 //Placa de REde
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Arduino.h>
 //EEPROM
 #include <EEPROM.h>
-
 EthernetClient client;
-
 
 /**
 * Metodo inicialização do modulo
 */
-void Controle::IinicializaModulo(){
+void Controle::inicializaModulo(BancoBateria bateria){
+  _bateria = bateria;
   Serial.begin(velocidade_serial);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
@@ -22,36 +22,38 @@ void Controle::IinicializaModulo(){
   Serial.println("## -- Fim Setup -- ##");
 }
 
-//verifica referencias de leitura do calculo
+/*
+verifica referencias de leitura do calculo
+*/
 void Controle::verificaReferenciaCalculo(){
-  //Inicializa Numero de celulas
-  ObjCelula celulas[numero_celulas];
-  for(int i=0; i<numero_celulas;i++){
+  //Inicializa banco de Bateria -> constroi celulas.
+  _bateria.inicializaBanco();
+  //Inicializa celulas com valores 
+  for(int i=0; i<_bateria.getQuantidadeCelulas();i++){
     //Verifica se tem referencia registrada na EEprom
     float x;
     EEPROM.get(i, x);
-
     //Cria Objeto.
     ObjCelula obj;
     obj.setNumeroCelula(i+1);
     obj.setReferencia(x);
     obj.setLeituraTensao(3.98);
-    celulas[i] = obj;
+    _bateria.setCelula(obj, i);
   }
-
-  for(int i=0; i<numero_celulas;i++){
-    ObjCelula objj = celulas[i];
+  //Percorre dados e imprime.
+  for(int i=0; i<_bateria.getQuantidadeCelulas();i++){
+    ObjCelula objj = _bateria.getCelula(i);
     Serial.print("Numero Celula = ");
     Serial.println(objj.getNumeroCelula());
     Serial.print("referencia = ");
     Serial.println(objj.getReferencia());
     Serial.print("Tensao = ");
     Serial.println(objj.getLeituraTensao());
+    Serial.print("Tensao anterior = ");
+    Serial.println(objj.getLeituraTensaoAnterior());
     Serial.println();
   }
-
 }
-
 
 /*
 * Ativa rede / DHCP
@@ -86,90 +88,90 @@ void Controle::calibraInicio(){
   Serial.println("Inicia Calibracao");
 
   #ifdef aRefS1
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS2
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS3
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS4
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS5
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS6
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS7
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS8
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS9
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS10
-  numero_celulas++;
+  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(numero_celulas);
+  Serial.print(_bateria.getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
   Serial.print("Total de Celulas configuradas = ");
-  Serial.println(numero_celulas);
+  Serial.println(_bateria.getQuantidadeCelulas());
   delay(300);
   Serial.println("Configura portas de entrada e Saida");
   int porta_digital = 0;
-  for(int i =1; i<=numero_celulas;i++){
+  for(int i =1; i<=_bateria.getQuantidadeCelulas();i++){
     //pinMode(i, INPUT);
     Serial.print("Setando porta analogica A");
     Serial.print(i);
@@ -183,4 +185,14 @@ void Controle::calibraInicio(){
     digitalWrite(porta_digital, LOW);
   }
   delay(1000);
+}
+
+
+
+
+/*
+verifica referencias de leitura do calculo
+*/
+ObjCelula *Controle::ciloProcessamento(){
+  //Serial.println("Processa");
 }
