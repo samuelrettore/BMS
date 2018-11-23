@@ -12,7 +12,7 @@ EthernetClient client;
 /**
 * Metodo inicialização do modulo
 */
-void Controle::inicializaModulo(BancoBateria bateria){
+void Controle::inicializaModulo(BancoBateria* bateria){
   _bateria = bateria;
   Serial.begin(velocidade_serial);
   Serial.println("## -- Iniciou Setup -- ##");
@@ -27,9 +27,9 @@ verifica referencias de leitura do calculo
 */
 void Controle::verificaReferenciaCalculo(){
   //Inicializa banco de Bateria -> constroi celulas.
-  _bateria.inicializaBanco();
-  //Inicializa celulas com valores 
-  for(int i=0; i<_bateria.getQuantidadeCelulas();i++){
+  _bateria->inicializaBanco();
+  //Inicializa celulas com valores
+  for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Verifica se tem referencia registrada na EEprom
     float x;
     EEPROM.get(i, x);
@@ -38,20 +38,7 @@ void Controle::verificaReferenciaCalculo(){
     obj.setNumeroCelula(i+1);
     obj.setReferencia(x);
     obj.setLeituraTensao(3.98);
-    _bateria.setCelula(obj, i);
-  }
-  //Percorre dados e imprime.
-  for(int i=0; i<_bateria.getQuantidadeCelulas();i++){
-    ObjCelula objj = _bateria.getCelula(i);
-    Serial.print("Numero Celula = ");
-    Serial.println(objj.getNumeroCelula());
-    Serial.print("referencia = ");
-    Serial.println(objj.getReferencia());
-    Serial.print("Tensao = ");
-    Serial.println(objj.getLeituraTensao());
-    Serial.print("Tensao anterior = ");
-    Serial.println(objj.getLeituraTensaoAnterior());
-    Serial.println();
+    _bateria->setCelula(obj, i);
   }
 }
 
@@ -88,90 +75,90 @@ void Controle::calibraInicio(){
   Serial.println("Inicia Calibracao");
 
   #ifdef aRefS1
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS2
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS3
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS4
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS5
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS6
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS7
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS8
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS9
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
 
   #ifdef aRefS10
-  _bateria.setQuantidadeCelulas(_bateria.getQuantidadeCelulas()+1);
+  _bateria->setQuantidadeCelulas(_bateria->getQuantidadeCelulas()+1);
   Serial.print("Celula ");
-  Serial.print(_bateria.getQuantidadeCelulas());
+  Serial.print(_bateria->getQuantidadeCelulas());
   Serial.println(" configurada...");
   #endif
   delay(300);
   Serial.print("Total de Celulas configuradas = ");
-  Serial.println(_bateria.getQuantidadeCelulas());
+  Serial.println(_bateria->getQuantidadeCelulas());
   delay(300);
   Serial.println("Configura portas de entrada e Saida");
   int porta_digital = 0;
-  for(int i =1; i<=_bateria.getQuantidadeCelulas();i++){
+  for(int i =1; i<=_bateria->getQuantidadeCelulas();i++){
     //pinMode(i, INPUT);
     Serial.print("Setando porta analogica A");
     Serial.print(i);
@@ -193,6 +180,7 @@ void Controle::calibraInicio(){
 /*
 verifica referencias de leitura do calculo
 */
-ObjCelula *Controle::ciloProcessamento(){
-  //Serial.println("Processa");
+void Controle::ciloProcessamento(){
+  _bateria->imprimeDados();
+  delay(3000);
 }

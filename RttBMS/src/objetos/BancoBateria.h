@@ -9,6 +9,7 @@ class BancoBateria {
     int getQuantidadeCelulas();
     void setQuantidadeCelulas(int numero_celula);
     void inicializaBanco();
+    void imprimeDados();
     //CELULAS
     ObjCelula getCelula(int posicao);
     void setCelula(ObjCelula objeto, int posicao);

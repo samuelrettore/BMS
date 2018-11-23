@@ -3,7 +3,7 @@
 #include "objetos/BancoBateria.h"
 //Objeto Controle
 Controle ctrl;
-BancoBateria bateria;
+BancoBateria* bateria = new BancoBateria();
 
 void setup() {
   ctrl.inicializaModulo(bateria);

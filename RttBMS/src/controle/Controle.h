@@ -7,13 +7,13 @@
 
 class Controle {
 public:
-  void inicializaModulo(BancoBateria bateria);
+  void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
   void ativaRedeDHCP();
   void verificaReferenciaCalculo();
-  ObjCelula *ciloProcessamento();
+  void ciloProcessamento();
 private:
-  BancoBateria _bateria;
+  BancoBateria* _bateria;
   int vbat_tensao = 0;
 };
   #endif

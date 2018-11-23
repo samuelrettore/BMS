@@ -23,3 +23,28 @@ ObjCelula BancoBateria::getCelula(int posicao){
 void BancoBateria::setCelula(ObjCelula objeto, int posicao){
   celulas[posicao] = objeto;
 }
+
+/*
+Imprime dado das celulas e do Banco.
+*/
+void BancoBateria::imprimeDados(){
+  Serial.println("#----- Dados banco de baterias ----- ###");
+  Serial.print("Quantidade de celulas = ");
+  Serial.println(getQuantidadeCelulas());
+  Serial.println();
+  Serial.println("#----- Dados celulas ----- ###");
+  for(int i=0; i<getQuantidadeCelulas();i++){
+    ObjCelula objj = getCelula(i);
+    Serial.print("Numero Celula = ");
+    Serial.println(objj.getNumeroCelula());
+    Serial.print("referencia = ");
+    Serial.println(objj.getReferencia());
+    Serial.print("Tensao = ");
+    Serial.println(objj.getLeituraTensao());
+    Serial.print("Tensao anterior = ");
+    Serial.println(objj.getLeituraTensaoAnterior());
+    Serial.println("#----- Fim dados celulas ----- ###");
+    Serial.println();
+  }
+  Serial.println("#----- Fim dados banco de baterias ----- ###");
+}
