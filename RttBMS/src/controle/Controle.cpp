@@ -41,7 +41,7 @@ void Controle::verificaReferenciaCalculo(){
 
   for(int i=0; i<numero_celulas;i++){
     ObjCelula objj = celulas[i];
-    Serial.print("numero Celula = ");
+    Serial.print("Numero Celula = ");
     Serial.println(objj.getNumeroCelula());
     Serial.print("referencia = ");
     Serial.println(objj.getReferencia());

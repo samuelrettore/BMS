@@ -63,6 +63,8 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 /*
   Outros dados
 */
+//Numero de amostras coletadas pelo sistema em cada porta analogica (leitura de tensao)
+#define AMOSTRAS 2000
 //Configuracoes placa de rede.
 #define W5100_CS  10
 #define SDCARD_CS 4
