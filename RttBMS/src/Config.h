@@ -25,20 +25,21 @@ se definir 7 usará mesma logica.
 
 Ex 3S ou 3 CELULAS
 
-#define aRefS1 3.89
-#define aRefS2 3.89
-#define aRefS3 3.89
+#define aRefS1 3.89 -> A1 le dados do divisor de tensao e 31 aciona sistema de resistor para equalizar celula
+#define aRefS2 3.89 -> A2 le dados do divisor de tensao e 32 aciona sistema de resistor para equalizar celula
+#define aRefS3 3.89 -> A3 le dados do divisor de tensao e 33 aciona sistema de resistor para equalizar celula
 
 ex 7S ou 7 CELULAS
 
-#define aRefS1 3.89
-#define aRefS2 3.89
-#define aRefS3 3.89
-#define aRefS4 3.89
-#define aRefS5 3.89
-#define aRefS6 3.89
-#define aRefS7 3.89
+#define aRefS1 3.89 -> A1 le dados do divisor de tensao e 31 aciona sistema de resistor para equalizar celula
+#define aRefS2 3.89 -> A2 le dados do divisor de tensao e 32 aciona sistema de resistor para equalizar celula
+#define aRefS3 3.89 -> A3 le dados do divisor de tensao e 33 aciona sistema de resistor para equalizar celula
+#define aRefS4 3.89 -> A4 le dados do divisor de tensao e 34 aciona sistema de resistor para equalizar celula
+#define aRefS5 3.89 -> A5 le dados do divisor de tensao e 35 aciona sistema de resistor para equalizar celula
+#define aRefS6 3.89 -> A6 le dados do divisor de tensao e 36 aciona sistema de resistor para equalizar celula
+#define aRefS7 3.89 -> A7 le dados do divisor de tensao e 37 aciona sistema de resistor para equalizar celula
 
+Abaixo pré definido sistema de 7S ou 7 celulas
 */
 #define aRefS1 3.89
 #define aRefS2 3.89

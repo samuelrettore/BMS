@@ -27,16 +27,16 @@ void Controle::verificaReferenciaCalculo(){
   //Inicializa Numero de celulas
   ObjCelula celulas[numero_celulas];
   for(int i=0; i<numero_celulas;i++){
-      //Verifica se tem referencia registrada na EEprom
-      float x;
-      EEPROM.get(i, x);
+    //Verifica se tem referencia registrada na EEprom
+    float x;
+    EEPROM.get(i, x);
 
-      //Cria Objeto.
-      ObjCelula obj;
-      obj.setNumeroCelula(i+1);
-      obj.setReferencia(x);
-      obj.setLeituraTensao(3.98);
-      celulas[i] = obj;
+    //Cria Objeto.
+    ObjCelula obj;
+    obj.setNumeroCelula(i+1);
+    obj.setReferencia(x);
+    obj.setLeituraTensao(3.98);
+    celulas[i] = obj;
   }
 
   for(int i=0; i<numero_celulas;i++){
@@ -166,5 +166,21 @@ void Controle::calibraInicio(){
   delay(300);
   Serial.print("Total de Celulas configuradas = ");
   Serial.println(numero_celulas);
+  delay(300);
+  Serial.println("Configura portas de entrada e Saida");
+  int porta_digital = 0;
+  for(int i =1; i<=numero_celulas;i++){
+    //pinMode(i, INPUT);
+    Serial.print("Setando porta analogica A");
+    Serial.print(i);
+    Serial.println(" entrada.");
+
+    porta_digital = i+30;
+    Serial.print("Setando porta Digital ");
+    Serial.print(porta_digital);
+    Serial.println(" saida nivel baixo(low).");
+    pinMode(porta_digital, OUTPUT);
+    digitalWrite(porta_digital, LOW);
+  }
   delay(1000);
 }
