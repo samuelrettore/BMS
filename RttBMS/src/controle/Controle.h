@@ -4,6 +4,7 @@
 #include <Arduino.h>
 //#include "../objetos/ObjCelula.h"
 #include "../objetos/BancoBateria.h"
+#include "../Config.h"
 #include "ControlaIO.h"
 
 class Controle : public ControlaIO {
@@ -17,5 +18,6 @@ public:
 private:
   BancoBateria* _bateria;
   int vbat_tensao = 0;
+  float _referencias_iniciais[tamanho_maximo];
 };
   #endif

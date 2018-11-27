@@ -13,8 +13,5 @@ void loop() {
   //Herança teste
   //ctrl.dizOI();
   ctrl.ciloProcessamento();
-  float x = ctrl.lePorta(0);
-  Serial.print("Leitura = ");
-  Serial.println(x);
-  delay(3000);
+
 }

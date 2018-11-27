@@ -41,13 +41,13 @@ ex 7S ou 7 CELULAS
 
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
-#define aRefS1 3.89
-#define aRefS2 3.89
-#define aRefS3 3.89
-#define aRefS4 3.89
-#define aRefS5 3.89
-#define aRefS6 3.89
-#define aRefS7 3.89
+#define aRefS1 11.95
+//#define aRefS2 3.89
+//#define aRefS3 3.89
+//#define aRefS4 3.89
+//#define aRefS5 3.89
+//#define aRefS6 3.89
+//#define aRefS7 3.89
 
 //referencia tensao total do banco
 //#define vbatRef 24.8
@@ -68,8 +68,13 @@ Baseado no artigo asseguir -> Voltímetro com Arduino: como montar, programar e 
 https://br-arduino.org/2015/06/voltimetro-com-arduino-como-montar-programar-e-calibrar.html
 */
 #define AMOSTRAS 2000
+//Dfine versao da EEprom
+#define versao 1.2
+
 //Configuracoes placa de rede.
 #define W5100_CS  10
 #define SDCARD_CS 4
 //Velocidade Serial Arduino
 #define velocidade_serial 115200
+//Tamanho maximo de leitores
+#define tamanho_maximo 10
