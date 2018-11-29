@@ -11,14 +11,6 @@ void ObjCelula::setLeituraTensao(float leitura){
   _leitura_tensao = leitura;
 }
 
-void ObjCelula::setReferencia(float referencia){
-  _referencia = referencia;
-}
-
-float ObjCelula::getReferencia(){
-  return _referencia;
-}
-
 int ObjCelula::getNumeroCelula(){
   return _numero_celula;
 };

@@ -39,30 +39,18 @@ void Controle::verificaReferenciaCalculo(){
   Serial.println(versao);
   if(ver != versao){
     zeraEEPROM();
-    gravaEEPROM(0, versao);
+    gravaEEPROM(endereco_memoria, versao);
   }
   Serial.println();
   Serial.println();
   delay(2000);
-
   //Inicializa celulas com valores
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
-    //Verifica se tem referencia registrada na EEprom
+    // //Verifica se tem referencia registrada na EEprom
     int numero_cel = i+1;
-    endereco_memoria+= sizeof(float);
-    float ref = eepromLeReferencia(endereco_memoria);
-    Serial.print(" REFERENCIA ");
-    Serial.print(numero_cel);
-    Serial.print(" EEPROM == ");
-    Serial.println(ref);
-    float comp = 0;
-    if(ref<1){
-      ref = eepromCalculaReferenciaGrava(endereco_memoria,_referencias_iniciais[i]);
-    }
     //Cria Objeto.
     ObjCelula obj;
     obj.setNumeroCelula(numero_cel);
-    obj.setReferencia(ref);
     obj.setLeituraTensao(0.00);
     _bateria->setCelula(obj, i);
   }
@@ -224,9 +212,7 @@ void Controle::ciloProcessamento(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
-    float ref  = objj.getReferencia();
     float x = lePorta(f);
-    x = x/ref;
     Serial.print("Leitura = ");
     Serial.println(x);
   }

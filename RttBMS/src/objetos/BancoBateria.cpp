@@ -37,12 +37,10 @@ void BancoBateria::imprimeDados(){
     ObjCelula objj = getCelula(i);
     Serial.print("Numero Celula = ");
     Serial.println(objj.getNumeroCelula());
-    Serial.print("referencia = ");
-    Serial.println(objj.getReferencia(),5);
-    Serial.print("Tensao = ");
-    Serial.println(objj.getLeituraTensao());
     Serial.print("Tensao anterior = ");
     Serial.println(objj.getLeituraTensaoAnterior());
+    Serial.print("Tensao = ");
+    Serial.println(objj.getLeituraTensao());
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
   }
