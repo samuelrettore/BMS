@@ -11,3 +11,9 @@ https://www.youtube.com/channel/UCOYG56TdTL7c-8PnxDOs1rA
 
 
 LEIA as instruções de configuração no arquivo <b>Config.h</b>
+
+Este projeto é desenvolvido usando a Platarma Atom + pluguin Plataformio
+
+Atom -> https://atom.io/
+PlataformIO -> https://platformio.org/
+

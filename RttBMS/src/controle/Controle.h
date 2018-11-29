@@ -18,6 +18,5 @@ public:
 private:
   BancoBateria* _bateria;
   int vbat_tensao = 0;
-  float _referencias_iniciais[tamanho_maximo];
 };
   #endif
