@@ -7,6 +7,7 @@
 class ControlaIO {
 public:
   float lePorta(int portaAnalogica);
+  float lePorta_modo2(int portaAnalogica);
 private:
 
 };

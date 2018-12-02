@@ -75,7 +75,7 @@ void Controle::ativaRedeDHCP(){
 void Controle::calibraInicio(){
   Serial.println("Inicia Calibracao");
   _bateria->setQuantidadeCelulas(QUANTIDADE_CELULAS);
-  for(int i = 1; i<_bateria->getQuantidadeCelulas();i++){
+  for(int i = 1; i<=_bateria->getQuantidadeCelulas();i++){
     Serial.print("Celula ");
     Serial.print(i);
     Serial.println(" configurada...");
@@ -114,8 +114,10 @@ void Controle::ciloProcessamento(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
-    float x = lePorta(f);
-    Serial.print("Leitura = ");
+    float x = lePorta_modo2(f);
+    Serial.print("Leitura  porta (");
+    Serial.print(f);
+    Serial.print(") = ");
     Serial.println(x);
   }
   delay(1000);

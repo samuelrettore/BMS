@@ -59,7 +59,7 @@ Abaixo pré definido sistema de 7S ou 7 celulas
   Outros dados
 */
 //Define quantidade de amostras usada na media do sensor de tensão
-#define AMOSTRAS 1
+#define AMOSTRAS 500
 //Configuracoes placa de rede.
 #define W5100_CS  10
 #define SDCARD_CS 4
