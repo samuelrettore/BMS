@@ -116,18 +116,11 @@ verifica referencias de leitura do calculo
 */
 void Controle::ciloProcessamento(){
   _bateria->imprimeDados();
-
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
-    float x = lePorta(i);
+    float x = lePorta(objj.getPortaInput());
     Serial.print("Leitura 1 porta (");
-    Serial.print(f);
-    Serial.print(") = ");
-    Serial.println(x);
-
-    x = lePorta2(i);
-    Serial.print("Leitura 2 porta (");
     Serial.print(f);
     Serial.print(") = ");
     Serial.println(x);
