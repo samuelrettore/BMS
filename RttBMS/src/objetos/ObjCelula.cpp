@@ -22,3 +22,11 @@ void ObjCelula::setNumeroCelula(int numero_celula){
 float ObjCelula::getLeituraTensaoAnterior(){
   return _tensao_anterior;
 }
+
+void ObjCelula::setPortaInput(uint8_t porta){
+  _porta_input = porta;
+}
+
+uint8_t ObjCelula::getPortaInput(){
+  return _porta_input;
+}

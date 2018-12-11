@@ -41,6 +41,8 @@ void BancoBateria::imprimeDados(){
     Serial.println(objj.getLeituraTensaoAnterior());
     Serial.print("Tensao = ");
     Serial.println(objj.getLeituraTensao());
+    Serial.print("Porta Leitura = ");
+    Serial.println(objj.getPortaInput());
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
   }

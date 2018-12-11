@@ -31,6 +31,8 @@ void Controle::verificaReferenciaCalculo(){
   //Inicializa banco de Bateria -> constroi celulas.
   _bateria->inicializaBanco();
   delay(2000);
+  //Seta Primeira porta como A1
+  int porta_i = A1;
   //Inicializa celulas com valores
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     // //Verifica se tem referencia registrada na EEprom
@@ -39,7 +41,9 @@ void Controle::verificaReferenciaCalculo(){
     ObjCelula obj;
     obj.setNumeroCelula(numero_cel);
     obj.setLeituraTensao(0.00);
+    obj.setPortaInput(porta_i);
     _bateria->setCelula(obj, i);
+    porta_i++;
   }
 }
 
