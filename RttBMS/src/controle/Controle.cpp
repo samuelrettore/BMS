@@ -90,7 +90,7 @@ void Controle::calibraInicio(){
 
   //Ativa Portas de ENtrada e Saida
   for(int i =1; i<=_bateria->getQuantidadeCelulas();i++){
-    pinMode(i, INPUT);
+    //pinMode(i, INPUT);
     Serial.print("Setando porta analogica A");
     Serial.print(i);
     Serial.println(" entrada.");
@@ -114,8 +114,14 @@ void Controle::ciloProcessamento(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
-    float x = lePorta_modo2(f);
-    Serial.print("Leitura  porta (");
+    float x = lePorta(i);
+    Serial.print("Leitura 1 porta (");
+    Serial.print(f);
+    Serial.print(") = ");
+    Serial.println(x);
+
+    x = lePorta2(i);
+    Serial.print("Leitura 2 porta (");
     Serial.print(f);
     Serial.print(") = ");
     Serial.println(x);
