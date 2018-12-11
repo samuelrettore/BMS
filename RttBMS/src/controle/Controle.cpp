@@ -20,31 +20,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
   ativaRedeDHCP();
-  verificaReferenciaCalculo();
   Serial.println("## -- Fim Setup -- ##");
-}
-
-/*
-verifica referencias de leitura do calculo
-*/
-void Controle::verificaReferenciaCalculo(){
-  //Inicializa banco de Bateria -> constroi celulas.
-  _bateria->inicializaBanco();
-  delay(2000);
-  //Seta Primeira porta como A1
-  int porta_i = A1;
-  //Inicializa celulas com valores
-  for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
-    // //Verifica se tem referencia registrada na EEprom
-    int numero_cel = i+1;
-    //Cria Objeto.
-    ObjCelula obj;
-    obj.setNumeroCelula(numero_cel);
-    obj.setLeituraTensao(0.00);
-    obj.setPortaInput(porta_i);
-    _bateria->setCelula(obj, i);
-    porta_i++;
-  }
 }
 
 /*
@@ -89,22 +65,48 @@ void Controle::calibraInicio(){
   Serial.print("Total de Celulas configuradas = ");
   Serial.println(_bateria->getQuantidadeCelulas());
   delay(300);
-  Serial.println("Configura portas de entrada e Saida");
-  int porta_digital = 0;
 
-  //Ativa Portas de ENtrada e Saida
-  for(int i =1; i<=_bateria->getQuantidadeCelulas();i++){
-    //pinMode(i, INPUT);
-    Serial.print("Setando porta analogica A");
-    Serial.print(i);
+  //Inicializa banco de Bateria -> constroi celulas.
+  _bateria->inicializaBanco();
+  delay(2000);
+
+  //Seta Primeira porta como A1
+  int porta_i = A1;
+
+  //Porta Digital inicia 31
+  int porta_digital = 31;
+
+  //Inicializa celulas com valores
+  Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
+
+  for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
+    // //Verifica se tem referencia registrada na EEprom
+    int numero_cel = i+1;
+    //Cria Objeto.
+    ObjCelula obj;
+    obj.setNumeroCelula(numero_cel);
+    obj.setLeituraTensao(0.00);
+    obj.setPortaInput(porta_i);
+    obj.setPortaControle(porta_digital);
+
+    //Porta digital
+    Serial.print("Setando porta analogica ");
+    Serial.print(porta_i);
     Serial.println(" entrada.");
+    //Ativa Input
+    pinMode(porta_i, INPUT);
 
-    porta_digital = i+30;
     Serial.print("Setando porta Digital ");
     Serial.print(porta_digital);
     Serial.println(" saida nivel baixo(low).");
+    //Ativa em modo baixo
     pinMode(porta_digital, OUTPUT);
     digitalWrite(porta_digital, LOW);
+
+    _bateria->setCelula(obj, i);
+    porta_i++;
+    porta_digital++;
+    delay(500);
   }
   delay(1000);
 }

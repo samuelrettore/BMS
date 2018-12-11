@@ -13,7 +13,6 @@ public:
   void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
   void ativaRedeDHCP();
-  void verificaReferenciaCalculo();
   void ciloProcessamento();
 private:
   BancoBateria* _bateria;

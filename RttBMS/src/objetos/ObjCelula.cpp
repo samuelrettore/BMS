@@ -30,3 +30,12 @@ void ObjCelula::setPortaInput(uint8_t porta){
 uint8_t ObjCelula::getPortaInput(){
   return _porta_input;
 }
+
+
+void ObjCelula::setPortaControle(int porta){
+  _porta_controle = porta;
+}
+
+int ObjCelula::getPortaControle(){
+  return _porta_controle;
+}

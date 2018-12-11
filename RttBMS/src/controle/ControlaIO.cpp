@@ -5,7 +5,7 @@
 Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v
 */
-float ControlaIO::lePorta(int portaAnalogica) {
+float ControlaIO::lePorta(uint8_t portaAnalogica) {
   float total=0;
   int valorDC = 0;
   float tensaoDC = 0;
@@ -22,7 +22,7 @@ float ControlaIO::lePorta(int portaAnalogica) {
 Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v Modelo China
 */
-float ControlaIO::lePorta2(int portaAnalogica) {
+float ControlaIO::lePorta2(uint8_t portaAnalogica) {
   int val11;
   float val2;
   float temp;
