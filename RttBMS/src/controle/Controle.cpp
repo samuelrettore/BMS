@@ -136,7 +136,7 @@ void Controle::atualizaDadosLeitura(){
 Faz ontrole dos Mosfets para ligar e desligar
 */
 void Controle::controlaMosfets(){
-  
+
 }
 
 /*
