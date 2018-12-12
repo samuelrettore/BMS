@@ -119,9 +119,9 @@ void Controle::ciloProcessamento(){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
     float x = lePorta(objj.getPortaInput());
-    Serial.print("Leitura 1 porta (");
+    Serial.print("Leitura 1 porta A");
     Serial.print(f);
-    Serial.print(") = ");
+    Serial.print(" = ");
     Serial.println(x);
   }
   delay(1000);

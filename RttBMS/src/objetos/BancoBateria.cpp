@@ -32,6 +32,9 @@ void BancoBateria::imprimeDados(){
   Serial.print("Quantidade de celulas = ");
   Serial.println(getQuantidadeCelulas());
   Serial.println();
+  Serial.print("Total de tensao = ");
+  Serial.println(getQuantidadeCelulas());
+
   Serial.println("#----- Dados celulas ----- ###");
   for(int i=0; i<getQuantidadeCelulas();i++){
     ObjCelula objj = getCelula(i);
