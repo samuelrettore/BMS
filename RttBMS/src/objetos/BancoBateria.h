@@ -13,6 +13,7 @@ class BancoBateria {
     //CELULAS
     ObjCelula getCelula(int posicao);
     void setCelula(ObjCelula objeto, int posicao);
+    float getTensaoBanco();
   private:
     //Numero de celulas do banco
     int _quantidade_celulas = 0;

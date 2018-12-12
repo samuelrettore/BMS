@@ -111,18 +111,39 @@ void Controle::calibraInicio(){
 }
 
 /*
-verifica referencias de leitura do calculo
+* Faz controle dos dados de leitura dados de input
+*e atualiza celulas
 */
-void Controle::ciloProcessamento(){
+void Controle::atualizaDadosLeitura(){
   _bateria->imprimeDados();
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
-    float x = lePorta(objj.getPortaInput());
+    float tread = lePorta(objj.getPortaInput());
     Serial.print("Leitura 1 porta A");
     Serial.print(f);
     Serial.print(" = ");
-    Serial.println(x);
+    Serial.println(tread,5);
+    objj.setLeituraTensao(tread);
+    //Atualiza Celula.
+    _bateria->setCelula(objj,i);
   }
-  delay(1000);
+  Serial.print("Print Depois");
+  _bateria->imprimeDados();
+}
+
+/*
+Faz ontrole dos Mosfets para ligar e desligar
+*/
+void Controle::controlaMosfets(){
+  
+}
+
+/*
+verifica referencias de leitura do calculo
+*/
+void Controle::ciloProcessamento(){
+  atualizaDadosLeitura();
+  controlaMosfets();
+  delay(6000);
 }

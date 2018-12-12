@@ -24,17 +24,19 @@ void BancoBateria::setCelula(ObjCelula objeto, int posicao){
   celulas[posicao] = objeto;
 }
 
+float BancoBateria::getTensaoBanco(){
+  float total = 0.0;
+  for(int i=0; i<getQuantidadeCelulas();i++){
+    ObjCelula obj = getCelula(i);
+    total =+ obj.getLeituraTensao();
+  }
+  return total;
+}
+
 /*
 Imprime dado das celulas e do Banco.
 */
 void BancoBateria::imprimeDados(){
-  Serial.println("#----- Dados banco de baterias ----- ###");
-  Serial.print("Quantidade de celulas = ");
-  Serial.println(getQuantidadeCelulas());
-  Serial.println();
-  Serial.print("Total de tensao = ");
-  Serial.println(getQuantidadeCelulas());
-
   Serial.println("#----- Dados celulas ----- ###");
   for(int i=0; i<getQuantidadeCelulas();i++){
     ObjCelula objj = getCelula(i);
@@ -51,5 +53,11 @@ void BancoBateria::imprimeDados(){
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
   }
+  Serial.println("#----- Dados banco de baterias ----- ###");
+  Serial.print("Quantidade de celulas = ");
+  Serial.println(getQuantidadeCelulas());
+  Serial.println();
+  Serial.print("Total de tensao = ");
+  Serial.println(getTensaoBanco(),5);
   Serial.println("#----- Fim dados banco de baterias ----- ###");
 }

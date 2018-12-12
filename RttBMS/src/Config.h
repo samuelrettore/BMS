@@ -48,7 +48,7 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Aqui define o tamanho do seu banco em celulas ou S
 #define QUANTIDADE_CELULAS 2
 //Tensao Referencia porta analogica Arduino
-#define TENSAO_REFERENCIA 5.03
+#define TENSAO_REFERENCIA 5.00
 
 //Configuracao do alor referncial que a bms trabalha em mV
 #define BMS 0.060
@@ -56,6 +56,9 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 #define MIN_VOLTAGE 24.0
 //Tensao Minima por celula
 #define MIN_VOLTAGE_CELL 3.30
+//Porta controla rele contatora inversor
+#define CONTATORA_INVERSOR 30
+ 
 
 /*
   Outros dados

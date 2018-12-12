@@ -15,6 +15,9 @@ public:
   void ativaRedeDHCP();
   void ciloProcessamento();
 private:
+  void atualizaDadosLeitura();
+  void controlaMosfets();
+
   BancoBateria* _bateria;
   int vbat_tensao = 0;
 };
