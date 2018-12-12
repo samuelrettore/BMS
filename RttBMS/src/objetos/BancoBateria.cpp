@@ -48,7 +48,6 @@ void BancoBateria::imprimeDados(){
     Serial.println(i+1);
     Serial.print("Porta Controle = ");
     Serial.println(objj.getPortaControle());
-
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
   }
