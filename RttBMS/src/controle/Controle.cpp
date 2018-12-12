@@ -90,13 +90,12 @@ void Controle::calibraInicio(){
     obj.setPortaControle(porta_digital);
 
     //Porta digital
-    Serial.print("Setando porta analogica ");
-    Serial.print(porta_i);
-    Serial.println(" entrada.");
+    Serial.print("Setando porta analogica A");
+    Serial.print(i+1);
+    Serial.print(" entrada --> porta de controle ");
     //Ativa Input
     pinMode(porta_i, INPUT);
 
-    Serial.print("Setando porta Digital ");
     Serial.print(porta_digital);
     Serial.println(" saida nivel baixo(low).");
     //Ativa em modo baixo

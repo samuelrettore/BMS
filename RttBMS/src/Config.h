@@ -46,7 +46,7 @@ O sistema ira definir a porta A7 para o leitor de tensão da celula 7 e o 37 aci
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
 //Aqui define o tamanho do seu banco em celulas ou S
-#define QUANTIDADE_CELULAS 1
+#define QUANTIDADE_CELULAS 2
 //Tensao Referencia porta analogica Arduino
 #define TENSAO_REFERENCIA 5.03
 
