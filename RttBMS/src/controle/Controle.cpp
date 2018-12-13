@@ -115,20 +115,15 @@ void Controle::calibraInicio(){
 *e atualiza celulas
 */
 void Controle::atualizaDadosLeitura(){
-  _bateria->imprimeDados();
+
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     int f = objj.getNumeroCelula();
     float tread = lePorta(objj.getPortaInput());
-    Serial.print("Leitura 1 porta A");
-    Serial.print(f);
-    Serial.print(" = ");
-    Serial.println(tread,5);
     objj.setLeituraTensao(tread);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
   }
-  Serial.print("Print Depois");
   _bateria->imprimeDados();
 }
 
