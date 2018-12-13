@@ -13,7 +13,6 @@ float ControlaIO::lePorta(uint8_t portaAnalogica) {
   return tensaoDC;
 }
 
-
 /*
 Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v Modelo China
@@ -29,7 +28,6 @@ float ControlaIO::lePorta2(uint8_t portaAnalogica) {
   delay(2000);
   return val2;
 }
-
 
 /*
 Le Dados porta Analogica analogReader
