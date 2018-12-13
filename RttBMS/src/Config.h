@@ -59,7 +59,6 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Porta controla rele contatora inversor
 #define CONTATORA_INVERSOR 30
 
-
 /*
   Outros dados
 */

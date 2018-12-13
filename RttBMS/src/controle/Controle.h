@@ -16,7 +16,7 @@ public:
   void ciloProcessamento();
 private:
   void atualizaDadosLeitura();
-  void controlaMosfets();
+  void controlaSaidas();
 
   BancoBateria* _bateria;
   int vbat_tensao = 0;

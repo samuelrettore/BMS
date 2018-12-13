@@ -123,13 +123,35 @@ void Controle::atualizaDadosLeitura(){
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
   }
+  //Imprime dados.
   _bateria->imprimeDados();
 }
 
 /*
 Faz ontrole dos Mosfets para ligar e desligar
 */
-void Controle::controlaMosfets(){
+void Controle::controlaSaidas(){
+  for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
+    //Busca Objeto
+    ObjCelula obj_i = _bateria->getCelula(i);
+    //Coleta tensao eporta
+    float tensao_i = obj_i.getLeituraTensao();
+    int porta_i = obj_i.getPortaControle();
+
+    for(int x=0; x<_bateria->getQuantidadeCelulas();x++){
+      //Busca Opbjeto
+      ObjCelula obj_x = _bateria->getCelula(x);
+      if(obj_i.getNumeroCelula() != obj_x.getNumeroCelula()){
+        //Coleta dados comparacao
+        float tensao_x = obj_x.getLeituraTensao();
+        if( (tensao_i > (tensao_x+BMS)) && (digitalRead(porta_i) == LOW)){
+          Serial.print("------------------------- liga porta ");
+          Serial.print(porta_i);
+          Serial.println("-------------------------");
+        }
+      }
+    }
+  }
 
 }
 
@@ -138,6 +160,6 @@ verifica referencias de leitura do calculo
 */
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
-  controlaMosfets();
+  controlaSaidas();
   delay(6000);
 }
