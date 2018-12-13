@@ -53,7 +53,7 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Configuracao do alor referncial que a bms trabalha em mV
 #define BMS 0.060
 //Tensao Minima BMS para de atuar
-#define MIN_VOLTAGE 24.0
+#define MIN_VOLTAGE 23.1
 //Tensao Minima por celula
 #define MIN_VOLTAGE_CELL 3.30
 //Porta controla rele contatora inversor
