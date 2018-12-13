@@ -6,15 +6,11 @@ Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v
 */
 float ControlaIO::lePorta(uint8_t portaAnalogica) {
-  float total=0;
   int valorDC = 0;
   float tensaoDC = 0;
-  for (int i=0; i<AMOSTRAS; i++) {
-    valorDC = analogRead(portaAnalogica);
-    tensaoDC = ((valorDC*0.00489)*TENSAO_REFERENCIA);
-    total += tensaoDC;
-  }
-  return total / (float)AMOSTRAS;
+  valorDC = analogRead(portaAnalogica);
+  tensaoDC = ((valorDC*0.00489)*TENSAO_REFERENCIA);
+  return tensaoDC;
 }
 
 

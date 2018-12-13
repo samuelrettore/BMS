@@ -118,7 +118,6 @@ void Controle::atualizaDadosLeitura(){
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    int f = objj.getNumeroCelula();
     float tread = lePorta(objj.getPortaInput());
     objj.setLeituraTensao(tread);
     //Atualiza Celula.
