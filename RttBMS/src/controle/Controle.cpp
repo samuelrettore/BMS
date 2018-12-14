@@ -72,7 +72,7 @@ void Controle::calibraInicio(){
 
   //Seta Primeira porta como A1
   int porta_i = A8;
-
+  int numero_porta  = 8;
   //Porta Digital inicia 31
   int porta_digital = 31;
 
@@ -91,7 +91,7 @@ void Controle::calibraInicio(){
 
     //Porta digital
     Serial.print("Setando porta analogica A");
-    Serial.print(i+1);
+    Serial.print(numero_porta);
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
     pinMode(porta_i, INPUT);
@@ -105,6 +105,7 @@ void Controle::calibraInicio(){
     _bateria->setCelula(obj, i);
     porta_i++;
     porta_digital+=2;
+    numero_porta++;
     delay(500);
   }
   delay(1000);
@@ -118,7 +119,7 @@ void Controle::atualizaDadosLeitura(){
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    float tread = lePorta(objj.getPortaInput());
+    float tread = lePortaDivisor(objj.getPortaInput());
     objj.setLeituraTensao(tread);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);

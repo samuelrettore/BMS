@@ -62,8 +62,8 @@ Abaixo pré definido sistema de 7S ou 7 celulas
   Dados de leitura com divisor de tensao
 */
 #define AMOSTRAS 2000
-#define RELACAO 0
-
+//#define RELACAO 17.65067
+#define RELACAO 17.822179732
 /*
   Outros dados
 */

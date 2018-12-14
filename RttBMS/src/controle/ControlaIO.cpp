@@ -42,7 +42,8 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
   total = total / (float)AMOSTRAS;
   if(RELACAO<=0){
     Serial.print("#------------------- leitura relacao ==== ");
-    Serial.println(total);
+    Serial.print(total,5);
+    Serial.println("/Tensao Multimetro");
   }
   //Divide pela relacao
   total = total/RELACAO;
