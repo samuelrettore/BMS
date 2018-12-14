@@ -71,7 +71,7 @@ void Controle::calibraInicio(){
   delay(2000);
 
   //Seta Primeira porta como A1
-  int porta_i = A1;
+  int porta_i = A8;
 
   //Porta Digital inicia 31
   int porta_digital = 31;
@@ -104,7 +104,7 @@ void Controle::calibraInicio(){
 
     _bateria->setCelula(obj, i);
     porta_i++;
-    porta_digital++;
+    porta_digital+=2;
     delay(500);
   }
   delay(1000);
@@ -158,7 +158,6 @@ void Controle::controlaSaidas(){
       }
     }
   }
-
 }
 
 /*

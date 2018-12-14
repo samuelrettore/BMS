@@ -14,9 +14,9 @@ Canal -> https://www.youtube.com/watch?v=0L6wfxrfS9M&t=1s
 
 Definicao de Quantos S(QUANTIDADE_CELULAS) ...ou celulas tem o Sistema
 Por exemplo um Projeto de 2S(duas celulas) segue o seguinte mapeamento
-A1 para leitura de tensao e 31 para controle da celulas:
-A1 - > 31
-A2 - > 32
+A8 para leitura de tensao e 31 para controle da celulas:
+A8 - > 31
+A9 - > 33
 ......
 
 Define tensao inicial(leitura multimetro) das celulas do banco usado para calculo, referencia da leitura
@@ -27,21 +27,21 @@ Ex 3S ou 3 CELULAS
 
 #define QUANTIDADE_CELULAS 3
 
-O sistema ira definir a porta A1 para o leitor de tensão da celula 1 e o 31 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A2 para o leitor de tensão da celula 2 e o 32 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A3 para o leitor de tensão da celula 3 e o 33 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A8 para o leitor de tensão da celula 1 e o 31 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A9 para o leitor de tensão da celula 2 e o 33 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A10 para o leitor de tensão da celula 3 e o 35 aciona sistema de resistor para equalizar celula
 
 Ex 7S ou 7 CELULAS
 
 #define QUANTIDADE_CELULAS 7
 
-O sistema ira definir a porta A1 para o leitor de tensão da celula 1 e o 31 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A2 para o leitor de tensão da celula 2 e o 32 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A3 para o leitor de tensão da celula 3 e o 33 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A4 para o leitor de tensão da celula 4 e o 34 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A5 para o leitor de tensão da celula 5 e o 35 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A6 para o leitor de tensão da celula 6 e o 36 aciona sistema de resistor para equalizar celula
-O sistema ira definir a porta A7 para o leitor de tensão da celula 7 e o 37 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A8 para o leitor de tensão da celula 1 e o 31 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A9 para o leitor de tensão da celula 2 e o 33 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A10 para o leitor de tensão da celula 3 e o 35 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A11 para o leitor de tensão da celula 4 e o 37 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A12 para o leitor de tensão da celula 5 e o 39 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A13 para o leitor de tensão da celula 6 e o 41 aciona sistema de resistor para equalizar celula
+O sistema ira definir a porta A14 para o leitor de tensão da celula 7 e o 43 aciona sistema de resistor para equalizar celula
 
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
