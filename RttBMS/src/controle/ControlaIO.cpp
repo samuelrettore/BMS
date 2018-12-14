@@ -30,8 +30,10 @@ float ControlaIO::lePorta_calculoresitor(uint8_t portaAnalogica) {
   return vin;
 }
 
-
-
+/*
+Le Dados porta Analogica analogReader
+Usando bloco de divisores de tensao.
+*/
 float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
   float total=0;
   for (int i=0; i<AMOSTRAS; i++) {
