@@ -111,7 +111,7 @@ void Controle::calibraInicio(){
 }
 
 /*
-* Faz controle dos dados de leitura dados de input
+* Faz leitura dados de input e atualiza dados da bateria
 *e atualiza celulas
 */
 void Controle::atualizaDadosLeitura(){
