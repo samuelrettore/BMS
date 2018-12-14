@@ -58,6 +58,11 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 #define MIN_VOLTAGE_CELL 3.30
 //Porta controla rele contatora inversor
 #define CONTATORA_INVERSOR 30
+/*
+  Dados de leitura com divisor de tensao
+*/
+#define AMOSTRAS 2000
+#define RELACAO 0
 
 /*
   Outros dados

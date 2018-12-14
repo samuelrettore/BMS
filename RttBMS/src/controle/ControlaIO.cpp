@@ -45,3 +45,20 @@ float ControlaIO::lePorta3(uint8_t portaAnalogica) {
   vin = vout / (R2/(R1+R2));
   return vin;
 }
+
+
+
+float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
+  float total=0;
+  for (int i=0; i<AMOSTRAS; i++) {
+    total += 1.0 * analogRead(portaAnalogica);
+  }
+  total = total / (float)AMOSTRAS;
+  if(RELACAO<=0){
+    Serial.print("#------------------- leitura relacao ==== ");
+    Serial.println(total);
+  }
+  //Divide pela relacao
+  total = total/RELACAO;
+  return total;
+}
