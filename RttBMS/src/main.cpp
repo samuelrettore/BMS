@@ -4,14 +4,17 @@
 //Objeto Controle
 Controle ctrl;
 BancoBateria* bateria = new BancoBateria();
+unsigned long time_1 = 0;
 
 void setup() {
   ctrl.inicializaModulo(bateria);
 }
 
 void loop() {
-  //Herança teste
-  //ctrl.dizOI();
-  ctrl.ciloProcessamento();
-
+  //Loop 1s
+  if(millis() > time_1 + 500){
+    time_1 = millis();
+    ctrl.ciloProcessamento();
+    //Atualiza dados no MQTT
+  }
 }

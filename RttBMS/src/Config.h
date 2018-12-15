@@ -67,6 +67,16 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 #define AMOSTRAS 2000
 //#define RELACAO 17.65067
 #define RELACAO 17.822179732
+
+/*
+Dados MQTT
+*/
+#define BROKER_MQTT "iot.eclipse.org"
+#define BROKER_PORT 1883
+#define ID_MQTT "BCI01" 
+//Esta Chave deve ser criada e usada no APP.
+#define TOPIC "asdkabsdaisyudtas5a76sd"
+
 /*
   Outros dados
 */

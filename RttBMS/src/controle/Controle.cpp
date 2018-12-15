@@ -5,9 +5,12 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Arduino.h>
+//MQTT
+#include <PubSubClient.h>
 
 //Global
 EthernetClient client;
+PubSubClient mqttClient;
 
 //Construtor
 Controle::Controle(){
@@ -22,6 +25,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
   ativaRedeDHCP();
+  ativaMQTT();
   Serial.println("## -- Fim Setup -- ##");
 }
 
@@ -48,6 +52,40 @@ void Controle::ativaRedeDHCP(){
   Serial.print("Endereço DNS: ");
   Serial.println(Ethernet.dnsServerIP());
   Serial.println();
+  delay(300);
+}
+
+/*
+* Ativa rede / DHCP
+*/
+void Controle::ativaMQTT(){
+  Serial.println("Ativando MQTT");
+  mqttClient.setClient(client);
+  mqttClient.setServer(BROKER_MQTT, BROKER_PORT);
+  mqttClient.setCallback(MqttCallback);
+  mqttClient.connect(ID_MQTT);
+  delay(300);
+}
+
+void Controle::MqttSendMessage(String topico, String mensagem){
+  while (!mqttClient.connected()) {
+    Serial.print("Conectando ao Broker MQTT: ");
+    Serial.println(BROKER_MQTT);
+    if (mqttClient.connect(ID_MQTT)) {
+      Serial.println("Conectado ao Broker com sucesso!");
+    }
+    else {
+      Serial.println("Noo foi possivel se conectar ao broker.");
+      Serial.println("Nova tentatica de conexao em 5s");
+      delay(5000);
+    }
+  }
+  Serial.print("Mensagem = ");
+  Serial.println(mensagem);
+  mqttClient.publish(topico.c_str(), mensagem.c_str(),1);
+}
+
+static void Controle::MqttCallback(){
 
 }
 
@@ -179,5 +217,8 @@ verifica referencias de leitura do calculo
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
-  delay(500);
+  String valor ="Olaaaaaaaa ";
+  valor.concat(i);
+  MqttSendMessage(TOPIC,  valor);
+  i++;
 }

@@ -13,12 +13,15 @@ public:
   void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
   void ativaRedeDHCP();
+  void ativaMQTT();
   void ciloProcessamento();
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
-
+  static void MqttCallback();
+  void MqttSendMessage(String topico, String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
+  int i = 0;
 };
 #endif
