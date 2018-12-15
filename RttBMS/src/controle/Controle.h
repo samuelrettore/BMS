@@ -21,4 +21,4 @@ private:
   BancoBateria* _bateria;
   int vbat_tensao = 0;
 };
-  #endif
+#endif

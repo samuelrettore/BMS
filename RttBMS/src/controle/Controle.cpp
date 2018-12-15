@@ -5,7 +5,8 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Arduino.h>
-//
+
+//Global
 EthernetClient client;
 
 //Construtor
@@ -34,7 +35,6 @@ void Controle::ativaRedeDHCP(){
   byte mac[] = {
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
   };
-
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Erro ao configurar via DHCP");
     // no point in carrying on, so do nothing forevermore:
@@ -48,6 +48,7 @@ void Controle::ativaRedeDHCP(){
   Serial.print("Endereço DNS: ");
   Serial.println(Ethernet.dnsServerIP());
   Serial.println();
+
 }
 
 /*
@@ -117,7 +118,6 @@ void Controle::calibraInicio(){
 *e atualiza celulas
 */
 void Controle::atualizaDadosLeitura(){
-
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
     float tread = lePortaDivisor(objj.getPortaInput());
