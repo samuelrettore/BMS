@@ -2,6 +2,7 @@
 #define ObjCelula_h
 
 #include "Arduino.h"
+#include "../Config.h"
 
 class ObjCelula {
   public:
@@ -14,6 +15,7 @@ class ObjCelula {
     int getPortaInput();
     void setPortaControle(int porta);
     int getPortaControle();
+    int getPercentual();
 
   private:
     //Numero da celula
@@ -22,5 +24,6 @@ class ObjCelula {
     int _porta_controle;
     float _leitura_tensao;
     float _tensao_anterior;
+    float _percentual;
 };
 #endif

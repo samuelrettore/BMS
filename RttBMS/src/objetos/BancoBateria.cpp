@@ -51,6 +51,10 @@ void BancoBateria::imprimeDados(){
     Serial.println(portaLe);
     Serial.print("Porta Controle = ");
     Serial.println(objj.getPortaControle());
+    Serial.print("Percentual = ");
+    Serial.print(objj.getPercentual());
+    Serial.println("%");
+
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
     portaLe++;

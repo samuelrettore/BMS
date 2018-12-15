@@ -47,5 +47,6 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
   }
   //Divide pela relacao
   total = total/RELACAO;
+  //total  =4.1;
   return total;
 }

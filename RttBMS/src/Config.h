@@ -56,6 +56,9 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 #define MIN_VOLTAGE 23.1
 //Tensao Minima por celula
 #define MIN_VOLTAGE_CELL 3.30
+//Tensao Minima por celula
+#define MAX_VOLTAGE_CELL 4.10
+
 //Porta controla rele contatora inversor
 #define CONTATORA_INVERSOR 30
 /*

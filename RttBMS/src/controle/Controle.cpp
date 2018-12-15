@@ -167,5 +167,5 @@ verifica referencias de leitura do calculo
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
-  delay(6000);
+  delay(1000);
 }
