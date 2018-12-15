@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Arduino.h>
+//
 EthernetClient client;
 
 //Construtor
@@ -138,25 +139,36 @@ void Controle::controlaSaidas(){
     //Coleta tensao eporta
     float tensao_i = obj_i.getLeituraTensao();
     int porta_i = obj_i.getPortaControle();
-
+    bool ligaResistencia = false;
     for(int x=0; x<_bateria->getQuantidadeCelulas();x++){
       //Busca Opbjeto
       ObjCelula obj_x = _bateria->getCelula(x);
       if(obj_i.getNumeroCelula() != obj_x.getNumeroCelula()){
         //Coleta dados comparacao
         float tensao_x = obj_x.getLeituraTensao();
-        Serial.print("####Compara ");
+        Serial.print("####### Compara celula ");
+        Serial.print(i+1);
+        Serial.print(" tensao = ");
         Serial.print(tensao_i,5);
-        Serial.print(" com ");
-        Serial.println((tensao_x+BMS),5);
-        if( (tensao_i > (tensao_x+BMS)) && (digitalRead(porta_i) == LOW)){
-          //Teste Desativado.
-          //digitalWrite(porta_i, HIGH);
-          Serial.print("------------------------- liga porta ");
-          Serial.print(porta_i);
-          Serial.println("-------------------------");
+        Serial.print(", com celula ");
+        Serial.print(x+1);
+        Serial.print(" tensao = ");
+        tensao_x += BMS;
+        Serial.print(tensao_x,5);
+        Serial.print(", porta estado = ");
+        Serial.println(digitalRead(porta_i));
+        if( (tensao_i > tensao_x) && !ligaResistencia){
+          ligaResistencia = true;
         }
       }
+    }
+    if(ligaResistencia && digitalRead(porta_i) == LOW){
+      digitalWrite(porta_i, HIGH);
+      Serial.print("------------------------- liga porta ");
+      Serial.print(porta_i);
+      Serial.println("-------------------------");
+    }else if(digitalRead(porta_i) == HIGH){
+      digitalWrite(porta_i, LOW);
     }
   }
 }
