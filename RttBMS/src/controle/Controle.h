@@ -15,6 +15,7 @@ public:
   void ativaRedeDHCP();
   void ativaMQTT();
   void ciloProcessamento();
+  void MqttEnviaDados();
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();

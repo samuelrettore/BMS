@@ -212,13 +212,20 @@ void Controle::controlaSaidas(){
 }
 
 /*
+Controla envio de dados ao MQTT
+*/
+void Controle::MqttEnviaDados(){
+  String valor ="Olaaaaaaaa ";
+  valor.concat(i);
+  MqttSendMessage(TOPIC,  valor);
+  i++;
+}
+
+
+/*
 verifica referencias de leitura do calculo
 */
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
-  String valor ="Olaaaaaaaa ";
-  valor.concat(i);
-  MqttSendMessage(TOPIC,  valor);
-  i++;
 }
