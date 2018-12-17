@@ -7,6 +7,7 @@
 #include <Arduino.h>
 //MQTT
 #include <PubSubClient.h>
+#include <ArduinoJson.h>
 
 //Global
 EthernetClient client;
@@ -215,10 +216,19 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT
 */
 void Controle::MqttEnviaDados(){
-  String valor ="Olaaaaaaaa ";
-  valor.concat(i);
-  MqttSendMessage(TOPIC,  valor);
-  i++;
+
+  for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
+    String valor ="Dados ";
+    valor.concat("Bateria ");
+    valor.concat(i+1);
+    valor.concat("->tensao = ");
+    //Busca Objeto
+    ObjCelula obj_i = _bateria->getCelula(i);
+    //Coleta tensao eporta
+    float tensao_i = obj_i.getLeituraTensao();
+    valor.concat(tensao_i);
+    MqttSendMessage(TOPIC,  valor);
+  }
 }
 
 

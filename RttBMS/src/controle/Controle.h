@@ -23,6 +23,5 @@ private:
   void MqttSendMessage(String topico, String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
-  int i = 0;
 };
 #endif

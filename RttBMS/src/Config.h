@@ -73,6 +73,8 @@ Dados MQTT
 #define BROKER_MQTT "iot.eclipse.org"
 #define BROKER_PORT 1883
 #define ID_MQTT "BCI01"
+#define MQTT_VERSION MQTT_VERSION_3_1_1
+
 //Esta Chave deve ser criada e usada no APP.
 #define TOPIC "asdkabsdaisyudtas5a76sd"
 
