@@ -64,7 +64,7 @@ void Controle::ativaMQTT(){
   Serial.println("Ativando MQTT");
   mqttClient.setClient(client);
   mqttClient.setServer(BROKER_MQTT, BROKER_PORT);
-  mqttClient.setCallback(MqttCallback);
+  //mqttClient.setCallback(MqttCallback);
   mqttClient.connect(ID_MQTT);
   delay(300);
 }
@@ -84,7 +84,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
   }
   Serial.print("Mensagem = ");
   Serial.println(mensagem);
-  mqttClient.publish(topico.c_str(), mensagem.c_str(),1);
+  mqttClient.publish(topico.c_str(), mensagem.c_str());
 }
 
 static void Controle::MqttCallback(){
