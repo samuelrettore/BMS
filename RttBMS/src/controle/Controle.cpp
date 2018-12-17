@@ -13,6 +13,7 @@
 EthernetClient client;
 PubSubClient mqttClient;
 
+
 //Construtor
 Controle::Controle(){
 }
@@ -213,21 +214,22 @@ void Controle::controlaSaidas(){
 }
 
 /*
-Controla envio de dados ao MQTT
+Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
-    String valor ="Dados ";
-    valor.concat("Bateria ");
-    valor.concat(i+1);
-    valor.concat("->tensao = ");
     //Busca Objeto
     ObjCelula obj_i = _bateria->getCelula(i);
     //Coleta tensao eporta
-    float tensao_i = obj_i.getLeituraTensao();
-    valor.concat(tensao_i);
-    MqttSendMessage(TOPIC,  valor);
+    //float tensao_i = obj_i.getLeituraTensao();
+    String mensagem;
+    StaticJsonDocument<200> doc;
+    JsonObject root = doc.to<JsonObject>();
+    root["n_bat"] = i+1;
+    root["v_bat"] = obj_i.getLeituraTensao();
+    root["p_bat"] = obj_i.getPercentual();
+    serializeJson(root,mensagem);
+    MqttSendMessage(TOPIC,  mensagem);
   }
 }
 
