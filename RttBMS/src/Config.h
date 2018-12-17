@@ -70,12 +70,13 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 /*
 Dados MQTT
 */
-#define BROKER_MQTT "iot.eclipse.org"
+//#define BROKER_MQTT "iot.eclipse.org"
+#define BROKER_MQTT "dev.serhmatica.com.br"
 #define BROKER_PORT 1883
-#define ID_MQTT "BCI01"
+#define ID_MQTT "ArduinoMQTT"
 #define MQTT_VERSION MQTT_VERSION_3_1_1
 
-//Esta Chave deve ser criada e usada no APP.
+//Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define TOPIC "asdkabsdaisyudtas5a76sd"
 
 /*
