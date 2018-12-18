@@ -69,24 +69,6 @@ void Controle::ativaMQTT(){
   delay(300);
 }
 
-void Controle::MqttSendMessage(String topico, String mensagem){
-  while (!mqttClient.connected()) {
-    Serial.print("Conectando ao Broker MQTT: ");
-    Serial.println(BROKER_MQTT);
-    if (mqttClient.connect(ID_MQTT)) {
-      Serial.println("Conectado ao Broker com sucesso!");
-    }
-    else {
-      Serial.println("Noo foi possivel se conectar ao broker.");
-      Serial.println("Nova tentatica de conexao em 5s");
-      delay(5000);
-    }
-  }
-  Serial.print("Mensagem = ");
-  Serial.println(mensagem);
-  mqttClient.publish(topico.c_str(), mensagem.c_str());
-}
-
 static void Controle::MqttCallback(){
 
 }
@@ -217,19 +199,49 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
+  StaticJsonDocument<200> doc;
+  JsonObject root = doc.to<JsonObject>();
+  root["codigo"] = 0;
+  root["qtcel"] = _bateria->getQuantidadeCelulas();
+  root["seq"] = sequencial++;
+  String mensagem;
+  serializeJson(root,mensagem);
+  MqttSendMessage(TOPIC,  mensagem);
+
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Busca Objeto
     ObjCelula obj_i = _bateria->getCelula(i);
-    //Coleta tensao eporta
-    //float tensao_i = obj_i.getLeituraTensao();
-    String mensagem;
+    // //Coleta tensao eporta
+    // //float tensao_i = obj_i.getLeituraTensao();
     StaticJsonDocument<200> doc;
     JsonObject root = doc.to<JsonObject>();
+    root["codigo"] = 1;
     root["n_bat"] = i+1;
     root["v_bat"] = obj_i.getLeituraTensao();
     root["p_bat"] = obj_i.getPercentual();
+    String mensagem;
     serializeJson(root,mensagem);
     MqttSendMessage(TOPIC,  mensagem);
+  }
+}
+
+
+void Controle::MqttSendMessage(String topico, String mensagem){
+  //while (!mqttClient.connected()) {
+  if (!mqttClient.connected()) {
+    Serial.print("Conectando ao Broker MQTT: ");
+    Serial.println(BROKER_MQTT);
+    if (mqttClient.connect(ID_MQTT)) {
+      Serial.println("Conectado ao Broker com sucesso!");
+    }else {
+      Serial.println("Não foi possivel se conectar ao broker.");
+      Serial.println("Nova tentatica de conexao em 5s");
+      //delay(1000);
+    }
+  }else{
+    Serial.print("Mensagem = ");
+    Serial.println(mensagem);
+    mqttClient.publish(topico.c_str(), mensagem.c_str());
   }
 }
 
