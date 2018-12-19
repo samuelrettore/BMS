@@ -151,10 +151,6 @@ void Controle::MqttSendMessage(String topico, String mensagem){
   }
 }
 
-static void Controle::MqttCallback(){
-
-}
-
 /*
 * Calibração inicial.
 */

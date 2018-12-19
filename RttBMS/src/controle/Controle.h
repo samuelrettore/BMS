@@ -19,7 +19,7 @@ public:
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
-  static void MqttCallback();
+  //static void MqttCallback();
   void MqttSendMessage(String topico, String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
