@@ -199,13 +199,13 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-  StaticJsonDocument<200> doc;
-  JsonObject root = doc.to<JsonObject>();
+  StaticJsonBuffer<200> doc;
+  JsonObject& root = doc.createObject();
   root["codigo"] = 0;
   root["qtcel"] = _bateria->getQuantidadeCelulas();
   root["seq"] = sequencial++;
   String mensagem;
-  serializeJson(root,mensagem);
+  root.printTo(mensagem);
   MqttSendMessage(TOPIC,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
@@ -213,14 +213,14 @@ void Controle::MqttEnviaDados(){
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonDocument<200> doc;
-    JsonObject root = doc.to<JsonObject>();
+    StaticJsonBuffer<200> doc;
+    JsonObject& root = doc.createObject();
     root["codigo"] = 1;
     root["n_bat"] = i+1;
     root["v_bat"] = obj_i.getLeituraTensao();
     root["p_bat"] = obj_i.getPercentual();
     String mensagem;
-    serializeJson(root,mensagem);
+    root.printTo(mensagem);
     MqttSendMessage(TOPIC,  mensagem);
   }
 }
