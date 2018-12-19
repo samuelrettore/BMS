@@ -78,7 +78,7 @@ Dados MQTT
 #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
-#define TOPIC "asdkabsdaisyudtas5a76sd"
+#define MQTT_TOPIC "asdkabsdaisyudtas5a76sd"
 
 /*
   Outros dados
