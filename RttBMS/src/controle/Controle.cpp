@@ -6,12 +6,16 @@
 #include <Ethernet.h>
 #include <Arduino.h>
 //MQTT
-#include <PubSubClient.h>
+#include <IPStack.h>
+#include <Countdown.h>
+#include <MQTTClient.h>
+//Json
 #include <ArduinoJson.h>
 
 //Global
 EthernetClient client;
-PubSubClient mqttClient;
+IPStack ipstack(client);
+MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
 
 
 //Construtor
@@ -61,11 +65,24 @@ void Controle::ativaRedeDHCP(){
 * Ativa rede / DHCP
 */
 void Controle::ativaMQTT(){
-  Serial.println("Ativando MQTT");
-  mqttClient.setClient(client);
-  mqttClient.setServer(BROKER_MQTT, BROKER_PORT);
-  //mqttClient.setCallback(MqttCallback);
-  mqttClient.connect(ID_MQTT);
+  int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
+  if (rc != 1){
+    Serial.print("Erro conexao rc = ");
+    Serial.println(rc);
+  }
+  Serial.print("Conectando MQTT a ");
+  Serial.println(BROKER_MQTT);
+  MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+  data.MQTTVersion = 4;
+  data.clientID.cstring = (char*)ID_MQTT;
+  data.keepAliveInterval = 3;
+  rc = client_mqtt.connect(data);
+  if (rc != 0){
+    Serial.print("erro MQTT rc = ");
+    Serial.println(rc);
+  }
+  Serial.print("MQTT Conectador a ");
+  Serial.println(BROKER_MQTT);
   delay(300);
 }
 //
@@ -225,25 +242,27 @@ void Controle::MqttEnviaDados(){
   }
 }
 
+/*
+Envia Mensagem MQTT
+*/
 void Controle::MqttSendMessage(String topico, String mensagem){
-  //while (!mqttClient.connected()) {
-  if (!mqttClient.connected()) {
-    Serial.print("Conectando ao Broker MQTT: ");
-    Serial.println(BROKER_MQTT);
-    if (mqttClient.connect(ID_MQTT)) {
-      Serial.println("Conectado ao Broker com sucesso!");
-    }else {
-      Serial.println("Não foi possivel se conectar ao broker.");
-      Serial.println("Nova tentatica de conexao em 5s");
-      //delay(1000);
-    }
-  }else{
-    Serial.print("Mensagem = ");
-    Serial.println(mensagem);
-    mqttClient.publish(topico.c_str(), mensagem.c_str());
+  if (!client_mqtt.isConnected()){
+    ativaMQTT();
+  }
+  MQTT::Message message;
+  // Send and receive QoS 0 message
+  char buf[150];
+  strcpy(buf, mensagem.c_str());
+  message.qos = MQTT::QOS1;
+  message.retained = false;
+  message.dup = false;
+  message.payload = (void*)buf;
+  message.payloadlen = strlen(buf)+1;
+  int rc = client_mqtt.publish(topico.c_str(), message);
+  if(rc != 0){
+    Serial.println("MQTT Qos1 erro publicacao.");
   }
 }
-
 
 /*
 verifica referencias de leitura do calculo
