@@ -240,7 +240,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
   }else{
     Serial.print("Mensagem = ");
     Serial.println(mensagem);
-    mqttClient.publish(topico.c_str(), mensagem.c_str(), 1);
+    mqttClient.publish(topico.c_str(), mensagem.c_str());
   }
 }
 
