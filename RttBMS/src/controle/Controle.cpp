@@ -48,7 +48,6 @@ void Controle::ativaRedeDHCP(){
   if (Ethernet.begin(mac) == 0) {
     Serial.println("Erro ao configurar via DHCP");
     // no point in carrying on, so do nothing forevermore:
-    while(true);
   }
   // print your local IP address:
   Serial.print("Endereço IP: ");
@@ -75,7 +74,7 @@ void Controle::ativaMQTT(){
   MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
   data.MQTTVersion = 4;
   data.clientID.cstring = (char*)ID_MQTT;
-  data.keepAliveInterval = 3;
+  //data.keepAliveInterval = 3;
   rc = client_mqtt.connect(data);
   if (rc != 0){
     Serial.print("erro MQTT rc = ");
@@ -247,18 +246,23 @@ Envia Mensagem MQTT
 */
 void Controle::MqttSendMessage(String topico, String mensagem){
   if (!client_mqtt.isConnected()){
+    Serial.println("Erro Conexao");
     ativaMQTT();
   }
+  Serial.print("Mensagem  = ");
+  Serial.print(mensagem);
   MQTT::Message message;
   // Send and receive QoS 0 message
-  char buf[150];
+  char buf[100];
   strcpy(buf, mensagem.c_str());
   message.qos = MQTT::QOS1;
   message.retained = false;
   message.dup = false;
   message.payload = (void*)buf;
-  message.payloadlen = strlen(buf)+1;
+  message.payloadlen = strlen(buf);
   int rc = client_mqtt.publish(topico.c_str(), message);
+  Serial.print(", retorno rx = ");
+  Serial.println(rc);
   if(rc != 0){
     Serial.println("MQTT Qos1 erro publicacao.");
   }
