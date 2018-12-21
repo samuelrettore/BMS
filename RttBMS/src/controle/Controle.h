@@ -16,6 +16,7 @@ public:
   void ativaMQTT();
   void ciloProcessamento();
   void MqttEnviaDados();
+  void verificaRede();
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
@@ -24,5 +25,8 @@ private:
   BancoBateria* _bateria;
   int vbat_tensao = 0;
   long sequencial = 0;
+  //Dados de conexoes
+  bool _status_rede = false;
+  bool _status_mqtt = false;
 };
 #endif

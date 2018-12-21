@@ -45,9 +45,12 @@ void Controle::ativaRedeDHCP(){
   byte mac[] = {
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
   };
-  if (Ethernet.begin(mac) == 0) {
+  //Timeout 30s, resposta 30s
+  if (Ethernet.begin(mac,20000, 20000) == 0) {
     Serial.println("Erro ao configurar via DHCP");
-    // no point in carrying on, so do nothing forevermore:
+    _status_rede = false;
+  }else{
+    _status_rede = true;
   }
   // print your local IP address:
   Serial.print("Endereço IP: ");
@@ -64,30 +67,31 @@ void Controle::ativaRedeDHCP(){
 * Ativa rede / DHCP
 */
 void Controle::ativaMQTT(){
-  int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
-  if (rc != 1){
-    Serial.print("Erro conexao rc = ");
-    Serial.println(rc);
+  if(_status_rede){
+    int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
+    if (rc != 1){
+      _status_mqtt = false;
+      Serial.print("Erro conexao rc = ");
+      Serial.println(rc);
+    }
+    Serial.print("Conectando MQTT a ");
+    Serial.println(BROKER_MQTT);
+    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+    data.MQTTVersion = 4;
+    data.clientID.cstring = (char*)ID_MQTT;
+    //data.keepAliveInterval = 3;
+    rc = client_mqtt.connect(data);
+    if (rc != 0){
+      _status_mqtt = false;
+      Serial.print("erro MQTT rc = ");
+      Serial.println(rc);
+    }
+    Serial.print("MQTT Conectador a ");
+    Serial.println(BROKER_MQTT);
+    _status_mqtt = true;
+    delay(300);
   }
-  Serial.print("Conectando MQTT a ");
-  Serial.println(BROKER_MQTT);
-  MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-  data.MQTTVersion = 4;
-  data.clientID.cstring = (char*)ID_MQTT;
-  //data.keepAliveInterval = 3;
-  rc = client_mqtt.connect(data);
-  if (rc != 0){
-    Serial.print("erro MQTT rc = ");
-    Serial.println(rc);
-  }
-  Serial.print("MQTT Conectador a ");
-  Serial.println(BROKER_MQTT);
-  delay(300);
 }
-//
-// static void Controle::MqttCallback(){
-//
-// }
 
 /*
 * Calibração inicial.
@@ -99,17 +103,14 @@ void Controle::calibraInicio(){
     Serial.print("Celula ");
     Serial.print(i);
     Serial.println(" configurada...");
-    delay(300);
+    delay(100);
   }
-
   Serial.print("Total de Celulas configuradas = ");
   Serial.println(_bateria->getQuantidadeCelulas());
-  delay(300);
-
+  delay(100);
   //Inicializa banco de Bateria -> constroi celulas.
   _bateria->inicializaBanco();
-  delay(2000);
-
+  delay(1000);
   //Seta Primeira porta como A1
   int porta_i = A8;
   int numero_porta  = 8;
@@ -137,7 +138,7 @@ void Controle::calibraInicio(){
     pinMode(porta_i, INPUT);
 
     Serial.print(porta_digital);
-    Serial.println(" saida nivel baixo(low).");
+    Serial.println(" saida nivel baixo(LOW).");
     //Ativa em modo baixo
     pinMode(porta_digital, OUTPUT);
     digitalWrite(porta_digital, LOW);
@@ -245,28 +246,48 @@ void Controle::MqttEnviaDados(){
 Envia Mensagem MQTT
 */
 void Controle::MqttSendMessage(String topico, String mensagem){
-  if (!client_mqtt.isConnected()){
-    Serial.println("Erro Conexao");
-    ativaMQTT();
-  }
-  Serial.print("Mensagem  = ");
-  Serial.print(mensagem);
-  MQTT::Message message;
-  // Send and receive QoS 0 message
-  char buf[100];
-  strcpy(buf, mensagem.c_str());
-  message.qos = MQTT::QOS1;
-  message.retained = false;
-  message.dup = false;
-  message.payload = (void*)buf;
-  message.payloadlen = strlen(buf);
-  int rc = client_mqtt.publish(topico.c_str(), message);
-  Serial.print(", retorno rx = ");
-  Serial.println(rc);
-  if(rc != 0){
-    Serial.println("MQTT Qos1 erro publicacao.");
+  //Verifica se esta OK.
+  if(_status_mqtt){
+    Serial.print("Mensagem  = ");
+    Serial.print(mensagem);
+    MQTT::Message message;
+    // Send and receive QoS 0 message
+    char buf[100];
+    strcpy(buf, mensagem.c_str());
+    message.qos = MQTT::QOS1;
+    message.retained = false;
+    message.dup = false;
+    message.payload = (void*)buf;
+    message.payloadlen = strlen(buf);
+    int rc = client_mqtt.publish(topico.c_str(), message);
+    Serial.print(", retorno rx = ");
+    Serial.println(rc);
+    if(rc != 0){
+      _status_mqtt = false;
+      Serial.println("MQTT Qos1 erro publicacao.");
+    }
   }
 }
+
+/*
+Verifica rede a cada 2 minutos.
+tenta reconectar.
+*/
+void Controle::verificaRede(){
+  if(!_status_rede || !_status_mqtt){
+    Serial.println("Verifica Rede 2 miutos");
+    client.stop();
+    Ethernet.maintain();
+    ativaRedeDHCP();
+    if(_status_rede){
+      if(client_mqtt.isConnected()){
+        client_mqtt.disconnect();
+      }
+      ativaMQTT();
+    }
+  }
+}
+
 
 /*
 verifica referencias de leitura do calculo
