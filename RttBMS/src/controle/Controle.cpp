@@ -159,8 +159,15 @@ void Controle::calibraInicio(){
 void Controle::atualizaDadosLeitura(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    float tread = lePortaDivisor(objj.getPortaInput());
-    objj.setLeituraTensao(tread);
+    float voltage = lePortaDivisor(objj.getPortaInput());
+    float voltage2 = lePortaCalculoResistor(objj.getPortaInput());
+    //Debug
+    Serial.print("Valor leitura Divisor normal =");
+    Serial.print(voltage);
+    Serial.print(", Valor leitura Divisor fator =");
+    Serial.println(voltage2);
+    delay(2000);
+    objj.setLeituraTensao(voltage);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
   }
