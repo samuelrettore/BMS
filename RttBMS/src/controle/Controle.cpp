@@ -166,7 +166,7 @@ void Controle::atualizaDadosLeitura(){
     // Serial.print(voltage,5);
     // Serial.print(", Valor leitura Divisor fator =");
     // Serial.println(voltage2,5);
-    // delay(2000);
+    //delay(2000);
     objj.setLeituraTensao(voltage);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
