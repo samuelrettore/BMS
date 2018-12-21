@@ -29,7 +29,6 @@ float ControlaIO::lePorta_calculoresitor(uint8_t portaAnalogica) {
   vin = vout / (R2/(R1+R2));
   return vin;
 }
-
 /*
 Le Dados porta Analogica analogReader
 Usando bloco de divisores de tensao.
