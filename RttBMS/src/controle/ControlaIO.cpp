@@ -20,12 +20,12 @@ Usando Shield de tensão 0-25v Modelo NET
 float ControlaIO::lePorta_calculoresitor(uint8_t portaAnalogica) {
   float vout = 0.0;
   float vin = 0.0;
-  float R1 = 1000000.0; // Resistor 1 - 1M
-  float R2 = 100000.0; // Resistor 2 - 100k
+  float R1 = 1000000; // Resistor 1 - 1M
+  float R2 = 100000; // Resistor 2 - 100k
   int value = 0;
-  // read the value at analog input
+  // Le valor da porta de entrada
   value = analogRead(portaAnalogica);
-  vout = (value * 5.0) / 1024.0; // see text
+  vout = (value * TENSAO_REFERENCIA) / 1024.0;
   vin = vout / (R2/(R1+R2));
   return vin;
 }
