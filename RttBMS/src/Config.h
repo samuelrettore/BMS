@@ -67,7 +67,7 @@ Abaixo pré definido sistema de 7S ou 7 celulas
   Dados de leitura com divisor de tensao
 */
 #define AMOSTRAS 2000
-#define RELACAO 18.18500
+#define RELACAO 18
 
 /*
 Dados MQTT
