@@ -5,7 +5,7 @@
 Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v
 */
-float ControlaIO::lePorta(uint8_t portaAnalogica) {
+float ControlaIO::lePortaShield25v(uint8_t portaAnalogica) {
   int valorDC = 0;
   float tensaoDC = 0;
   valorDC = analogRead(portaAnalogica);
@@ -17,7 +17,7 @@ float ControlaIO::lePorta(uint8_t portaAnalogica) {
 Le Dados porta Analogica analogReader
 Usando Shield de tensão 0-25v Modelo NET
 */
-float ControlaIO::lePorta_calculoresitor(uint8_t portaAnalogica) {
+float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
   float vout = 0.0;
   float vin = 0.0;
   float R1 = 1000000; // Resistor 1 - 1M
