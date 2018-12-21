@@ -46,11 +46,9 @@ void Controle::ativaRedeDHCP(){
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
   };
   //Timeout 30s, resposta 30s
-  if (Ethernet.begin(mac,20000, 20000) == 0) {
+  if (Ethernet.begin(mac,30000, 30000) == 0) {
     Serial.println("Erro ao configurar via DHCP");
     _status_rede = false;
-  }else{
-    _status_rede = true;
   }
   // print your local IP address:
   Serial.print("Endereço IP: ");
@@ -74,22 +72,24 @@ void Controle::ativaMQTT(){
       Serial.print("Erro conexao rc = ");
       Serial.println(rc);
     }
-    Serial.print("Conectando MQTT a ");
-    Serial.println(BROKER_MQTT);
-    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-    data.MQTTVersion = 4;
-    data.clientID.cstring = (char*)ID_MQTT;
-    //data.keepAliveInterval = 3;
-    rc = client_mqtt.connect(data);
-    if (rc != 0){
-      _status_mqtt = false;
-      Serial.print("erro MQTT rc = ");
-      Serial.println(rc);
+    if(_status_mqtt){
+      Serial.print("Conectando MQTT a ");
+      Serial.println(BROKER_MQTT);
+      MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+      data.MQTTVersion = 4;
+      data.clientID.cstring = (char*)ID_MQTT;
+      //data.keepAliveInterval = 3;
+      rc = client_mqtt.connect(data);
+      if (rc != 0){
+        _status_mqtt = false;
+        Serial.print("erro MQTT rc = ");
+        Serial.println(rc);
+      }
+      Serial.print("MQTT Conectador a ");
+      Serial.println(BROKER_MQTT);
+      _status_mqtt = true;
+      delay(300);
     }
-    Serial.print("MQTT Conectador a ");
-    Serial.println(BROKER_MQTT);
-    _status_mqtt = true;
-    delay(300);
   }
 }
 
@@ -163,9 +163,9 @@ void Controle::atualizaDadosLeitura(){
     float voltage2 = lePortaCalculoResistor(objj.getPortaInput());
     //Debug
     Serial.print("Valor leitura Divisor normal =");
-    Serial.print(voltage);
+    Serial.print(voltage,5);
     Serial.print(", Valor leitura Divisor fator =");
-    Serial.println(voltage2);
+    Serial.println(voltage2,5);
     delay(2000);
     objj.setLeituraTensao(voltage);
     //Atualiza Celula.

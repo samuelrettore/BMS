@@ -26,7 +26,7 @@ private:
   int vbat_tensao = 0;
   long sequencial = 0;
   //Dados de conexoes
-  bool _status_rede = false;
-  bool _status_mqtt = false;
+  bool _status_rede = true;
+  bool _status_mqtt = true;
 };
 #endif

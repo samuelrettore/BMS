@@ -24,7 +24,12 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
   float R2 = 100000; // Resistor 2 - 100k
   int value = 0;
   // Le valor da porta de entrada
-  value = analogRead(portaAnalogica);
+  //value = analogRead(portaAnalogica);
+  int x = 20;
+  for(int i = 1; i<=x;i++){
+    value += analogRead(portaAnalogica);
+  }
+  value = value/x;
   vout = (value * TENSAO_REFERENCIA) / 1024.0;
   vin = vout / (R2/(R1+R2));
   return vin;
