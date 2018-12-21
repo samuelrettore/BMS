@@ -21,12 +21,12 @@ void loop() {
     time_cliclo = millis();
     ctrl.ciloProcessamento();
   }
-  //Atualiza dados no MQTT
+  //Atualiza dados no MQTT -> 10 segundos
   if(millis() > time_mqtt + 10000){
     time_mqtt = millis();
     ctrl.MqttEnviaDados();
   }
-  //Verifica Rede conexoes 2 minutos
+  //Verifica Rede conexoes -> 2 minutos
   if(millis()>time_network+120000){
     time_network = millis();
     ctrl.verificaRede();
