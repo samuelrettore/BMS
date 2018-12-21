@@ -16,7 +16,7 @@ void setup() {
 }
 
 void loop() {
-  //Loop 1s
+  //Loop 1s -> 500ms
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
