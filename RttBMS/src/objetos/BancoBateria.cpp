@@ -54,6 +54,8 @@ void BancoBateria::imprimeDados(){
     Serial.print("Percentual = ");
     Serial.print(objj.getPercentual());
     Serial.println("%");
+    Serial.print("Referencia = ");
+    Serial.println(objj.getReferencia(),5);
 
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
