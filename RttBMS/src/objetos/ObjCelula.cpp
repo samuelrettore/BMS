@@ -44,3 +44,11 @@ int ObjCelula::getPortaControle(){
 int ObjCelula::getPercentual(){
   return _percentual;
 }
+
+void ObjCelula::setReferencia(float referencia){
+  _referencia = referencia;
+}
+
+float ObjCelula::getReferencia(){
+    return _referencia;
+}

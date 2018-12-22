@@ -30,7 +30,6 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
     value += (float)analogRead(portaAnalogica);
   }
   value = value/x;
-
   vout = (value * TENSAO_REFERENCIA) / 1024.0;
   vin = vout / (R2/(R1+R2));
   return vin;
@@ -39,13 +38,13 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
 Le Dados porta Analogica analogReader
 Usando bloco de divisores de tensao.
 */
-float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
+float ControlaIO::lePortaDivisor(uint8_t portaAnalogica, float referencia) {
   float total=0;
   for (int i=0; i<AMOSTRAS; i++) {
     total += 1.0 * analogRead(portaAnalogica);
   }
   total = total / (float)AMOSTRAS;
-  if(RELACAO<=0){
+  if(referencia<=0){
     Serial.print("#------------------- leitura relacao porta = ");
     Serial.print(portaAnalogica);
     Serial.print(", valor ");
@@ -53,7 +52,7 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica) {
     Serial.println("/Tensao Multimetro");
   }
   //Divide pela relacao
-  total = total/RELACAO;
+  total = total/referencia;
   if(total<0.1){
     total = 0.0;
   }

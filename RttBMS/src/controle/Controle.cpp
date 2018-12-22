@@ -129,6 +129,7 @@ void Controle::calibraInicio(){
     obj.setLeituraTensao(0.00);
     obj.setPortaInput(porta_i);
     obj.setPortaControle(porta_digital);
+    obj.setReferencia(RELACAO);
 
     //Porta digital
     Serial.print("Setando porta analogica A");
@@ -159,7 +160,7 @@ void Controle::calibraInicio(){
 void Controle::atualizaDadosLeitura(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    float voltage = lePortaDivisor(objj.getPortaInput());
+    float voltage = lePortaDivisor(objj.getPortaInput(), objj.getReferencia());
     // float voltage2 = lePortaCalculoResistor(objj.getPortaInput());
     // //Debug
     // Serial.print("Valor leitura Divisor normal =");
