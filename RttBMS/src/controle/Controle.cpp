@@ -160,14 +160,14 @@ void Controle::calibraInicio(){
 void Controle::atualizaDadosLeitura(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    float voltage = lePortaDivisor(objj.getPortaInput(), objj.getReferencia());
-    float voltage2 = lePortaCalculoResistor(objj.getPortaInput());
-    //Debug
-    Serial.print("Valor leitura Divisor normal =");
-    Serial.print(voltage,5);
-    Serial.print(", Valor leitura Divisor fator =");
-    Serial.println(voltage2,5);
-    delay(2000);
+    //float voltage = lePortaDivisor(objj.getPortaInput(), objj.getReferencia());
+    float voltage = lePortaCalculoResistor(objj.getPortaInput());
+    // //Debug
+    // Serial.print("Valor leitura Divisor normal =");
+    // Serial.print(voltage,5);
+    // Serial.print(", Valor leitura Divisor fator =");
+    // Serial.println(voltage2,5);
+    //delay(2000);
     objj.setLeituraTensao(voltage);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
@@ -175,6 +175,7 @@ void Controle::atualizaDadosLeitura(){
   //Imprime dados.
   _bateria->imprimeDados();
 }
+
 
 /*
 Faz ontrole dos Mosfets para ligar e desligar

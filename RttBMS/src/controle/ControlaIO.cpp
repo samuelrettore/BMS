@@ -30,10 +30,12 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
     value += (float)analogRead(portaAnalogica);
   }
   value = value/x;
-  vout = (value * TENSAO_REFERENCIA) / 1024.0;
+  vout = (value *TENSAO_REFERENCIA) / 1024.0;
   vin = vout / (R2/(R1+R2));
   if(vin<0.1){
     vin = 0;
+  }else{
+    vin += FATOR_CORRECAO;
   }
   return vin;
 }

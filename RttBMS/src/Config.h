@@ -51,6 +51,10 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Calculo Baseado no resistor
 //Tensao Referencia porta analogica Arduino
 #define TENSAO_REFERENCIA 5.03
+#define FATOR_CORRECAO 0.186
+//#define FATOR_CORRECAO 0.185
+
+//#define CALIBRACAO 1
 
 //Configuracao do alor referncial que a bms trabalha em mV
 #define BMS 0.060
