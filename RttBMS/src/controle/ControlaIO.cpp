@@ -25,6 +25,7 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
   float value = 0;
   // Le valor da porta de entrada
   //value = analogRead(portaAnalogica);
+  
   //Le Media
   int x = AMOSTRAS;
   for(int i = 1; i<=x;i++){
