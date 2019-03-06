@@ -49,7 +49,8 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 
 /*
 Calculo Baseado no resistor
-Tensao Referencia porta analogica Arduino - medir com multimetro tensão de operação do arduino melhora eficiencia da leitura de tensao
+Tensao Referencia porta analogica Arduino - medir com multimetro tensão de operação do arduino melhora eficiencia da
+leitura de tensao
 */
 #define TENSAO_REFERENCIA 5.03
 
