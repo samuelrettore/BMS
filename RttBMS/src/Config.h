@@ -58,9 +58,6 @@ Tensao Referencia porta analogica Arduino - medir com multimetro tensão de oper
 #define FATOR_CORRECAO 0.186
 //#define FATOR_CORRECAO 0.185
 
-//Experimental
-//#define CALIBRACAO 1
-
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
 #define BMS 0.060
 
