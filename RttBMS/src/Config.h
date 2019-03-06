@@ -15,11 +15,10 @@ Canal -> https://www.youtube.com/watch?v=0L6wfxrfS9M&t=1s
 Definicao de Quantos S(QUANTIDADE_CELULAS) ...ou celulas tem o Sistema
 Por exemplo um Projeto de 2S(duas celulas) segue o seguinte mapeamento
 A8 para leitura de tensao e 31 para controle da celulas:
-A8 - > 31
-A9 - > 33
+A8 -> 31
+A9 -> 33
 ......
 
-Define tensao inicial(leitura multimetro) das celulas do banco usado para calculo, referencia da leitura
 SE VOCE DEFINIR 2 CELULAS o sistema entendera que seu banco terá duas celulas,
 se definir 7 usará mesma logica.
 
@@ -48,31 +47,48 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Aqui define o tamanho do seu banco em celulas ou S
 #define QUANTIDADE_CELULAS 1
 
-//Calculo Baseado no resistor
-//Tensao Referencia porta analogica Arduino
+/*
+Calculo Baseado no resistor
+Tensao Referencia porta analogica Arduino - medir com multimetro tensão de operação do arduino melhora eficiencia da leitura de tensao
+*/
 #define TENSAO_REFERENCIA 5.03
+
+/*Fator de correcao para adicionar e estabilizar tensao final
+*/
 #define FATOR_CORRECAO 0.186
 //#define FATOR_CORRECAO 0.185
 
+//Experimental
 //#define CALIBRACAO 1
 
-//Configuracao do alor referncial que a bms trabalha em mV
+//Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
 #define BMS 0.060
-//Tensao Minima BMS para de atuar
+
+//Tensao Minima do Banco para de atuar
 #define MIN_VOLTAGE 23.1
+
 //Tensao Minima por celula
 #define MIN_VOLTAGE_CELL 3.30
-//Tensao Minima por celula
-#define MAX_VOLTAGE_CELL 4.10
 
-//Porta controla rele contatora inversor
+//Tensao Maxima por celula usado para estatistica.
+#define MAX_VOLTAGE_CELL 4.00
+
+/*
+Porta controla rele contatora ou inversor
+Porta que desliga dispotivo quando tensao minima atingida.
+*/
 #define CONTATORA_INVERSOR 30
+
 /*
   Dados de leitura com divisor de tensao
 */
+//Numero de amostras na leitura
 #define AMOSTRAS 2000
-#define RELACAO 18.18500 //11.86
+
+//Metodo Base de relacao
+#define RELACAO 18.18500 //11.86, old methodo Deprecated
 //#define RELACAO 17.72637 //4.2
+
 /*
 Dados MQTT
 */
@@ -92,5 +108,6 @@ Dados MQTT
 //Configuracoes placa de rede.
 #define W5100_CS  10
 #define SDCARD_CS 4
+
 //Velocidade Serial Arduino
 #define VELOCIDADE_SERIAL_ARDUINO 115200
