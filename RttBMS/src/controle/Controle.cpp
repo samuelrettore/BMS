@@ -39,16 +39,26 @@ void Controle::inicializaModulo(BancoBateria* bateria){
 * Ativa rede / DHCP
 */
 void Controle::ativaRedeDHCP(){
-  pinMode(SDCARD_CS, OUTPUT);
-  digitalWrite(SDCARD_CS, HIGH);
+  //pinMode(SDCARD_CS, OUTPUT);
+  //digitalWrite(SDCARD_CS, HIGH);
   Serial.println("Ativando DHCP");
   byte mac[] = {
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
   };
-  //Timeout 30s, resposta 30s
-  if (Ethernet.begin(mac,30000, 30000) == 0) {
-    Serial.println("Erro ao configurar via DHCP");
-    _status_rede = false;
+  // start the Ethernet connection:
+  Serial.println("Inicializando Ethernet via DHCP:");
+
+  if (Ethernet.begin(mac) == 0) {
+    Serial.println("Falaha ao configurar Ethernet usando DHCP");
+    if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+      Serial.println("Ethernet Shield Error. :(");
+    } else if (Ethernet.linkStatus() == LinkOFF) {
+      Serial.println("Cabo Desconectado.");
+    }
+    // no point in carrying on, so do nothing forevermore:
+    while (true) {
+      delay(1);
+    }
   }
   // print your local IP address:
   Serial.print("Endereço IP: ");
@@ -65,31 +75,33 @@ void Controle::ativaRedeDHCP(){
 * Ativa rede / DHCP
 */
 void Controle::ativaMQTT(){
-  if(_status_rede){
-    int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
-    if (rc != 1){
+  int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
+  Serial.print("Conexao rc = ");
+  Serial.println(rc);
+  delay(2000);
+  if (rc != 1){
+    _status_mqtt = false;
+    ipstack.disconnect();
+  }else{
+    _status_mqtt = true;
+  }
+  if(_status_mqtt){
+    Serial.print("Conectando MQTT a ");
+    Serial.println(BROKER_MQTT);
+    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
+    data.MQTTVersion = 4;
+    data.clientID.cstring = (char*)ID_MQTT;
+    //data.keepAliveInterval = 3;
+    rc = client_mqtt.connect(data);
+    if (rc != 0){
       _status_mqtt = false;
-      Serial.print("Erro conexao rc = ");
+      Serial.print("erro MQTT rc = ");
       Serial.println(rc);
     }
-    if(_status_mqtt){
-      Serial.print("Conectando MQTT a ");
-      Serial.println(BROKER_MQTT);
-      MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-      data.MQTTVersion = 4;
-      data.clientID.cstring = (char*)ID_MQTT;
-      //data.keepAliveInterval = 3;
-      rc = client_mqtt.connect(data);
-      if (rc != 0){
-        _status_mqtt = false;
-        Serial.print("erro MQTT rc = ");
-        Serial.println(rc);
-      }
-      Serial.print("MQTT Conectador a ");
-      Serial.println(BROKER_MQTT);
-      _status_mqtt = true;
-      delay(300);
-    }
+    Serial.print("MQTT Conectador a ");
+    Serial.println(BROKER_MQTT);
+    _status_mqtt = true;
+    delay(300);
   }
 }
 
@@ -283,18 +295,17 @@ Verifica rede a cada 2 minutos.
 tenta reconectar.
 */
 void Controle::verificaRede(){
-  if(!_status_rede || !_status_mqtt){
-    Serial.println("Verifica Rede 2 miutos");
-    client.stop();
+  Serial.println("Verifica Rede 2 miutos");
+  // print your local IP address:
+  Serial.print("Endereço IP: ");
+  Serial.println(Ethernet.localIP());
+  if(!_status_mqtt){
+    //Força renew
+    Serial.print("Renew IP");
     Ethernet.maintain();
-    ativaRedeDHCP();
-    if(_status_rede){
-      if(client_mqtt.isConnected()){
-        client_mqtt.disconnect();
-      }
-      ativaMQTT();
-    }
+    ativaMQTT();
   }
+  //delay(2000);
 }
 
 

@@ -104,7 +104,7 @@ Dados MQTT
   Outros dados
 */
 //Configuracoes placa de rede.
-#define W5100_CS  10
+//#define W5100_CS  10
 #define SDCARD_CS 4
 
 //Velocidade Serial Arduino

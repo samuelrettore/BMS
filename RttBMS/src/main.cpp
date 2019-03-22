@@ -26,8 +26,8 @@ void loop() {
     time_mqtt = millis();
     ctrl.MqttEnviaDados();
   }
-  //Verifica Rede conexoes -> 2 minutos
-  if(millis()>time_network+120000){
+  //Verifica Rede conexoes -> 2 minutos = 120000
+  if(millis()>time_network+10000){
     time_network = millis();
     ctrl.verificaRede();
   }
