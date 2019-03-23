@@ -237,6 +237,7 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
+
   StaticJsonBuffer<200> doc;
   JsonObject& root = doc.createObject();
   root["codigo"] = 0;

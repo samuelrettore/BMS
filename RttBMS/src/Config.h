@@ -56,7 +56,7 @@ leitura de tensao
 
 /*Fator de correcao para adicionar e estabilizar tensao final
 */
-#define FATOR_CORRECAO 0.186
+#define FATOR_CORRECAO 0.297
 //#define FATOR_CORRECAO 0.185
 
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
@@ -66,10 +66,10 @@ leitura de tensao
 #define MIN_VOLTAGE 23.1
 
 //Tensao Minima por celula
-#define MIN_VOLTAGE_CELL 3.30
+#define MIN_VOLTAGE_CELL 11.5
 
 //Tensao Maxima por celula usado para estatistica.
-#define MAX_VOLTAGE_CELL 4.00
+#define MAX_VOLTAGE_CELL 14.4
 
 /*
 Porta controla rele contatora ou inversor
@@ -98,7 +98,10 @@ Dados MQTT
 #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
-#define MQTT_TOPIC "asdkabsdaisyudtas5a76sd"
+//Teste
+//#define MQTT_TOPIC "f4091f7cd9/bateria"
+//Quente
+#define MQTT_TOPIC "376f0d9743/bateria"
 
 /*
   Outros dados
