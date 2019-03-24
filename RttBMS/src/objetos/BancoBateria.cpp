@@ -30,7 +30,12 @@ float BancoBateria::getTensaoBanco(){
     ObjCelula obj = getCelula(i);
     total =+ obj.getLeituraTensao();
   }
+  _percentual = map((total*100), ((MIN_VOLTAGE_CELL*QUANTIDADE_CELULAS)*100), ((MAX_VOLTAGE_CELL*QUANTIDADE_CELULAS)*100), 0, 100);
   return total;
+}
+
+int BancoBateria::getPercentual(){
+  return _percentual;
 }
 
 /*

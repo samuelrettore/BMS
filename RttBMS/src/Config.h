@@ -62,9 +62,6 @@ leitura de tensao
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
 #define BMS 0.060
 
-//Tensao Minima do Banco para de atuar
-#define MIN_VOLTAGE 23.1
-
 //Tensao Minima por celula
 #define MIN_VOLTAGE_CELL 11.5
 

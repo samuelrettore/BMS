@@ -242,7 +242,9 @@ void Controle::MqttEnviaDados(){
   JsonObject& root = doc.createObject();
   root["codigo"] = 0;
   root["qtcel"] = _bateria->getQuantidadeCelulas();
+  root["p_bat"] = _bateria->getPercentual();
   root["seq"] = sequencial++;
+  
   String mensagem;
   root.printTo(mensagem);
   MqttSendMessage(MQTT_TOPIC,  mensagem);
