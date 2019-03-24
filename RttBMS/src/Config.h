@@ -69,7 +69,7 @@ leitura de tensao
 #define MIN_VOLTAGE_CELL 11.5
 
 //Tensao Maxima por celula usado para estatistica.
-#define MAX_VOLTAGE_CELL 14.4
+#define MAX_VOLTAGE_CELL 14.5
 
 /*
 Porta controla rele contatora ou inversor
