@@ -243,8 +243,9 @@ void Controle::MqttEnviaDados(){
   root["codigo"] = 0;
   root["qtcel"] = _bateria->getQuantidadeCelulas();
   root["p_bat"] = _bateria->getPercentual();
+  root["v_bat"] = _bateria->getTensaoBanco();
   root["seq"] = sequencial++;
-  
+
   String mensagem;
   root.printTo(mensagem);
   MqttSendMessage(MQTT_TOPIC,  mensagem);
@@ -257,9 +258,9 @@ void Controle::MqttEnviaDados(){
     StaticJsonBuffer<200> doc;
     JsonObject& root = doc.createObject();
     root["codigo"] = 1;
-    root["n_bat"] = i+1;
-    root["v_bat"] = obj_i.getLeituraTensao();
-    root["p_bat"] = obj_i.getPercentual();
+    root["n_cell"] = i+1;
+    root["v_cell"] = obj_i.getLeituraTensao();
+    root["p_cell"] = obj_i.getPercentual();
     String mensagem;
     root.printTo(mensagem);
     MqttSendMessage(MQTT_TOPIC,  mensagem);
