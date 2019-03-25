@@ -244,6 +244,8 @@ void Controle::MqttEnviaDados(){
   root["qtcel"] = _bateria->getQuantidadeCelulas();
   root["p_bat"] = _bateria->getPercentual();
   root["v_bat"] = _bateria->getTensaoBanco();
+  root["v_min"] = _bateria->getTensaoMinima();
+  root["v_max"] = _bateria->getTensaoMaxima();
   root["seq"] = sequencial++;
 
   String mensagem;
