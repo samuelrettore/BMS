@@ -14,6 +14,9 @@ void BancoBateria::inicializaBanco(){
   if(_quantidade_celulas >0 ){
     celulas = new ObjCelula[_quantidade_celulas];
   }
+  //Seta Tensao Minima e maxima
+  _tensao_minima = MIN_VOLTAGE_CELL*QUANTIDADE_CELULAS;
+  _tensao_maxima = MAX_VOLTAGE_CELL*QUANTIDADE_CELULAS;
 }
 
 ObjCelula BancoBateria::getCelula(int posicao){
@@ -30,12 +33,20 @@ float BancoBateria::getTensaoBanco(){
     ObjCelula obj = getCelula(i);
     total =+ obj.getLeituraTensao();
   }
-  _percentual = map((total*100), ((MIN_VOLTAGE_CELL*QUANTIDADE_CELULAS)*100), ((MAX_VOLTAGE_CELL*QUANTIDADE_CELULAS)*100), 0, 100);
+  _percentual = map((total*100), (getTensaoMinima()*100), (getTensaoMaxima()*100), 0, 100);
   return total;
 }
 
 int BancoBateria::getPercentual(){
   return _percentual;
+}
+
+float BancoBateria::getTensaoMinima(){
+  return _tensao_minima;
+}
+
+float BancoBateria::getTensaoMaxima(){
+  return _tensao_maxima;
 }
 
 /*
