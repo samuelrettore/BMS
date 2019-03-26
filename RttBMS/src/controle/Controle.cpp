@@ -329,7 +329,6 @@ void Controle::verificaRede(){
   Serial.print("Atualiza Data e Hora");
   timeClient.forceUpdate();
   Serial.print(timeClient.getFormattedTime());
-  delay(10000);
 }
 
 /*
