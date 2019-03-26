@@ -238,8 +238,8 @@ Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
 
-  StaticJsonBuffer<200> doc;
-  JsonObject& root = doc.createObject();
+  StaticJsonDocument<200> doc;
+  JsonObject root = doc.to<JsonObject>();
   root["codigo"] = 0;
   root["qtcel"] = _bateria->getQuantidadeCelulas();
   root["p_bat"] = _bateria->getPercentual();
@@ -249,7 +249,8 @@ void Controle::MqttEnviaDados(){
   root["seq"] = sequencial++;
 
   String mensagem;
-  root.printTo(mensagem);
+  //root.printTo(mensagem);
+  serializeJson(root,mensagem);
   MqttSendMessage(MQTT_TOPIC,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
@@ -257,14 +258,15 @@ void Controle::MqttEnviaDados(){
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonBuffer<200> doc;
-    JsonObject& root = doc.createObject();
+    StaticJsonDocument<200> doc;
+    JsonObject root = doc.to<JsonObject>();
     root["codigo"] = 1;
     root["n_cell"] = i+1;
     root["v_cell"] = obj_i.getLeituraTensao();
     root["p_cell"] = obj_i.getPercentual();
     String mensagem;
-    root.printTo(mensagem);
+    //root.printTo(mensagem);
+    serializeJson(root, mensagem);
     MqttSendMessage(MQTT_TOPIC,  mensagem);
   }
 }
