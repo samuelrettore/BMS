@@ -18,8 +18,8 @@
 EthernetClient client;
 EthernetUDP udp;
 //NTPClient
-int16_t utc = -3;
-NTPClient timeClient(udp, "a.ntp.br",3600,60000);
+int16_t utc = 3;
+NTPClient timeClient(udp,"gps.ntp.br");
 
 IPStack ipstack(client);
 MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
@@ -78,6 +78,7 @@ void Controle::ativaRedeDHCP(){
   Serial.println();
   Serial.println("Ajusta NTP ");
   timeClient.begin();
+  timeClient.update();
   delay(500);
 
 }
@@ -248,7 +249,7 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-  unsigned long unix_time = timeClient.getEpochTime();
+  long unix_time = timeClient.getEpochTime();
   StaticJsonDocument<200> doc;
   JsonObject root = doc.to<JsonObject>();
   root["cd"] = 0;
