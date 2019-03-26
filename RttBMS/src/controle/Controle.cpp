@@ -19,7 +19,7 @@ EthernetClient client;
 EthernetUDP udp;
 //NTPClient
 int16_t utc = -3;
-NTPClient timeClient(udp, "a.ntp.br",utc*3600,60000);
+NTPClient timeClient(udp, "a.ntp.br",3600,60000);
 
 IPStack ipstack(client);
 MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
