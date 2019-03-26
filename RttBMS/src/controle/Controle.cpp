@@ -11,12 +11,20 @@
 #include <MQTTClient.h>
 //Json
 #include <ArduinoJson.h>
+//Date Time
+#include <NTPClient.h>
 
 //Global
 EthernetClient client;
+EthernetUDP udp;
+//NTPClient
+int16_t utc = -3;
+NTPClient timeClient(udp, "a.ntp.br",utc*3600,60000);
+
 IPStack ipstack(client);
 MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
 
+//NTP CLient
 
 //Construtor
 Controle::Controle(){
@@ -61,14 +69,17 @@ void Controle::ativaRedeDHCP(){
     }
   }
   // print your local IP address:
-  Serial.print("Endereço IP: ");
+  Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
-  Serial.print("Endereço gateway: ");
+  Serial.print("Endereco gateway: ");
   Serial.println(Ethernet.gatewayIP());
-  Serial.print("Endereço DNS: ");
+  Serial.print("Endereco DNS: ");
   Serial.println(Ethernet.dnsServerIP());
   Serial.println();
-  delay(300);
+  Serial.println("Ajusta NTP ");
+  timeClient.begin();
+  delay(500);
+
 }
 
 /*
@@ -237,16 +248,17 @@ void Controle::controlaSaidas(){
 Controla envio de dados ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-
+  unsigned long unix_time = timeClient.getEpochTime();
   StaticJsonDocument<200> doc;
   JsonObject root = doc.to<JsonObject>();
-  root["codigo"] = 0;
-  root["qtcel"] = _bateria->getQuantidadeCelulas();
-  root["p_bat"] = _bateria->getPercentual();
-  root["v_bat"] = _bateria->getTensaoBanco();
-  root["v_min"] = _bateria->getTensaoMinima();
-  root["v_max"] = _bateria->getTensaoMaxima();
-  root["seq"] = sequencial++;
+  root["cd"] = 0;
+  root["qt"] = _bateria->getQuantidadeCelulas();
+  root["pr"] = _bateria->getPercentual();
+  root["vb"] = _bateria->getTensaoBanco();
+  root["vn"] = _bateria->getTensaoMinima();
+  root["vm"] = _bateria->getTensaoMaxima();
+  root["tm"] = unix_time;
+  root["sq"] = sequencial++;
 
   String mensagem;
   //root.printTo(mensagem);
@@ -260,10 +272,11 @@ void Controle::MqttEnviaDados(){
     // //float tensao_i = obj_i.getLeituraTensao();
     StaticJsonDocument<200> doc;
     JsonObject root = doc.to<JsonObject>();
-    root["codigo"] = 1;
-    root["n_cell"] = i+1;
-    root["v_cell"] = obj_i.getLeituraTensao();
-    root["p_cell"] = obj_i.getPercentual();
+    root["cd"] = 1;
+    root["nc"] = i+1;
+    root["vc"] = obj_i.getLeituraTensao();
+    root["pc"] = obj_i.getPercentual();
+    root["tm"] = unix_time;
     String mensagem;
     //root.printTo(mensagem);
     serializeJson(root, mensagem);
@@ -313,9 +326,11 @@ void Controle::verificaRede(){
     Ethernet.maintain();
     ativaMQTT();
   }
-  //delay(2000);
+  Serial.print("Atualiza Data e Hora");
+  timeClient.forceUpdate();
+  Serial.print(timeClient.getFormattedTime());
+  delay(10000);
 }
-
 
 /*
 verifica referencias de leitura do calculo
