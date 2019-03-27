@@ -78,6 +78,7 @@ void Controle::ativaRedeDHCP(){
   Serial.println();
   Serial.println("Ajusta NTP ");
   timeClient.begin();
+  delay(300);
   timeClient.update();
   delay(500);
 
@@ -329,6 +330,7 @@ void Controle::verificaRede(){
   }
   Serial.print("Atualiza Data e Hora");
   timeClient.forceUpdate();
+  delay(300);
   Serial.print(timeClient.getFormattedTime());
 }
 
