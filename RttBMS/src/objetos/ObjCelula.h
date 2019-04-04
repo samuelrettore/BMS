@@ -18,6 +18,8 @@ class ObjCelula {
     int getPercentual();
     void setReferencia(float referencia);
     float getReferencia();
+    float getTensaoMinima();
+    float getTensaoMaxima();
   private:
     //Numero da celula
     int _numero_celula;
@@ -27,5 +29,7 @@ class ObjCelula {
     float _leitura_tensao;
     float _tensao_anterior;
     float _percentual;
+    float _tensao_minima = MIN_VOLTAGE_CELL;
+    float _tensao_maxima = MAX_VOLTAGE_CELL;
 };
 #endif

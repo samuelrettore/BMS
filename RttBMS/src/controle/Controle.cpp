@@ -260,7 +260,6 @@ void Controle::MqttEnviaDados(){
   root["vn"] = _bateria->getTensaoMinima();
   root["vm"] = _bateria->getTensaoMaxima();
   root["tm"] = unix_time;
-  root["sq"] = sequencial++;
 
   String mensagem;
   //root.printTo(mensagem);
@@ -277,7 +276,9 @@ void Controle::MqttEnviaDados(){
     root["cd"] = 1;
     root["nc"] = i+1;
     root["vc"] = obj_i.getLeituraTensao();
-    root["pc"] = obj_i.getPercentual();
+    root["pr"] = obj_i.getPercentual();
+    root["cn"] = obj_i.getTensaoMinima();
+    root["vm"] = obj_i.getTensaoMaxima();
     root["tm"] = unix_time;
     String mensagem;
     //root.printTo(mensagem);

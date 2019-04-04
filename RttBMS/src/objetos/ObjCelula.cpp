@@ -52,3 +52,11 @@ void ObjCelula::setReferencia(float referencia){
 float ObjCelula::getReferencia(){
     return _referencia;
 }
+
+float ObjCelula::getTensaoMinima(){
+  return _tensao_minima;
+}
+
+float ObjCelula::getTensaoMaxima(){
+  return _tensao_maxima;
+}
