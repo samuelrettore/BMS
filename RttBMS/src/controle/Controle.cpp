@@ -19,12 +19,11 @@ EthernetClient client;
 EthernetUDP udp;
 //NTPClient
 int16_t utc = 3;
-NTPClient timeClient(udp,"gps.ntp.br");
+//NTP CLient
+NTPClient timeClient(udp, NTPSERVER);
 
 IPStack ipstack(client);
 MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
-
-//NTP CLient
 
 //Construtor
 Controle::Controle(){
@@ -57,7 +56,7 @@ void Controle::ativaRedeDHCP(){
   Serial.println("Inicializando Ethernet via DHCP:");
 
   if (Ethernet.begin(mac) == 0) {
-    Serial.println("Falaha ao configurar Ethernet usando DHCP");
+    Serial.println("Falha ao configurar Ethernet usando DHCP");
     if (Ethernet.hardwareStatus() == EthernetNoHardware) {
       Serial.println("Ethernet Shield Error. :(");
     } else if (Ethernet.linkStatus() == LinkOFF) {
@@ -79,8 +78,14 @@ void Controle::ativaRedeDHCP(){
   Serial.println("Ajusta NTP ");
   timeClient.begin();
   delay(300);
-  timeClient.update();
-  delay(500);
+  while(!timeClient.update()) {
+    Serial.println("Tentando Update Hora");
+    timeClient.forceUpdate();
+  }
+  Serial.print("##Data e Hora = ");
+  timeClient.forceUpdate();
+  Serial.println(timeClient.getFormattedTime());
+  delay(2000);
 
 }
 
@@ -329,10 +334,10 @@ void Controle::verificaRede(){
     Ethernet.maintain();
     ativaMQTT();
   }
-  Serial.print("Atualiza Data e Hora");
+  Serial.print("Atualiza Data e Hora = " );
   timeClient.forceUpdate();
+  Serial.println(timeClient.getFormattedTime());
   delay(300);
-  Serial.print(timeClient.getFormattedTime());
 }
 
 /*

@@ -100,6 +100,9 @@ Dados MQTT
 //Quente
 #define MQTT_TOPIC "376f0d9743/bateria"
 
+//NTP Server
+#define NTPSERVER "gps.ntp.br"
+
 /*
   Outros dados
 */
