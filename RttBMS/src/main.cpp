@@ -16,13 +16,14 @@ void setup() {
 }
 
 void loop() {
+  //Serial.println("Loop");
   //Loop 1s -> 500ms
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
   }
-  //Atualiza dados no MQTT -> 10 segundos
-  if(millis() > time_mqtt + 10000){
+  //Atualiza dados no MQTT -> 10 segundos = 10000
+  if(millis() > time_mqtt + 1000){
     time_mqtt = millis();
     ctrl.MqttEnviaDados();
   }
