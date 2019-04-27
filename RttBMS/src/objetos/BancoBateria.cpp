@@ -31,7 +31,7 @@ float BancoBateria::getTensaoBanco(){
   float total = 0.0;
   for(int i=0; i<getQuantidadeCelulas();i++){
     ObjCelula obj = getCelula(i);
-    total =+ obj.getLeituraTensao();
+    total += obj.getLeituraTensao();
   }
   _percentual = map((total*100), (getTensaoMinima()*100), (getTensaoMaxima()*100), 0, 100);
   return total;

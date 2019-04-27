@@ -56,8 +56,8 @@ leitura de tensao
 
 /*Fator de correcao para adicionar e estabilizar tensao final
 */
-#define FATOR_CORRECAO 0.297
-//#define FATOR_CORRECAO 0.185
+#define FATOR_CORRECAO 0.358
+//#define FATOR_CORRECAO 0.298
 
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
 #define BMS 0.060

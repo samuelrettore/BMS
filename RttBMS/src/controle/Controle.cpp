@@ -82,8 +82,8 @@ void Controle::ativaRedeDHCP(){
     Serial.println("Tentando Update Hora");
     timeClient.forceUpdate();
   }
-  Serial.print("##Data e Hora = ");
   timeClient.forceUpdate();
+  Serial.print("##Data e Hora = ");
   Serial.println(timeClient.getFormattedTime());
   delay(2000);
 
@@ -298,6 +298,10 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     char buf[100];
     strcpy(buf, mensagem.c_str());
     message.qos = MQTT::QOS1;
+    //Teste QOS2 nao vai kkk
+    //message.qos = MQTT::QOS2;
+    //Força renew
+    //Retem as mensagem a novas assinaturas, testar true
     message.retained = false;
     message.dup = false;
     message.payload = (void*)buf;
@@ -322,7 +326,6 @@ void Controle::verificaRede(){
   Serial.print("Endereço IP: ");
   Serial.println(Ethernet.localIP());
   if(!_status_mqtt){
-    //Força renew
     Serial.print("Renew IP");
     Ethernet.maintain();
     ativaMQTT();
