@@ -6,28 +6,36 @@
 #include <Ethernet.h>
 #include <Arduino.h>
 //MQTT
-#include <IPStack.h>
-#include <Countdown.h>
-#include <MQTTClient.h>
+#include <MqttClient.h>
 //Json
 #include <ArduinoJson.h>
 //Date Time
 #include <NTPClient.h>
 
 //Global
-EthernetClient client;
+MqttClient *mqtt = NULL;
+EthernetClient netClient;
 EthernetUDP udp;
 //NTPClient
 int16_t utc = 3;
 //NTP CLient
 NTPClient timeClient(udp, NTPSERVER);
 
-IPStack ipstack(client);
-MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
+// IPStack ipstack(client);
+// MQTT::Client<IPStack, Countdown, 150, 1> client_mqtt = MQTT::Client<IPStack, Countdown, 150, 1>(ipstack);
 
 //Construtor
 Controle::Controle(){
 }
+
+// ============== Object to supply system functions ================================
+class System: public MqttClient::System {
+public:
+  unsigned long millis() const {
+    return ::millis();
+  }
+};
+
 
 /**
 * Metodo inicialização do modulo
@@ -93,33 +101,61 @@ void Controle::ativaRedeDHCP(){
 * Ativa rede / DHCP
 */
 void Controle::ativaMQTT(){
-  int rc = ipstack.connect(BROKER_MQTT, BROKER_PORT);
-  Serial.print("Conexao rc = ");
-  Serial.println(rc);
-  delay(2000);
-  if (rc != 1){
-    _status_mqtt = false;
-    ipstack.disconnect();
-  }else{
-    _status_mqtt = true;
-  }
-  if(_status_mqtt){
+
+  // Setup MqttClient
+  MqttClient::System *mqttSystem = new System;
+  MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
+  MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
+  //// Make 128 bytes send buffer
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<128>();
+  //// Make 128 bytes receive buffer
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<128>();
+  //// Allow up to 2 subscriptions simultaneously
+  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
+  //// Configure client options
+  MqttClient::Options mqttOptions;
+  ////// Set command timeout to 10 seconds
+  mqttOptions.commandTimeoutMs = 10000;
+  //// Make client object
+  mqtt = new MqttClient (
+    mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
+    *mqttRecvBuffer, *mqttMessageHandlers
+  );
+
+  if(!mqtt->isConnected()){
+    netClient.stop();
+    netClient.connect(BROKER_MQTT, BROKER_PORT);
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
-    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-    data.MQTTVersion = 4;
-    data.clientID.cstring = (char*)ID_MQTT;
-    //data.keepAliveInterval = 3;
-    rc = client_mqtt.connect(data);
-    if (rc != 0){
-      _status_mqtt = false;
-      Serial.print("erro MQTT rc = ");
-      Serial.println(rc);
+    MqttClient::ConnectResult connectResult;
+    //Conect
+    {
+      MQTTPacket_connectData options = MQTTPacket_connectData_initializer;
+      options.MQTTVersion = 3;
+      options.clientID.cstring = (char*)ID_MQTT;
+      options.cleansession = false;
+      options.keepAliveInterval = 15; // 15 seconds
+      MqttClient::Error::type rc = mqtt->connect(options, connectResult);
+      if (rc != MqttClient::Error::SUCCESS) {
+        Serial.print("Connection error: ");
+        Serial.println(rc);
+        return;
+      }
+      // // Subscribe
+      // {
+      //   MqttClient::Error::type rc = mqtt->subscribe(
+      //     MQTT_TOPIC_SUB, MqttClient::QOS0, processaMessage
+      //   );
+      //   if (rc != MqttClient::Error::SUCCESS) {
+      //     LOG_PRINTFLN("Subscribe error: %i", rc);
+      //     LOG_PRINTFLN("Drop connection");
+      //     mqtt->disconnect();
+      //     return;
+      //   }
+      // }
     }
-    Serial.print("MQTT Conectador a ");
-    Serial.println(BROKER_MQTT);
-    _status_mqtt = true;
-    delay(300);
+  }else{
+    mqtt->yield(30000L);
   }
 }
 
@@ -290,29 +326,19 @@ Envia Mensagem MQTT
 */
 void Controle::MqttSendMessage(String topico, String mensagem){
   //Verifica se esta OK.
-  if(_status_mqtt){
+  if(mqtt->isConnected()){
     Serial.print("Mensagem  = ");
-    Serial.print(mensagem);
-    MQTT::Message message;
+    Serial.println(mensagem);
+    MqttClient::Message message;
     // Send and receive QoS 0 message
     char buf[100];
     strcpy(buf, mensagem.c_str());
-    message.qos = MQTT::QOS1;
-    //Teste QOS2 nao vai kkk
-    //message.qos = MQTT::QOS2;
-    //Força renew
-    //Retem as mensagem a novas assinaturas, testar true
+    message.qos = MqttClient::QOS1;
     message.retained = false;
     message.dup = false;
     message.payload = (void*)buf;
-    message.payloadlen = strlen(buf);
-    int rc = client_mqtt.publish(topico.c_str(), message);
-    Serial.print(", retorno rx = ");
-    Serial.println(rc);
-    if(rc != 0){
-      _status_mqtt = false;
-      Serial.println("MQTT Qos1 erro publicacao.");
-    }
+    message.payloadLen = strlen(buf);
+    mqtt->publish(topico.c_str(), message);
   }
 }
 
@@ -325,7 +351,7 @@ void Controle::verificaRede(){
   // print your local IP address:
   Serial.print("Endereço IP: ");
   Serial.println(Ethernet.localIP());
-  if(!_status_mqtt){
+  if(!mqtt->isConnected()){
     Serial.print("Renew IP");
     Ethernet.maintain();
     ativaMQTT();
@@ -342,4 +368,16 @@ verifica referencias de leitura do calculo
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
+}
+
+// ============== Subscription callback ========================================
+void Controle::processaMessage(MqttClient::MessageData& md) {
+	const MqttClient::Message& msg = md.message;
+	char payload[msg.payloadLen + 1];
+	memcpy(payload, msg.payload, msg.payloadLen);
+	payload[msg.payloadLen] = '\0';
+	// LOG_PRINTFLN(
+	// 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
+	// 	msg.qos, msg.retained, msg.dup, msg.id, payload
+	// );
 }

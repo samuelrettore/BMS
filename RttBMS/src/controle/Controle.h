@@ -6,6 +6,7 @@
 #include "../objetos/BancoBateria.h"
 #include "../Config.h"
 #include "ControlaIO.h"
+#include <MqttClient.h>
 
 class Controle : public ControlaIO {
 public:
@@ -17,6 +18,7 @@ public:
   void ciloProcessamento();
   void MqttEnviaDados();
   void verificaRede();
+  void processaMessage(MqttClient::MessageData& md);
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
@@ -24,7 +26,5 @@ private:
   void MqttSendMessage(String topico, String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
-  //Dados de conexoes
-  bool _status_mqtt = true;
 };
 #endif

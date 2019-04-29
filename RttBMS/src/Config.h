@@ -92,7 +92,7 @@ Dados MQTT
 #define BROKER_PORT 1883
 #define MQTT_QOS 1
 #define ID_MQTT "ArduinoMQTT"
-#define MQTT_VERSION MQTT_VERSION_3_1_1
+// #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 //Teste
