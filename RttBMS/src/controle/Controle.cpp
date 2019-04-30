@@ -98,6 +98,8 @@ void Controle::ativaRedeDHCP(){
 * Ativa rede / DHCP
 */
 void Controle::ativaMQTT(){
+  //Foce Stop rede
+  netClient.stop();
 
   // Setup MqttClient
   MqttClient::System *mqttSystem = new System;
@@ -118,7 +120,6 @@ void Controle::ativaMQTT(){
     mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
     *mqttRecvBuffer, *mqttMessageHandlers
   );
-
   if(!mqtt->isConnected()){
     netClient.stop();
     netClient.connect(BROKER_MQTT, BROKER_PORT);
