@@ -70,10 +70,7 @@ void Controle::ativaRedeDHCP(){
     } else if (Ethernet.linkStatus() == LinkOFF) {
       Serial.println("Cabo Desconectado.");
     }
-    // no point in carrying on, so do nothing forevermore:
-    while (true) {
-      delay(1);
-    }
+
   }
   // print your local IP address:
   Serial.print("Endereco IP: ");
@@ -131,7 +128,8 @@ void Controle::ativaMQTT(){
     //Conect
     {
       MQTTPacket_connectData options = MQTTPacket_connectData_initializer;
-      options.MQTTVersion = 3;
+      //4=3.1.1
+      options.MQTTVersion = 4;
       options.clientID.cstring = (char*)ID_MQTT;
       options.cleansession = false;
       options.keepAliveInterval = 15; // 15 seconds
