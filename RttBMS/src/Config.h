@@ -90,7 +90,6 @@ Dados MQTT
 //#define BROKER_MQTT "iot.eclipse.org"
 #define BROKER_MQTT "dev.serhmatica.com.br"
 #define BROKER_PORT 1883
-#define MQTT_QOS 1
 #define ID_MQTT "ArduinoMQTT"
 // #define MQTT_VERSION MQTT_VERSION_3_1_1
 

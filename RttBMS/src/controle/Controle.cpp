@@ -131,7 +131,7 @@ void Controle::ativaMQTT(){
       //4=3.1.1
       options.MQTTVersion = 4;
       options.clientID.cstring = (char*)ID_MQTT;
-      options.cleansession = false;
+      //options.cleansession = false;
       options.keepAliveInterval = 15; // 15 seconds
       MqttClient::Error::type rc = mqtt->connect(options, connectResult);
       if (rc != MqttClient::Error::SUCCESS) {
