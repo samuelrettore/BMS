@@ -46,6 +46,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
   ativaRedeDHCP();
+  configuraMQTT();
   ativaMQTT();
   Serial.println("## -- Fim Setup -- ##");
 }
@@ -94,13 +95,10 @@ void Controle::ativaRedeDHCP(){
 
 }
 
-/*
-* Ativa rede / DHCP
+/**
+* Configura MQTT
 */
-void Controle::ativaMQTT(){
-  //Foce Stop rede
-  netClient.stop();
-
+void Controle::configuraMQTT(){
   // Setup MqttClient
   MqttClient::System *mqttSystem = new System;
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
@@ -120,6 +118,13 @@ void Controle::ativaMQTT(){
     mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
     *mqttRecvBuffer, *mqttMessageHandlers
   );
+}
+
+
+/*
+* Ativa rede / DHCP
+*/
+void Controle::ativaMQTT(){
   if(!mqtt->isConnected()){
     netClient.stop();
     netClient.connect(BROKER_MQTT, BROKER_PORT);
@@ -371,12 +376,12 @@ void Controle::ciloProcessamento(){
 
 // ============== Subscription callback ========================================
 void Controle::processaMessage(MqttClient::MessageData& md) {
-	const MqttClient::Message& msg = md.message;
-	char payload[msg.payloadLen + 1];
-	memcpy(payload, msg.payload, msg.payloadLen);
-	payload[msg.payloadLen] = '\0';
-	// LOG_PRINTFLN(
-	// 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
-	// 	msg.qos, msg.retained, msg.dup, msg.id, payload
-	// );
+  const MqttClient::Message& msg = md.message;
+  char payload[msg.payloadLen + 1];
+  memcpy(payload, msg.payload, msg.payloadLen);
+  payload[msg.payloadLen] = '\0';
+  // LOG_PRINTFLN(
+  // 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
+  // 	msg.qos, msg.retained, msg.dup, msg.id, payload
+  // );
 }

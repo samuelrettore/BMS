@@ -15,6 +15,7 @@ public:
   void calibraInicio();
   void ativaRedeDHCP();
   void ativaMQTT();
+  void configuraMQTT();
   void ciloProcessamento();
   void MqttEnviaDados();
   void verificaRede();
