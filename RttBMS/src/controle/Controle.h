@@ -19,7 +19,7 @@ public:
   void ciloProcessamento();
   void MqttEnviaDados();
   void verificaRede();
-  void processaMessage(MqttClient::MessageData& md);
+  static void processaMessage(MqttClient::MessageData& md);
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();

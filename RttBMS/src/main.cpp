@@ -23,7 +23,7 @@ void loop() {
     ctrl.ciloProcessamento();
   }
   //Atualiza dados no MQTT -> 10 segundos = 10000
-  if(millis() > time_mqtt + 1000){
+  if(millis() > time_mqtt + 5000){
     time_mqtt = millis();
     ctrl.MqttEnviaDados();
   }

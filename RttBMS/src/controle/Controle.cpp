@@ -106,9 +106,9 @@ void Controle::configuraMQTT(){
   //// Make 128 bytes send buffer
   MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<128>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<128>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<400>();
   //// Allow up to 2 subscriptions simultaneously
-  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
+  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<1>();
   //// Configure client options
   MqttClient::Options mqttOptions;
   ////// Set command timeout to 10 seconds
@@ -121,8 +121,30 @@ void Controle::configuraMQTT(){
 }
 
 
+
+// ============== Subscription callback ========================================
+void Controle::processaMessage(MqttClient::MessageData& md) {
+  Serial.println("Oeeeeeeeeeeeeeee");
+  delay(2000);
+  const MqttClient::Message& msg = md.message;
+  char payload[msg.payloadLen + 1];
+  memcpy(payload, msg.payload, msg.payloadLen);
+  payload[msg.payloadLen] = '\0';
+  Serial.println("Mensagem Chegou");
+  Serial.print("Size = ");
+  Serial.println(msg.payloadLen);
+  delay(1000);
+  Serial.print("Mensagem Subscribe = ");
+  Serial.println(payload);
+
+  // LOG_PRINTFLN(
+  // 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
+  // 	msg.qos, msg.retained, msg.dup, msg.id, payload
+  // );
+}
+
 /*
-* Ativa rede / DHCP
+* Ativa MQTT
 */
 void Controle::ativaMQTT(){
   if(!mqtt->isConnected()){
@@ -136,7 +158,8 @@ void Controle::ativaMQTT(){
       MQTTPacket_connectData options = MQTTPacket_connectData_initializer;
       //4=3.1.1
       options.MQTTVersion = 4;
-      options.clientID.cstring = (char*)ID_MQTT;
+      String id = (String)ID_MQTT+MQTT_KEY;
+      options.clientID.cstring = (char*)id.c_str();
       //options.cleansession = false;
       options.keepAliveInterval = 15; // 15 seconds
       MqttClient::Error::type rc = mqtt->connect(options, connectResult);
@@ -145,19 +168,25 @@ void Controle::ativaMQTT(){
         Serial.println(rc);
         return;
       }
-      // // Subscribe
-      // {
-      //   MqttClient::Error::type rc = mqtt->subscribe(
-      //     MQTT_TOPIC_SUB, MqttClient::QOS0, processaMessage
-      //   );
-      //   if (rc != MqttClient::Error::SUCCESS) {
-      //     LOG_PRINTFLN("Subscribe error: %i", rc);
-      //     LOG_PRINTFLN("Drop connection");
-      //     mqtt->disconnect();
-      //     return;
-      //   }
-      // }
     }
+
+    // //Subscribe
+    // {
+    //   String topico = (String)MQTT_KEY+MQTT_RESEND;
+    //   //String topico = (String)MQTT_KEY+MQTT_BAT;
+    //   Serial.println("Subscribe Topico = "+topico);
+    //   MqttClient::Error::type rc = mqtt->subscribe(topico.c_str(), MqttClient::QOS0, processaMessage);
+    //   Serial.print("RC = ");
+    //   Serial.println(rc);
+    //   delay(3000);
+    //   if (rc != MqttClient::Error::SUCCESS) {
+    //     Serial.print("Subscribe error:");
+    //     Serial.println(rc);
+    //     Serial.println("Drop connection");
+    //     mqtt->disconnect();
+    //     return;
+    //   }
+    // }
   }else{
     mqtt->yield(30000L);
   }
@@ -285,9 +314,10 @@ void Controle::controlaSaidas(){
 }
 
 /*
-Controla envio de dados ao MQTT via Json
+Controla envio de dados da bateria ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
+  String topico = (String)MQTT_KEY+MQTT_BAT;
   long unix_time = timeClient.getEpochTime();
   StaticJsonDocument<200> doc;
   JsonObject root = doc.to<JsonObject>();
@@ -302,7 +332,7 @@ void Controle::MqttEnviaDados(){
   String mensagem;
   //root.printTo(mensagem);
   serializeJson(root,mensagem);
-  MqttSendMessage(MQTT_TOPIC,  mensagem);
+  MqttSendMessage(topico,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Busca Objeto
@@ -321,7 +351,7 @@ void Controle::MqttEnviaDados(){
     String mensagem;
     //root.printTo(mensagem);
     serializeJson(root, mensagem);
-    MqttSendMessage(MQTT_TOPIC,  mensagem);
+    MqttSendMessage(topico,  mensagem);
   }
 }
 
@@ -343,6 +373,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     message.payload = (void*)buf;
     message.payloadLen = strlen(buf);
     mqtt->publish(topico.c_str(), message);
+    //mqtt->yield(30000L);
   }
 }
 
@@ -372,16 +403,4 @@ verifica referencias de leitura do calculo
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
-}
-
-// ============== Subscription callback ========================================
-void Controle::processaMessage(MqttClient::MessageData& md) {
-  const MqttClient::Message& msg = md.message;
-  char payload[msg.payloadLen + 1];
-  memcpy(payload, msg.payload, msg.payloadLen);
-  payload[msg.payloadLen] = '\0';
-  // LOG_PRINTFLN(
-  // 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
-  // 	msg.qos, msg.retained, msg.dup, msg.id, payload
-  // );
 }

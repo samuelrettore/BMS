@@ -94,10 +94,17 @@ Dados MQTT
 // #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
-//Teste
-//#define MQTT_TOPIC "f4091f7cd9/bateria"
-//Quente
-#define MQTT_TOPIC "376f0d9743/bateria"
+#define MQTT_KEY "376f0d9743"
+
+//Definicoes MQTT
+#define MQTT_BAT "/bateria"
+//376f0d9743/sonoff/SENSOR
+#define MQTT_RESEND "/sonoff/SENSOR"
+//#define MQTT_RESEND1 "/sonoff1/SENSOR"
+
+//#define MQTT_TOPIC "376f0d9743/bateria"
+//Topico Sonoff Concessionaria
+//#define MQTT_TOPIC_SONOFF_CON "376f0d9743/sonoff/SENSOR"
 
 //NTP Server
 #define NTPSERVER "gps.ntp.br"
