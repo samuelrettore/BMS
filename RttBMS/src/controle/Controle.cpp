@@ -104,9 +104,9 @@ void Controle::configuraMQTT(){
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
   MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
   //// Make 128 bytes send buffer
-  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<128>();
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<350>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<400>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<350>();
   //// Allow up to 2 subscriptions simultaneously
   MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<1>();
   //// Configure client options
@@ -178,7 +178,7 @@ void Controle::ativaMQTT(){
     //   MqttClient::Error::type rc = mqtt->subscribe(topico.c_str(), MqttClient::QOS0, processaMessage);
     //   Serial.print("RC = ");
     //   Serial.println(rc);
-    //   delay(3000);
+    //   delay(5000);
     //   if (rc != MqttClient::Error::SUCCESS) {
     //     Serial.print("Subscribe error:");
     //     Serial.println(rc);
