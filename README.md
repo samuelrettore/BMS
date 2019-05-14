@@ -1,4 +1,4 @@
-# RttBMS
+# RttBMS - ESP32
 
 Projeto de Controle de carga baterias de Lítio usado em
 sistema solar com até 7 celulas.
