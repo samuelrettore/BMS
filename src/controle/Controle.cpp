@@ -1,10 +1,14 @@
+#include <Arduino.h>
 #include "../Config.h"
 #include "Controle.h"
 #include "../objetos/BancoBateria.h"
-//Placa de REde
-#include <SPI.h>
-#include <Ethernet.h>
-#include <Arduino.h>
+#include "../wireless.h"
+
+
+//Wireless
+#include <WiFi.h> //lib to the Wifi configuration
+#include <WiFiUdp.h>//Biblioteca do UDP.
+
 //MQTT
 #include <MqttClient.h>
 //Json
@@ -12,10 +16,10 @@
 //Date Time
 #include <NTPClient.h>
 
+WiFiUDP udp;//Cria um objeto da classe UDP.
+static WiFiClient network;
 //Global
 MqttClient *mqtt = NULL;
-EthernetClient netClient;
-EthernetUDP udp;
 //NTPClient
 int16_t utc = 3;
 //NTP CLient
@@ -55,31 +59,22 @@ void Controle::inicializaModulo(BancoBateria* bateria){
 * Ativa rede / DHCP
 */
 void Controle::ativaRedeDHCP(){
-  //pinMode(SDCARD_CS, OUTPUT);
-  //digitalWrite(SDCARD_CS, HIGH);
-  Serial.println("Ativando DHCP");
-  byte mac[] = {
-    0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
-  };
-  // start the Ethernet connection:
-  Serial.println("Inicializando Ethernet via DHCP:");
-
-  if (Ethernet.begin(mac) == 0) {
-    Serial.println("Falha ao configurar Ethernet usando DHCP");
-    if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-      Serial.println("Ethernet Shield Error. :(");
-    } else if (Ethernet.linkStatus() == LinkOFF) {
-      Serial.println("Cabo Desconectado.");
-    }
-
+  Serial.println("Ativando Wireless");
+  WiFi.begin(ssid, password);             // Connect to the network
+  Serial.print("Conectando a ");
+  Serial.print(ssid);
+  while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
+    delay(500);
+    Serial.print('.');
   }
+
   // print your local IP address:
   Serial.print("Endereco IP: ");
-  Serial.println(Ethernet.localIP());
+  Serial.println(WiFi.localIP());
   Serial.print("Endereco gateway: ");
-  Serial.println(Ethernet.gatewayIP());
+  Serial.println(WiFi.gatewayIP());
   Serial.print("Endereco DNS: ");
-  Serial.println(Ethernet.dnsServerIP());
+  Serial.println(WiFi.dnsIP());
   Serial.println();
   Serial.println("Ajusta NTP ");
   timeClient.begin();
@@ -102,7 +97,7 @@ void Controle::configuraMQTT(){
   // Setup MqttClient
   MqttClient::System *mqttSystem = new System;
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
-  MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
+  MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(network, *mqttSystem);
   //// Make 128 bytes send buffer
   MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<350>();
   //// Make 128 bytes receive buffer
@@ -148,8 +143,8 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
 */
 void Controle::ativaMQTT(){
   if(!mqtt->isConnected()){
-    netClient.stop();
-    netClient.connect(BROKER_MQTT, BROKER_PORT);
+    network.stop();
+    network.connect(BROKER_MQTT, BROKER_PORT);
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     MqttClient::ConnectResult connectResult;
@@ -210,9 +205,11 @@ void Controle::calibraInicio(){
   //Inicializa banco de Bateria -> constroi celulas.
   _bateria->inicializaBanco();
   delay(1000);
+
   //Seta Primeira porta como A1
   int porta_i = A8;
   int numero_porta  = 8;
+
   //Porta Digital inicia 31
   int porta_digital = 31;
 
@@ -385,10 +382,8 @@ void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
   // print your local IP address:
   Serial.print("Endereço IP: ");
-  Serial.println(Ethernet.localIP());
+  Serial.println(WiFi.localIP());
   if(!mqtt->isConnected()){
-    Serial.print("Renew IP");
-    Ethernet.maintain();
     ativaMQTT();
   }
   Serial.print("Atualiza Data e Hora = " );
