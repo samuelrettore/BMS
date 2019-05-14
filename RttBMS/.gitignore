@@ -2,4 +2,5 @@
 .piolibdeps
 .clang_complete
 .gcc-flags.json
-RttBMS/src/wireless.h
+./src/wireless.h
+src/wireless.h
