@@ -62,7 +62,7 @@ void Controle::ativaRedeDHCP(){
   Serial.println("Ativando Wireless");
   WiFi.begin(ssid, password);             // Connect to the network
   Serial.print("Conectando a ");
-  Serial.print(ssid);
+  Serial.println(ssid);
   while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
     delay(500);
     Serial.print('.');
@@ -206,15 +206,10 @@ void Controle::calibraInicio(){
   _bateria->inicializaBanco();
   delay(1000);
 
-  //Seta Primeira porta como A1
-  int porta_i = A8;
-  int numero_porta  = 8;
-
-  //Porta Digital inicia 31
-  int porta_digital = 31;
-
   //Inicializa celulas com valores
   Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
+  int pinos_entrada[] = INPUT_PORT;
+  int pinos_saida[] = OUTPUT_PORT;
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     // //Verifica se tem referencia registrada na EEprom
@@ -223,27 +218,22 @@ void Controle::calibraInicio(){
     ObjCelula obj;
     obj.setNumeroCelula(numero_cel);
     obj.setLeituraTensao(0.00);
-    obj.setPortaInput(porta_i);
-    obj.setPortaControle(porta_digital);
-    obj.setReferencia(RELACAO);
-
+    obj.setPortaInput(pinos_entrada[i]);
+    obj.setPortaControle(pinos_saida[i]);
+    //obj.setReferencia(RELACAO);
     //Porta digital
-    Serial.print("Setando porta analogica A");
-    Serial.print(numero_porta);
+    Serial.print("Setando porta analogica GPI(O)");
+    Serial.print(obj.getPortaInput());
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
-    pinMode(porta_i, INPUT);
-
-    Serial.print(porta_digital);
+    pinMode(obj.getPortaInput(), INPUT);
+    Serial.print(obj.getPortaControle());
     Serial.println(" saida nivel baixo(LOW).");
     //Ativa em modo baixo
-    pinMode(porta_digital, OUTPUT);
-    digitalWrite(porta_digital, LOW);
+    pinMode(obj.getPortaControle(), OUTPUT);
+    digitalWrite(obj.getPortaControle(), LOW);
 
     _bateria->setCelula(obj, i);
-    porta_i++;
-    porta_digital+=2;
-    numero_porta++;
     delay(500);
   }
   delay(1000);

@@ -54,7 +54,6 @@ Imprime dado das celulas e do Banco.
 */
 void BancoBateria::imprimeDados(){
   Serial.println("#----- Dados celulas ----- ###");
-  int portaLe = 8;
   for(int i=0; i<getQuantidadeCelulas();i++){
     ObjCelula objj = getCelula(i);
     Serial.print("Numero Celula = ");
@@ -63,8 +62,8 @@ void BancoBateria::imprimeDados(){
     Serial.println(objj.getLeituraTensaoAnterior(),5);
     Serial.print("Tensao = ");
     Serial.println(objj.getLeituraTensao(),5);
-    Serial.print("Porta Leitura = A");
-    Serial.println(portaLe);
+    Serial.print("Porta Leitura = GPI(0)");
+    Serial.println(objj.getPortaInput());
     Serial.print("Porta Controle = ");
     Serial.println(objj.getPortaControle());
     Serial.print("Percentual = ");
@@ -72,7 +71,6 @@ void BancoBateria::imprimeDados(){
     Serial.println("%");
     Serial.println("#----- Fim dados celulas ----- ###");
     Serial.println();
-    portaLe++;
   }
   Serial.println("#----- Dados banco de baterias ----- ###");
   Serial.print("Quantidade de celulas = ");

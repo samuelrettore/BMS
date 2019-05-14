@@ -9,8 +9,6 @@
 Projeto desenvolvido por Samuel Rettore
 email -> rettore@gmail.com
 
-Baseado no projeto BMSDuino @autor Claudio - Solar Souzam
-Canal -> https://www.youtube.com/watch?v=0L6wfxrfS9M&t=1s
 
 Definicao de Quantos S(QUANTIDADE_CELULAS) ...ou celulas tem o Sistema
 Por exemplo um Projeto de 2S(duas celulas) segue o seguinte mapeamento
@@ -47,12 +45,17 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Aqui define o tamanho do seu banco em celulas ou S
 #define QUANTIDADE_CELULAS 1
 
+//Pinos entrada
+#define INPUT_PORT {36, 39, 34, 35, 32, 33, 25}
+//Pinos de Saida PWM
+#define OUTPUT_PORT {22, 1, 3, 21, 19, 18}
+
 /*
 Calculo Baseado no resistor
 Tensao Referencia porta analogica Arduino - medir com multimetro tensão de operação do arduino melhora eficiencia da
 leitura de tensao
 */
-#define TENSAO_REFERENCIA 5.03
+#define TENSAO_REFERENCIA 3.3
 
 /*Fator de correcao para adicionar e estabilizar tensao final
 */
@@ -81,7 +84,7 @@ Porta que desliga dispotivo quando tensao minima atingida.
 #define AMOSTRAS 2000
 
 //Metodo Base de relacao
-#define RELACAO 18.18500 //11.86, old methodo Deprecated
+//#define RELACAO 18.18500 //11.86, old methodo Deprecated
 //#define RELACAO 17.72637 //4.2
 
 /*
@@ -90,7 +93,7 @@ Dados MQTT
 //#define BROKER_MQTT "iot.eclipse.org"
 #define BROKER_MQTT "mqtt.serhmatica.com.br"
 #define BROKER_PORT 1883
-#define ID_MQTT "ArduinoMQTT"
+#define ID_MQTT "Esp32MQTT"
 // #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.

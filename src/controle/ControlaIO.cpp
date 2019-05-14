@@ -33,7 +33,7 @@ float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
   }
   value = value/AMOSTRAS;
   //Fim Media
-  vout = (value *TENSAO_REFERENCIA) / 1024.0;
+  vout = (value *TENSAO_REFERENCIA) / 4095.0;
   vin = vout / (R2/(R1+R2));
   if(vin<0.1){
     vin = 0;
