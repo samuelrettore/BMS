@@ -94,16 +94,16 @@ Dados MQTT
 //#define MQTT_LOG_ENABLED 1
 #define BROKER_MQTT "mqtt.serhmatica.com.br"
 #define BROKER_PORT 1883
-#define ID_MQTT "Esp32MQTT"
+#define ID_MQTT "Esp32-v2-MQTT"
 // #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define MQTT_KEY "376f0d9743"
 
 //Definicoes MQTT
-#define MQTT_BAT "/bateria"
+#define MQTT_DATA "/dados"
 //376f0d9743/sonoff/SENSOR
-#define MQTT_RESEND "376f0d9743/sonoff/SENSOR"
+#define MQTT_RESEND "/sonoff/SENSOR"
 //#define MQTT_RESEND1 "/sonoff1/SENSOR"
 
 //#define MQTT_TOPIC "376f0d9743/bateria"
