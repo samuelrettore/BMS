@@ -91,6 +91,7 @@ Porta que desliga dispotivo quando tensao minima atingida.
 Dados MQTT
 */
 //#define BROKER_MQTT "iot.eclipse.org"
+//#define MQTT_LOG_ENABLED 1
 #define BROKER_MQTT "mqtt.serhmatica.com.br"
 #define BROKER_PORT 1883
 #define ID_MQTT "Esp32MQTT"
