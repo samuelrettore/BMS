@@ -119,10 +119,11 @@ void Controle::configuraMQTT(){
 
 // ============== Subscription callback ========================================
 void Controle::processaMessage(MqttClient::MessageData& md) {
-  Serial.println("Oeeeeeeeeeeeeeee");
   const MqttClient::Message& msg = md.message;
   Serial.print("Topico recebido == ");
   Serial.println(md.topicName.cstring);
+  Serial.print("Qos == ");
+  Serial.println(msg.qos);
   char payload[msg.payloadLen + 1];
   memcpy(payload, msg.payload, msg.payloadLen);
   payload[msg.payloadLen] = '\0';
@@ -131,7 +132,7 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   Serial.println(msg.payloadLen);
   Serial.print("Mensagem Subscribe = ");
   Serial.println(payload);
-  delay(2000);
+  //delay(2000);
 }
 
 /*
@@ -163,10 +164,11 @@ void Controle::ativaMQTT(){
 
     // Subscribe
     {
-      String topicoX = "376f0d9743/sonoff/SENSOR";
-      //String topico = (String)MQTT_KEY+MQTT_BAT;
-      MqttClient::Error::type rc = mqtt->subscribe(topicoX.c_str(), MqttClient::QOS0, processaMessage);
-      Serial.println("Subscribe Topico = "+topicoX+", rc  = "+rc);
+      //String topicoX = (String)MQTT_KEY+MQTT_RESEND;
+      //String topicoX = MQTT_RESEND;
+      MqttClient::Error::type rc = mqtt->subscribe(MQTT_RESEND, MqttClient::QOS0, processaMessage);
+      Serial.print("Subscribe Topico = ");
+      Serial.println(MQTT_RESEND);
       if (rc != MqttClient::Error::SUCCESS) {
         Serial.print("Erro leitura topicos:");
         Serial.println(rc);

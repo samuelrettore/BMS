@@ -103,7 +103,7 @@ Dados MQTT
 //Definicoes MQTT
 #define MQTT_BAT "/bateria"
 //376f0d9743/sonoff/SENSOR
-#define MQTT_RESEND "/sonoff/SENSOR"
+#define MQTT_RESEND "376f0d9743/sonoff/SENSOR"
 //#define MQTT_RESEND1 "/sonoff1/SENSOR"
 
 //#define MQTT_TOPIC "376f0d9743/bateria"
