@@ -2,8 +2,6 @@
 #include "controle/Controle.h"
 #include "objetos/BancoBateria.h"
 
-
-#define MQTTCLIENT_QOS2 1
 //Objeto Controle
 Controle ctrl;
 BancoBateria* bateria = new BancoBateria();

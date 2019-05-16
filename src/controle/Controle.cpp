@@ -48,7 +48,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.begin(VELOCIDADE_SERIAL_ARDUINO);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
-  ativaRedeDHCP();
+  ativaRedeWIFI();
   configuraMQTT();
   ativaMQTT();
   pinMode(LED_PLACA,OUTPUT);
@@ -58,7 +58,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
 /*
 * Ativa rede / DHCP
 */
-void Controle::ativaRedeDHCP(){
+void Controle::ativaRedeWIFI(){
   Serial.println("Ativando Wireless");
   WiFi.begin(ssid, password);             // Connect to the network
   Serial.print("Conectando a ");
@@ -67,7 +67,7 @@ void Controle::ativaRedeDHCP(){
     delay(500);
     Serial.print('.');
   }
-
+    Serial.println("");
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(WiFi.localIP());
@@ -133,7 +133,7 @@ void Controle::ativaMQTT(){
       String id = (String)ID_MQTT+MQTT_KEY;
       options.clientID.cstring = (char*)id.c_str();
       options.cleansession = false;
-      options.keepAliveInterval = 15; // 15 seconds
+      options.keepAliveInterval = 20; // 15 seconds
       MqttClient::Error::type rc = mqtt->connect(options, connectResult);
       if (rc != MqttClient::Error::SUCCESS) {
         Serial.print("Connection error: ");
@@ -144,13 +144,10 @@ void Controle::ativaMQTT(){
 
     // Subscribe
     {
-      //String topico1 = (String);
-      String topico = "";
-      topico = "376f0d9743/sonoff/SENSOR";
-      MqttClient::Error::type rc = mqtt->subscribe("376f0d9743/sonoff/SENSOR", MqttClient::QOS0, processaMessage);
-      Serial.print("Subscribe Topico =|");
-      Serial.print(topico);
-      Serial.println("|");
+      MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS0, processaMessage);
+      // Serial.print("Subscribe Topico =|");
+      // Serial.print(topico);
+      // Serial.println("|");
       if (rc != MqttClient::Error::SUCCESS) {
         Serial.print("Erro leitura topicos:");
         Serial.println(rc);
@@ -281,7 +278,7 @@ void Controle::controlaSaidas(){
 Controla envio de dados da bateria ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-  String topico = (String)MQTT_KEY+MQTT_DATA;
+
   long unix_time = timeClient.getEpochTime();
   StaticJsonDocument<300> doc;
   JsonObject root = doc.to<JsonObject>();
@@ -297,7 +294,7 @@ void Controle::MqttEnviaDados(){
   String mensagem;
   //root.printTo(mensagem);
   serializeJson(root,mensagem);
-  MqttSendMessage(topico,  mensagem);
+  MqttSendMessage(MQTT_DATA,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Busca Objeto
@@ -317,7 +314,7 @@ void Controle::MqttEnviaDados(){
     String mensagem;
     //root.printTo(mensagem);
     serializeJson(root, mensagem);
-    MqttSendMessage(topico,  mensagem);
+    MqttSendMessage(MQTT_DATA,  mensagem);
   }
 }
 
@@ -362,8 +359,7 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   String mensagem;
   //root.printTo(mensagem);
   serializeJson(root, mensagem);
-  String topico = (String)MQTT_KEY+MQTT_DATA;
-  MqttSendMessage(topico,  mensagem);
+  MqttSendMessage(MQTT_DATA,  mensagem);
 }
 
 

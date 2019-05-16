@@ -13,7 +13,7 @@ public:
   Controle();
   void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
-  void ativaRedeDHCP();
+  void ativaRedeWIFI();
   void ativaMQTT();
   void configuraMQTT();
   void ciloProcessamento();
