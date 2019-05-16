@@ -393,7 +393,7 @@ tenta reconectar.
 void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
   // print your local IP address:
-  Serial.print("Endereço IP: ");
+  Serial.print("Endereco IP: ");
   Serial.println(WiFi.localIP());
   if(!mqtt->isConnected()){
     ativaMQTT();

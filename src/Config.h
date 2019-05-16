@@ -99,10 +99,10 @@ Dados MQTT
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define MQTT_KEY "376f0d9743"
-
 //Definicoes MQTT
 #define MQTT_DATA "376f0d9743/dados"
 #define MQTT_SONOFF1 "376f0d9743/sonoff/SENSOR"
+
 //#define MQTT_RESEND1 "/sonoff1/SENSOR"
 
 //#define MQTT_TOPIC "376f0d9743/bateria"
