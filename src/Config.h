@@ -122,3 +122,4 @@ Dados MQTT
 
 //Velocidade Serial Arduino
 #define VELOCIDADE_SERIAL_ARDUINO 115200
+#define LED_PLACA 2

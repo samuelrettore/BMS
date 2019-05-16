@@ -51,6 +51,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   ativaRedeDHCP();
   configuraMQTT();
   ativaMQTT();
+  pinMode(LED_PLACA,OUTPUT);
   Serial.println("## -- Fim Setup -- ##");
 }
 
@@ -372,6 +373,7 @@ Envia Mensagem MQTT
 void Controle::MqttSendMessage(String topico, String mensagem){
   //Verifica se esta OK.
   if(mqtt->isConnected()){
+    digitalWrite(LED_PLACA,HIGH);
     Serial.print("Envia MSG  = ");
     Serial.println(mensagem);
     MqttClient::Message message;
@@ -384,6 +386,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     message.payload = (void*)buf;
     message.payloadLen = strlen(buf);
     mqtt->publish(topico.c_str(), message);
+    digitalWrite(LED_PLACA,LOW);
   }
 }
 
