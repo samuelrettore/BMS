@@ -1,4 +1,4 @@
 //Rede wireless
-const char* ssid = "";
+const char* ssid = "trojam.exe";
 //Senha rede wireless
-const char* password = "";
+const char* password = "DemoCao5512";

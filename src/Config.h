@@ -1,5 +1,5 @@
 /*
- _____    _     _     ____    __  __    _____
+_____    _     _     ____    __  __    _____
 |  __ \  | |   | |   |  _ \  |  \/  |  / ____|
 | |__) | | |_  | |_  | |_) | | \  / | | (___
 |  _  /  | __| | __| |  _ <  | |\/| |  \___ \
@@ -43,12 +43,12 @@ O sistema ira definir a porta A14 para o leitor de tensão da celula 7 e o 43 ac
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
 //Aqui define o tamanho do seu banco em celulas ou S
-#define QUANTIDADE_CELULAS 1
+#define QUANTIDADE_CELULAS 7
 
 //Pinos entrada
 #define INPUT_PORT {36, 39, 34, 35, 32, 33, 25}
 //Pinos de Saida PWM
-#define OUTPUT_PORT {22, 1, 3, 21, 19, 18}
+#define OUTPUT_PORT {22, 1, 3, 21, 19, 18, 5}
 
 /*
 Calculo Baseado no resistor
@@ -78,7 +78,7 @@ Porta que desliga dispotivo quando tensao minima atingida.
 #define CONTATORA_INVERSOR 30
 
 /*
-  Dados de leitura com divisor de tensao
+Dados de leitura com divisor de tensao
 */
 //Numero de amostras na leitura
 #define AMOSTRAS 2000
@@ -113,7 +113,7 @@ Dados MQTT
 #define NTPSERVER "gps.ntp.br"
 
 /*
-  Outros dados
+Outros dados
 */
 //Configuracoes placa de rede.
 //#define W5100_CS  10

@@ -26,7 +26,6 @@ void loop() {
     Serial.print("k livre de ");
     Serial.print(ESP.getHeapSize()/1024);
     Serial.println(" k");
-
   }
   //Atualiza dados no MQTT -> 10 segundos = 10000
   if(millis() > time_mqtt + 5000){
