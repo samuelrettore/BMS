@@ -73,7 +73,7 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica, float referencia) {
   return total;
 }
 
-//FUNÇÃO DE GRAU SEM USAR O POW
+//FUNÇÃO DE GRAU 13 polimonial SEM USAR O POW, melhora performance
 //Filtro leitura ADC
 double ControlaIO::f13_semPow(double x) {
   return   2, 161282383460e+02
