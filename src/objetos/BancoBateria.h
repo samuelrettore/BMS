@@ -11,18 +11,18 @@ class BancoBateria {
     void inicializaBanco();
     void imprimeDados();
     int getPercentual();
-    float getTensaoMinima();
-    float getTensaoMaxima();
+    double getTensaoMinima();
+    double getTensaoMaxima();
     //CELULAS
     ObjCelula getCelula(int posicao);
     void setCelula(ObjCelula objeto, int posicao);
-    float getTensaoBanco();
+    double getTensaoBanco();
   private:
     //Numero de celulas do banco
     int _quantidade_celulas = 0;
-    float _percentual;
-    float _tensao_minima;
-    float _tensao_maxima;
+    double _percentual;
+    double _tensao_minima;
+    double _tensao_maxima;
     ObjCelula* celulas;
 };
 #endif

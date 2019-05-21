@@ -17,19 +17,23 @@ float ControlaIO::lePortaShield25v(uint8_t portaAnalogica) {
 Le Dados porta Analogica analogReader
 usando calculo de resistores.
 */
-float ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica) {
-  float vout = 0.0;
-  float vin = 0.0;
-  float R1 = 1000000.0; // Resistor 1 - 1M
-  float R2 = 100000.0; // Resistor 2 - 100k
-  float value = 0;
+double ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica, bool filtro) {
+  double vout = 0.0;
+  double vin = 0.0;
+  double R1 = 1000000.0; // Resistor 1 - 1M
+  double R2 = 100000.0; // Resistor 2 - 100k
+  double value = 0;
   // Le valor da porta de entrada
   //value = analogRead(portaAnalogica);
 
   //Le Media
   int x = AMOSTRAS;
   for(int i = 1; i<=x;i++){
-    value += (float)analogRead(portaAnalogica);
+    if(filtro){
+      value += f13_semPow(analogRead(portaAnalogica));
+    }else{
+      value += analogRead(portaAnalogica);
+    }
   }
   value = value/AMOSTRAS;
   //Fim Media
@@ -67,4 +71,23 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica, float referencia) {
   }
   //total  =4.1;
   return total;
+}
+
+//FUNÇÃO DE GRAU SEM USAR O POW
+//Filtro leitura ADC
+double ControlaIO::f13_semPow(double x) {
+  return   2, 161282383460e+02
+  +   3, 944594843419e-01 * x
+  +   5, 395439724295e-04 * x * x
+  +  -3, 968558178426e-06 * x * x * x
+  +   1, 047910519933e-08 * x * x * x * x
+  +  -1, 479271312313e-11 * x * x * x * x * x
+  +   1, 220894795714e-14 * x * x * x * x * x * x
+  +  -6, 136200785076e-18 * x * x * x * x * x * x * x
+  +   1, 910015248179e-21 * x * x * x * x * x * x * x * x
+  +  -3, 566607830903e-25 * x * x * x * x * x * x * x * x * x
+  +   5, 000280815521e-30 * x * x * x * x * x * x * x * x * x * x
+  +   3, 434515045670e-32 * x * x * x * x * x * x * x * x * x * x * x
+  +  -1, 407635444704e-35 * x * x * x * x * x * x * x * x * x * x * x * x
+  +   9, 871816383223e-40 * x * x * x * x * x * x * x * x * x * x * x * x * x;
 }

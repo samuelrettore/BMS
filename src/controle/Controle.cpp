@@ -200,6 +200,10 @@ void Controle::calibraInicio(){
     Serial.print(obj.getPortaInput());
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
+
+    //Teste
+    //adcAttachPin(pinos_entrada[i]);
+    //analogSetClockDiv(255);
     pinMode(pinos_entrada[i], INPUT);
     Serial.print(obj.getPortaControle());
     Serial.println(" saida nivel baixo(LOW).");
@@ -220,7 +224,7 @@ void Controle::calibraInicio(){
 void Controle::atualizaDadosLeitura(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    float voltage = lePortaCalculoResistor(objj.getPortaInput());
+    double voltage = lePortaCalculoResistor(objj.getPortaInput(), false);
     objj.setLeituraTensao(voltage);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);

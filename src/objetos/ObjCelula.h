@@ -6,9 +6,9 @@
 
 class ObjCelula {
   public:
-    float getLeituraTensao();
-    float getLeituraTensaoAnterior();
-    void setLeituraTensao(float leitura);
+    double getLeituraTensao();
+    double getLeituraTensaoAnterior();
+    void setLeituraTensao(double leitura);
     int getNumeroCelula();
     void setNumeroCelula(int numero_celula);
     void setPortaInput(int porta);
@@ -16,20 +16,20 @@ class ObjCelula {
     void setPortaControle(int porta);
     int getPortaControle();
     int getPercentual();
-    void setReferencia(float referencia);
-    float getReferencia();
-    float getTensaoMinima();
-    float getTensaoMaxima();
+    void setReferencia(double referencia);
+    double getReferencia();
+    double getTensaoMinima();
+    double getTensaoMaxima();
   private:
     //Numero da celula
     int _numero_celula;
     int _porta_input;
     int _porta_controle;
-    float _referencia;
-    float _leitura_tensao;
-    float _tensao_anterior;
-    float _percentual;
-    float _tensao_minima = MIN_VOLTAGE_CELL;
-    float _tensao_maxima = MAX_VOLTAGE_CELL;
+    double _referencia;
+    double _leitura_tensao;
+    double _tensao_anterior;
+    double _percentual;
+    double _tensao_minima = MIN_VOLTAGE_CELL;
+    double _tensao_maxima = MAX_VOLTAGE_CELL;
 };
 #endif

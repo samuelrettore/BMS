@@ -27,8 +27,8 @@ void BancoBateria::setCelula(ObjCelula objeto, int posicao){
   celulas[posicao] = objeto;
 }
 
-float BancoBateria::getTensaoBanco(){
-  float total = 0.0;
+double BancoBateria::getTensaoBanco(){
+  double total = 0.0;
   for(int i=0; i<getQuantidadeCelulas();i++){
     ObjCelula obj = getCelula(i);
     total += obj.getLeituraTensao();
@@ -41,11 +41,11 @@ int BancoBateria::getPercentual(){
   return _percentual;
 }
 
-float BancoBateria::getTensaoMinima(){
+double BancoBateria::getTensaoMinima(){
   return _tensao_minima;
 }
 
-float BancoBateria::getTensaoMaxima(){
+double BancoBateria::getTensaoMaxima(){
   return _tensao_maxima;
 }
 
