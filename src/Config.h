@@ -43,7 +43,7 @@ O sistema ira definir a porta A14 para o leitor de tensão da celula 7 e o 43 ac
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
 //Aqui define o tamanho do seu banco em celulas ou S
-#define QUANTIDADE_CELULAS 7
+#define QUANTIDADE_CELULAS 1
 
 //Pinos entrada
 #define INPUT_PORT {36, 39, 34, 35, 32, 33, 25}
@@ -59,7 +59,7 @@ leitura de tensao
 
 /*Fator de correcao para adicionar e estabilizar tensao final
 */
-#define FATOR_CORRECAO 0.358
+#define FATOR_CORRECAO 1.750
 //#define FATOR_CORRECAO 0.298
 
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
@@ -100,6 +100,8 @@ Dados MQTT
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define MQTT_KEY "376f0d9743"
 //Definicoes MQTT
+//#define MQTT_DATA "376f0d9743/dados"
+//Dev
 #define MQTT_DATA "376f0d9743/dados"
 #define MQTT_SONOFF1 "376f0d9743/sonoff/SENSOR"
 

@@ -200,17 +200,17 @@ void Controle::calibraInicio(){
     Serial.print(obj.getPortaInput());
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
-    pinMode(obj.getPortaInput(), INPUT);
+    pinMode(pinos_entrada[i], INPUT);
     Serial.print(obj.getPortaControle());
     Serial.println(" saida nivel baixo(LOW).");
     //Ativa em modo baixo
-    pinMode(obj.getPortaControle(), OUTPUT);
-    digitalWrite(obj.getPortaControle(), LOW);
+    pinMode(pinos_saida[i], OUTPUT);
+    digitalWrite(pinos_saida[i], LOW);
 
     _bateria->setCelula(obj, i);
     delay(500);
   }
-  delay(1000);
+  delay(5000);
 }
 
 /*
