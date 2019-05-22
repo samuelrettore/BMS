@@ -30,7 +30,14 @@ double ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica, bool filtro) {
   int x = AMOSTRAS;
   for(int i = 1; i<=x;i++){
     if(filtro){
-      value += f13_semPow(analogRead(portaAnalogica));
+      double leitura = analogRead(portaAnalogica);
+      Serial.print("Leitura  = ");
+      Serial.println(leitura);
+      Double filtro = f13_semPow(leitura);
+      Serial.print("Filtro  = ");
+      Serial.println(filtro);
+      value += leitura;
+      delay(1000);
     }else{
       value += analogRead(portaAnalogica);
     }
@@ -44,6 +51,8 @@ double ControlaIO::lePortaCalculoResistor(uint8_t portaAnalogica, bool filtro) {
   }else{
     vin += FATOR_CORRECAO;
   }
+  Serial.print("Filtro == ");
+  Serial.println(filtro);
   return vin;
 }
 /*
@@ -76,18 +85,18 @@ float ControlaIO::lePortaDivisor(uint8_t portaAnalogica, float referencia) {
 //FUNÇÃO DE GRAU 13 polimonial SEM USAR O POW, melhora performance
 //Filtro leitura ADC
 double ControlaIO::f13_semPow(double x) {
-  return   2, 161282383460e+02
-  +   3, 944594843419e-01 * x
-  +   5, 395439724295e-04 * x * x
-  +  -3, 968558178426e-06 * x * x * x
-  +   1, 047910519933e-08 * x * x * x * x
-  +  -1, 479271312313e-11 * x * x * x * x * x
-  +   1, 220894795714e-14 * x * x * x * x * x * x
-  +  -6, 136200785076e-18 * x * x * x * x * x * x * x
-  +   1, 910015248179e-21 * x * x * x * x * x * x * x * x
-  +  -3, 566607830903e-25 * x * x * x * x * x * x * x * x * x
-  +   5, 000280815521e-30 * x * x * x * x * x * x * x * x * x * x
-  +   3, 434515045670e-32 * x * x * x * x * x * x * x * x * x * x * x
-  +  -1, 407635444704e-35 * x * x * x * x * x * x * x * x * x * x * x * x
-  +   9, 871816383223e-40 * x * x * x * x * x * x * x * x * x * x * x * x * x;
+  return   2.161282383460e+02
+  +   3.944594843419e-01 * x
+  +   5.395439724295e-04 * x * x
+  +  -3.968558178426e-06 * x * x * x
+  +   1.047910519933e-08 * x * x * x * x
+  +  -1.479271312313e-11 * x * x * x * x * x
+  +   1.220894795714e-14 * x * x * x * x * x * x
+  +  -6.136200785076e-18 * x * x * x * x * x * x * x
+  +   1.910015248179e-21 * x * x * x * x * x * x * x * x
+  +  -3.566607830903e-25 * x * x * x * x * x * x * x * x * x
+  +   5.000280815521e-30 * x * x * x * x * x * x * x * x * x * x
+  +   3.434515045670e-32 * x * x * x * x * x * x * x * x * x * x * x
+  +  -1.407635444704e-35 * x * x * x * x * x * x * x * x * x * x * x * x
+  +   9.871816383223e-40 * x * x * x * x * x * x * x * x * x * x * x * x * x;
 }

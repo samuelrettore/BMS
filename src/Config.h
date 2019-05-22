@@ -81,7 +81,7 @@ Porta que desliga dispotivo quando tensao minima atingida.
 Dados de leitura com divisor de tensao
 */
 //Numero de amostras na leitura
-#define AMOSTRAS 2000
+#define AMOSTRAS 3000
 
 //Metodo Base de relacao
 //#define RELACAO 18.18500 //11.86, old methodo Deprecated
