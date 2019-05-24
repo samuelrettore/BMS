@@ -67,7 +67,7 @@ void Controle::ativaRedeWIFI(){
     delay(500);
     Serial.print('.');
   }
-    Serial.println("");
+  Serial.println("");
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(WiFi.localIP());
@@ -396,11 +396,14 @@ tenta reconectar.
 */
 void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
-  // print your local IP address:
-  Serial.print("Endereco IP: ");
-  Serial.println(WiFi.localIP());
-  if(!mqtt->isConnected()){
-    ativaMQTT();
+  if(!WiFi.isConnected()){
+    WiFi.reconnect();
+    // print your local IP address:
+    Serial.print("Endereco IP: ");
+    Serial.println(WiFi.localIP());
+    if(!mqtt->isConnected()){
+      ativaMQTT();
+    }
   }
   Serial.print("Atualiza Data e Hora = " );
   timeClient.forceUpdate();

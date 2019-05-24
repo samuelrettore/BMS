@@ -10,6 +10,7 @@ public:
   double lePortaCalculoResistor(uint8_t portaAnalogica, bool filtro);
   float lePortaDivisor(uint8_t portaAnalogica, float referencia);
   double f13_semPow(double x);
+  double f6_semPow(double x); 
 private:
 
 };

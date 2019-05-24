@@ -8,7 +8,6 @@ BancoBateria* bateria = new BancoBateria();
 unsigned long time_cliclo = 0;
 unsigned long time_mqtt = 0;
 unsigned long time_network = 0;
-unsigned long ciclo_number = 0;
 void setup() {
   ctrl.inicializaModulo(bateria);
 }
@@ -19,8 +18,7 @@ void loop() {
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
-    ciclo_number++;
-    Serial.printf("Ciclo numero %lu clock CPU %lu \n", ciclo_number, ESP.getCpuFreqMHz());
+    Serial.printf("Ciclo clock CPU %lu \n", ESP.getCpuFreqMHz());
     Serial.print("Memoria = ");
     Serial.print(ESP.getFreeHeap()/1024);
     Serial.print("k livre de ");
