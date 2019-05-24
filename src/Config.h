@@ -59,7 +59,7 @@ leitura de tensao
 
 /*Fator de correcao para adicionar e estabilizar tensao final
 */
-#define FATOR_CORRECAO 1.752
+#define FATOR_CORRECAO 1.842
 //#define FATOR_CORRECAO 0.298
 
 //Configuracao do valor referencial que a bms trabalha em mV ou seja so vai agir caso de diferença de 0.060 milivolts
@@ -81,7 +81,7 @@ Porta que desliga dispotivo quando tensao minima atingida.
 Dados de leitura com divisor de tensao
 */
 //Numero de amostras na leitura
-#define AMOSTRAS 4000
+#define AMOSTRAS 2000
 
 //Metodo Base de relacao
 //#define RELACAO 18.18500 //11.86, old methodo Deprecated
