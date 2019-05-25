@@ -347,7 +347,7 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   deserializeJson(doc,payload);
   //Dados reescritos
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<300> doc2;
+  StaticJsonDocument<250> doc2;
   JsonObject root = doc2.to<JsonObject>();
   //Energia concessionaria
   //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
@@ -366,7 +366,6 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   root["Current"] = doc["ENERGY"]["Current"];
   root["time"] = unix_time;
   String mensagem;
-  //root.printTo(mensagem);
   serializeJson(root, mensagem);
   MqttSendMessage(MQTT_DATA,  mensagem);
 }
@@ -382,7 +381,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     Serial.println(mensagem);
     MqttClient::Message message;
     // Send and receive QoS 0 message
-    char buf[100];
+    char buf[250];
     strcpy(buf, mensagem.c_str());
     message.qos = MqttClient::QOS1;
     message.retained = false;
@@ -390,7 +389,6 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     message.payload = (void*)buf;
     message.payloadLen = strlen(buf);
     mqtt->publish(topico.c_str(), message);
-    //mqtt->yield(30000L);
   }
 }
 

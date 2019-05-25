@@ -92,7 +92,7 @@ Dados MQTT
 //#define BROKER_MQTT "iot.eclipse.org"
 #define BROKER_MQTT "mqtt.serhmatica.com.br"
 #define BROKER_PORT 1883
-#define ID_MQTT "ArduinoMQTT"
+#define ID_MQTT "ArduinoMQTT-v2"
 // #define MQTT_VERSION MQTT_VERSION_3_1_1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
