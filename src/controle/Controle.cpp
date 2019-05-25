@@ -189,6 +189,8 @@ void Controle::calibraInicio(){
 
   //Inicializa celulas com valores
   Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
+  int pinos_entrada[] = INPUT_PORT;
+  int pinos_saida[] = OUTPUT_PORT;
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     int numero_cel = i+1;
@@ -196,8 +198,8 @@ void Controle::calibraInicio(){
     ObjCelula obj;
     obj.setNumeroCelula(numero_cel);
     obj.setLeituraTensao(0.00);
-    obj.setPortaInput(porta_i);
-    obj.setPortaControle(porta_digital);
+    obj.setPortaInput(pinos_entrada[i]);
+    obj.setPortaControle(pinos_saida[i]);
 
     //Porta digital
     Serial.print("Setando porta analogica A");

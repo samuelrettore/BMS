@@ -49,9 +49,9 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 
 
 //Pinos entrada
-#define INPUT_PORT {A8, 39, 34, 35, 32, 33, 25}
+#define INPUT_PORT {A8, A9, A10, A11, A12, A13, A14}
 //Pinos de Saida PWM
-#define OUTPUT_PORT {22, 1, 3, 21, 19, 18, 5}
+#define OUTPUT_PORT {31, 33, 35, 37, 39, 41, 43}
 
 /*
 Calculo Baseado no resistor
