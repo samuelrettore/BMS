@@ -101,43 +101,20 @@ void Controle::configuraMQTT(){
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
   MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
   //// Make 128 bytes send buffer
-  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<350>();
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<300>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<350>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<300>();
   //// Allow up to 2 subscriptions simultaneously
   MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<1>();
   //// Configure client options
   MqttClient::Options mqttOptions;
   ////// Set command timeout to 10 seconds
-  mqttOptions.commandTimeoutMs = 10000;
+  mqttOptions.commandTimeoutMs = 20000;
   //// Make client object
   mqtt = new MqttClient (
     mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
     *mqttRecvBuffer, *mqttMessageHandlers
   );
-}
-
-
-
-// ============== Subscription callback ========================================
-void Controle::processaMessage(MqttClient::MessageData& md) {
-  Serial.println("Oeeeeeeeeeeeeeee");
-  delay(2000);
-  const MqttClient::Message& msg = md.message;
-  char payload[msg.payloadLen + 1];
-  memcpy(payload, msg.payload, msg.payloadLen);
-  payload[msg.payloadLen] = '\0';
-  Serial.println("Mensagem Chegou");
-  Serial.print("Size = ");
-  Serial.println(msg.payloadLen);
-  delay(1000);
-  Serial.print("Mensagem Subscribe = ");
-  Serial.println(payload);
-
-  // LOG_PRINTFLN(
-  // 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
-  // 	msg.qos, msg.retained, msg.dup, msg.id, payload
-  // );
 }
 
 /*
@@ -167,23 +144,20 @@ void Controle::ativaMQTT(){
       }
     }
 
-    // //Subscribe
-    // {
-    //   String topico = (String)MQTT_KEY+MQTT_RESEND;
-    //   //String topico = (String)MQTT_KEY+MQTT_BAT;
-    //   Serial.println("Subscribe Topico = "+topico);
-    //   MqttClient::Error::type rc = mqtt->subscribe(topico.c_str(), MqttClient::QOS0, processaMessage);
-    //   Serial.print("RC = ");
-    //   Serial.println(rc);
-    //   delay(5000);
-    //   if (rc != MqttClient::Error::SUCCESS) {
-    //     Serial.print("Subscribe error:");
-    //     Serial.println(rc);
-    //     Serial.println("Drop connection");
-    //     mqtt->disconnect();
-    //     return;
-    //   }
-    // }
+    //Subscribe
+    {
+      MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS0, processaMessage);
+      Serial.print("RC = ");
+      Serial.println(rc);
+      delay(5000);
+      if (rc != MqttClient::Error::SUCCESS) {
+        Serial.print("Subscribe error:");
+        Serial.println(rc);
+        Serial.println("Drop connection");
+        mqtt->disconnect();
+        return;
+      }
+    }
   }else{
     mqtt->yield(30000L);
   }
@@ -217,7 +191,6 @@ void Controle::calibraInicio(){
   Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
-    // //Verifica se tem referencia registrada na EEprom
     int numero_cel = i+1;
     //Cria Objeto.
     ObjCelula obj;
@@ -225,7 +198,6 @@ void Controle::calibraInicio(){
     obj.setLeituraTensao(0.00);
     obj.setPortaInput(porta_i);
     obj.setPortaControle(porta_digital);
-    obj.setReferencia(RELACAO);
 
     //Porta digital
     Serial.print("Setando porta analogica A");
@@ -314,43 +286,91 @@ void Controle::controlaSaidas(){
 Controla envio de dados da bateria ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-  String topico = (String)MQTT_KEY+MQTT_BAT;
+
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<200> doc;
+  StaticJsonDocument<300> doc;
   JsonObject root = doc.to<JsonObject>();
-  root["cd"] = 0;
-  root["qt"] = _bateria->getQuantidadeCelulas();
-  root["pr"] = _bateria->getPercentual();
-  root["vb"] = _bateria->getTensaoBanco();
-  root["vn"] = _bateria->getTensaoMinima();
-  root["vm"] = _bateria->getTensaoMaxima();
-  root["tm"] = unix_time;
+  //Bateria
+  root["codigo"] = 0;
+  root["bat_qtcells"] = _bateria->getQuantidadeCelulas();
+  root["bat_per"] = _bateria->getPercentual();
+  root["bat_vbat"] = _bateria->getTensaoBanco();
+  root["bat_vmin"] = _bateria->getTensaoMinima();
+  root["bat_vmax"] = _bateria->getTensaoMaxima();
+  root["time"] = unix_time;
 
   String mensagem;
   //root.printTo(mensagem);
   serializeJson(root,mensagem);
-  MqttSendMessage(topico,  mensagem);
+  MqttSendMessage(MQTT_DATA,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Busca Objeto
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonDocument<200> doc;
+    StaticJsonDocument<300> doc;
     JsonObject root = doc.to<JsonObject>();
-    root["cd"] = 1;
-    root["nc"] = i+1;
-    root["vc"] = obj_i.getLeituraTensao();
-    root["pr"] = obj_i.getPercentual();
-    root["cn"] = obj_i.getTensaoMinima();
-    root["vm"] = obj_i.getTensaoMaxima();
-    root["tm"] = unix_time;
+    //Celulas
+    root["codigo"] = 1;
+    root["cel_num"] = i+1;
+    root["cel_vcel"] = obj_i.getLeituraTensao();
+    root["cel_per"] = obj_i.getPercentual();
+    root["cel_vmin"] = obj_i.getTensaoMinima();
+    root["cel_vmax"] = obj_i.getTensaoMaxima();
+    root["time"] = unix_time;
     String mensagem;
     //root.printTo(mensagem);
     serializeJson(root, mensagem);
-    MqttSendMessage(topico,  mensagem);
+    MqttSendMessage(MQTT_DATA,  mensagem);
   }
 }
+
+
+// ============== Subscription callback ========================================
+void Controle::processaMessage(MqttClient::MessageData& md) {
+  const MqttClient::Message& msg = md.message;
+  Serial.print("Topico recebido == ");
+  Serial.println(md.topicName.cstring);
+  Serial.print("Qos == ");
+  Serial.println(msg.qos);
+  char payload[msg.payloadLen + 1];
+  memcpy(payload, msg.payload, msg.payloadLen);
+  payload[msg.payloadLen] = '\0';
+  Serial.println("Mensagem Chegou");
+  Serial.print("Size = ");
+  Serial.println(msg.payloadLen);
+  Serial.print("Mensagem Subscribe = ");
+  Serial.println(payload);
+  //Deserializa Json
+  StaticJsonDocument<300> doc;
+  deserializeJson(doc,payload);
+  //Dados reescritos
+  long unix_time = timeClient.getEpochTime();
+  StaticJsonDocument<300> doc2;
+  JsonObject root = doc2.to<JsonObject>();
+  //Energia concessionaria
+  //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
+  //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
+  root["codigo"] = 2;
+  root["Time"] = doc["Time"];
+  root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
+  root["Total"] = doc["ENERGY"]["Total"];
+  root["Today"] = doc["ENERGY"]["Today"];
+  root["Period"] = doc["ENERGY"]["Period"];
+  root["Power"] = doc["ENERGY"]["Power"];
+  root["ApparentPower"] = doc["ENERGY"]["ApparentPower"];
+  root["ReactivePower"] = doc["ENERGY"]["ReactivePower"];
+  root["Factor"] = doc["ENERGY"]["Factor"];
+  root["Voltage"] = doc["ENERGY"]["Voltage"];
+  root["Current"] = doc["ENERGY"]["Current"];
+  root["time"] = unix_time;
+  String mensagem;
+  //root.printTo(mensagem);
+  serializeJson(root, mensagem);
+  MqttSendMessage(MQTT_DATA,  mensagem);
+}
+
 
 /*
 Envia Mensagem MQTT

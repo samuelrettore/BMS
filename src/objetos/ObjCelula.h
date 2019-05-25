@@ -16,8 +16,6 @@ class ObjCelula {
     void setPortaControle(int porta);
     int getPortaControle();
     int getPercentual();
-    void setReferencia(float referencia);
-    float getReferencia();
     float getTensaoMinima();
     float getTensaoMaxima();
   private:

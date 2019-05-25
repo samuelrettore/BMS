@@ -47,6 +47,12 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Aqui define o tamanho do seu banco em celulas ou S
 #define QUANTIDADE_CELULAS 1
 
+
+//Pinos entrada
+#define INPUT_PORT {A8, 39, 34, 35, 32, 33, 25}
+//Pinos de Saida PWM
+#define OUTPUT_PORT {22, 1, 3, 21, 19, 18, 5}
+
 /*
 Calculo Baseado no resistor
 Tensao Referencia porta analogica Arduino - medir com multimetro tensão de operação do arduino melhora eficiencia da
@@ -80,10 +86,6 @@ Porta que desliga dispotivo quando tensao minima atingida.
 //Numero de amostras na leitura
 #define AMOSTRAS 2000
 
-//Metodo Base de relacao
-#define RELACAO 18.18500 //11.86, old methodo Deprecated
-//#define RELACAO 17.72637 //4.2
-
 /*
 Dados MQTT
 */
@@ -96,10 +98,9 @@ Dados MQTT
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define MQTT_KEY "376f0d9743"
 
-//Definicoes MQTT
-#define MQTT_BAT "/bateria"
-//376f0d9743/sonoff/SENSOR
-#define MQTT_RESEND "/sonoff/SENSOR"
+//Dev
+#define MQTT_DATA "376f0d9743/dados"
+#define MQTT_SONOFF1 "376f0d9743/sonoff/SENSOR"
 //#define MQTT_RESEND1 "/sonoff1/SENSOR"
 
 //#define MQTT_TOPIC "376f0d9743/bateria"
