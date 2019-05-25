@@ -45,6 +45,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   ativaRedeDHCP();
   configuraMQTT();
   ativaMQTT();
+  pinMode(LED_PLACA,OUTPUT);
   Serial.println("## -- Fim Setup -- ##");
 }
 
@@ -101,11 +102,11 @@ void Controle::configuraMQTT(){
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
   MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
   //// Make 128 bytes send buffer
-  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<280>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<280>();
   //// Allow up to 2 subscriptions simultaneously
-  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<1>();
+  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
   //// Configure client options
   MqttClient::Options mqttOptions;
   ////// Set command timeout to 10 seconds
@@ -181,11 +182,6 @@ void Controle::calibraInicio(){
   //Inicializa banco de Bateria -> constroi celulas.
   _bateria->inicializaBanco();
   delay(1000);
-  //Seta Primeira porta como A1
-  int porta_i = A8;
-  int numero_porta  = 8;
-  //Porta Digital inicia 31
-  int porta_digital = 31;
 
   //Inicializa celulas com valores
   Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
@@ -193,6 +189,7 @@ void Controle::calibraInicio(){
   int pinos_saida[] = OUTPUT_PORT;
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
+    // //Verifica se tem referencia registrada na EEprom
     int numero_cel = i+1;
     //Cria Objeto.
     ObjCelula obj;
@@ -200,24 +197,24 @@ void Controle::calibraInicio(){
     obj.setLeituraTensao(0.00);
     obj.setPortaInput(pinos_entrada[i]);
     obj.setPortaControle(pinos_saida[i]);
-
+    //obj.setReferencia(RELACAO);
     //Porta digital
-    Serial.print("Setando porta analogica A");
-    Serial.print(numero_porta);
+    Serial.print("Setando porta analogica GPI(O)");
+    Serial.print(obj.getPortaInput());
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
-    pinMode(porta_i, INPUT);
 
-    Serial.print(porta_digital);
+    //Teste
+    //adcAttachPin(pinos_entrada[i]);
+    //analogSetClockDiv(255);
+    pinMode(pinos_entrada[i], INPUT);
+    Serial.print(obj.getPortaControle());
     Serial.println(" saida nivel baixo(LOW).");
     //Ativa em modo baixo
-    pinMode(porta_digital, OUTPUT);
-    digitalWrite(porta_digital, LOW);
+    pinMode(pinos_saida[i], OUTPUT);
+    digitalWrite(pinos_saida[i], LOW);
 
     _bateria->setCelula(obj, i);
-    porta_i++;
-    porta_digital+=2;
-    numero_porta++;
     delay(500);
   }
   delay(1000);
@@ -379,6 +376,7 @@ Envia Mensagem MQTT
 void Controle::MqttSendMessage(String topico, String mensagem){
   //Verifica se esta OK.
   if(mqtt->isConnected()){
+    digitalWrite(LED_PLACA,HIGH);
     Serial.print("Mensagem  = ");
     Serial.println(mensagem);
     MqttClient::Message message;
@@ -391,6 +389,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     message.payload = (void*)buf;
     message.payloadLen = strlen(buf);
     mqtt->publish(topico.c_str(), message);
+    digitalWrite(LED_PLACA,LOW);
   }
 }
 
