@@ -1,13 +1,10 @@
-#include <Arduino.h>
 #include "../Config.h"
 #include "Controle.h"
 #include "../objetos/BancoBateria.h"
-#include "../wireless.h"
-
-//Wireless
-#include <WiFi.h> //lib to the Wifi configuration
-#include <WiFiUdp.h>//Biblioteca do UDP.
-
+//Placa de REde
+#include <SPI.h>
+#include <Ethernet.h>
+#include <Arduino.h>
 //MQTT
 #include <MqttClient.h>
 //Json
@@ -15,10 +12,10 @@
 //Date Time
 #include <NTPClient.h>
 
-WiFiUDP udp;//Cria um objeto da classe UDP.
-static WiFiClient network;
 //Global
 MqttClient *mqtt = NULL;
+EthernetClient netClient;
+EthernetUDP udp;
 //NTPClient
 int16_t utc = 3;
 //NTP CLient
@@ -34,9 +31,6 @@ public:
   unsigned long millis() const {
     return ::millis();
   }
-  void yield(void) {
-    ::yield();
-  }
 };
 
 
@@ -48,33 +42,41 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.begin(VELOCIDADE_SERIAL_ARDUINO);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
-  ativaRedeWIFI();
+  ativaRedeDHCP();
   configuraMQTT();
   ativaMQTT();
-  pinMode(LED_PLACA,OUTPUT);
   Serial.println("## -- Fim Setup -- ##");
 }
 
 /*
 * Ativa rede / DHCP
 */
-void Controle::ativaRedeWIFI(){
-  Serial.println("Ativando Wireless");
-  WiFi.begin(ssid, password);             // Connect to the network
-  Serial.print("Conectando a ");
-  Serial.println(ssid);
-  while (WiFi.status() != WL_CONNECTED) { // Wait for the Wi-Fi to connect
-    delay(500);
-    Serial.print('.');
+void Controle::ativaRedeDHCP(){
+  //pinMode(SDCARD_CS, OUTPUT);
+  //digitalWrite(SDCARD_CS, HIGH);
+  Serial.println("Ativando DHCP");
+  byte mac[] = {
+    0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
+  };
+  // start the Ethernet connection:
+  Serial.println("Inicializando Ethernet via DHCP:");
+
+  if (Ethernet.begin(mac) == 0) {
+    Serial.println("Falha ao configurar Ethernet usando DHCP");
+    if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+      Serial.println("Ethernet Shield Error. :(");
+    } else if (Ethernet.linkStatus() == LinkOFF) {
+      Serial.println("Cabo Desconectado.");
+    }
+
   }
-  Serial.println("");
   // print your local IP address:
   Serial.print("Endereco IP: ");
-  Serial.println(WiFi.localIP());
+  Serial.println(Ethernet.localIP());
   Serial.print("Endereco gateway: ");
-  Serial.println(WiFi.gatewayIP());
+  Serial.println(Ethernet.gatewayIP());
   Serial.print("Endereco DNS: ");
-  Serial.println(WiFi.dnsIP());
+  Serial.println(Ethernet.dnsServerIP());
   Serial.println();
   Serial.println("Ajusta NTP ");
   timeClient.begin();
@@ -97,17 +99,17 @@ void Controle::configuraMQTT(){
   // Setup MqttClient
   MqttClient::System *mqttSystem = new System;
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
-  MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(network, *mqttSystem);
+  MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
   //// Make 128 bytes send buffer
-  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<350>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<350>();
   //// Allow up to 2 subscriptions simultaneously
-  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
+  MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<1>();
   //// Configure client options
   MqttClient::Options mqttOptions;
   ////// Set command timeout to 10 seconds
-  mqttOptions.commandTimeoutMs = 20000;
+  mqttOptions.commandTimeoutMs = 10000;
   //// Make client object
   mqtt = new MqttClient (
     mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
@@ -115,13 +117,36 @@ void Controle::configuraMQTT(){
   );
 }
 
+
+
+// ============== Subscription callback ========================================
+void Controle::processaMessage(MqttClient::MessageData& md) {
+  Serial.println("Oeeeeeeeeeeeeeee");
+  delay(2000);
+  const MqttClient::Message& msg = md.message;
+  char payload[msg.payloadLen + 1];
+  memcpy(payload, msg.payload, msg.payloadLen);
+  payload[msg.payloadLen] = '\0';
+  Serial.println("Mensagem Chegou");
+  Serial.print("Size = ");
+  Serial.println(msg.payloadLen);
+  delay(1000);
+  Serial.print("Mensagem Subscribe = ");
+  Serial.println(payload);
+
+  // LOG_PRINTFLN(
+  // 	"Message arrived: qos %d, retained %d, dup %d, packetid %d, payload:[%s]",
+  // 	msg.qos, msg.retained, msg.dup, msg.id, payload
+  // );
+}
+
 /*
 * Ativa MQTT
 */
 void Controle::ativaMQTT(){
   if(!mqtt->isConnected()){
-    network.stop();
-    network.connect(BROKER_MQTT, BROKER_PORT);
+    netClient.stop();
+    netClient.connect(BROKER_MQTT, BROKER_PORT);
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     MqttClient::ConnectResult connectResult;
@@ -132,8 +157,8 @@ void Controle::ativaMQTT(){
       options.MQTTVersion = 4;
       String id = (String)ID_MQTT+MQTT_KEY;
       options.clientID.cstring = (char*)id.c_str();
-      options.cleansession = false;
-      options.keepAliveInterval = 20; // 15 seconds
+      //options.cleansession = false;
+      options.keepAliveInterval = 15; // 15 seconds
       MqttClient::Error::type rc = mqtt->connect(options, connectResult);
       if (rc != MqttClient::Error::SUCCESS) {
         Serial.print("Connection error: ");
@@ -142,20 +167,23 @@ void Controle::ativaMQTT(){
       }
     }
 
-    // Subscribe
-    {
-      MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS0, processaMessage);
-      // Serial.print("Subscribe Topico =|");
-      // Serial.print(topico);
-      // Serial.println("|");
-      if (rc != MqttClient::Error::SUCCESS) {
-        Serial.print("Erro leitura topicos:");
-        Serial.println(rc);
-        Serial.println("Desconectando ");
-        mqtt->disconnect();
-        return;
-      }
-    }
+    // //Subscribe
+    // {
+    //   String topico = (String)MQTT_KEY+MQTT_RESEND;
+    //   //String topico = (String)MQTT_KEY+MQTT_BAT;
+    //   Serial.println("Subscribe Topico = "+topico);
+    //   MqttClient::Error::type rc = mqtt->subscribe(topico.c_str(), MqttClient::QOS0, processaMessage);
+    //   Serial.print("RC = ");
+    //   Serial.println(rc);
+    //   delay(5000);
+    //   if (rc != MqttClient::Error::SUCCESS) {
+    //     Serial.print("Subscribe error:");
+    //     Serial.println(rc);
+    //     Serial.println("Drop connection");
+    //     mqtt->disconnect();
+    //     return;
+    //   }
+    // }
   }else{
     mqtt->yield(30000L);
   }
@@ -179,11 +207,14 @@ void Controle::calibraInicio(){
   //Inicializa banco de Bateria -> constroi celulas.
   _bateria->inicializaBanco();
   delay(1000);
+  //Seta Primeira porta como A1
+  int porta_i = A8;
+  int numero_porta  = 8;
+  //Porta Digital inicia 31
+  int porta_digital = 31;
 
   //Inicializa celulas com valores
   Serial.println("Configura portas de entrada e Saida e cria Objetos do banco.");
-  int pinos_entrada[] = INPUT_PORT;
-  int pinos_saida[] = OUTPUT_PORT;
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     // //Verifica se tem referencia registrada na EEprom
@@ -192,29 +223,30 @@ void Controle::calibraInicio(){
     ObjCelula obj;
     obj.setNumeroCelula(numero_cel);
     obj.setLeituraTensao(0.00);
-    obj.setPortaInput(pinos_entrada[i]);
-    obj.setPortaControle(pinos_saida[i]);
-    //obj.setReferencia(RELACAO);
+    obj.setPortaInput(porta_i);
+    obj.setPortaControle(porta_digital);
+    obj.setReferencia(RELACAO);
+
     //Porta digital
-    Serial.print("Setando porta analogica GPI(O)");
-    Serial.print(obj.getPortaInput());
+    Serial.print("Setando porta analogica A");
+    Serial.print(numero_porta);
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
+    pinMode(porta_i, INPUT);
 
-    //Teste
-    //adcAttachPin(pinos_entrada[i]);
-    //analogSetClockDiv(255);
-    pinMode(pinos_entrada[i], INPUT);
-    Serial.print(obj.getPortaControle());
+    Serial.print(porta_digital);
     Serial.println(" saida nivel baixo(LOW).");
     //Ativa em modo baixo
-    pinMode(pinos_saida[i], OUTPUT);
-    digitalWrite(pinos_saida[i], LOW);
+    pinMode(porta_digital, OUTPUT);
+    digitalWrite(porta_digital, LOW);
 
     _bateria->setCelula(obj, i);
+    porta_i++;
+    porta_digital+=2;
+    numero_porta++;
     delay(500);
   }
-  delay(5000);
+  delay(1000);
 }
 
 /*
@@ -224,7 +256,7 @@ void Controle::calibraInicio(){
 void Controle::atualizaDadosLeitura(){
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     ObjCelula objj = _bateria->getCelula(i);
-    double voltage = lePortaCalculoResistor(objj.getPortaInput(), false);
+    float voltage = lePortaCalculoResistor(objj.getPortaInput());
     objj.setLeituraTensao(voltage);
     //Atualiza Celula.
     _bateria->setCelula(objj,i);
@@ -282,90 +314,43 @@ void Controle::controlaSaidas(){
 Controla envio de dados da bateria ao MQTT via Json
 */
 void Controle::MqttEnviaDados(){
-
+  String topico = (String)MQTT_KEY+MQTT_BAT;
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<300> doc;
+  StaticJsonDocument<200> doc;
   JsonObject root = doc.to<JsonObject>();
-  //Bateria
-  root["codigo"] = 0;
-  root["bat_qtcells"] = _bateria->getQuantidadeCelulas();
-  root["bat_per"] = _bateria->getPercentual();
-  root["bat_vbat"] = _bateria->getTensaoBanco();
-  root["bat_vmin"] = _bateria->getTensaoMinima();
-  root["bat_vmax"] = _bateria->getTensaoMaxima();
-  root["time"] = unix_time;
+  root["cd"] = 0;
+  root["qt"] = _bateria->getQuantidadeCelulas();
+  root["pr"] = _bateria->getPercentual();
+  root["vb"] = _bateria->getTensaoBanco();
+  root["vn"] = _bateria->getTensaoMinima();
+  root["vm"] = _bateria->getTensaoMaxima();
+  root["tm"] = unix_time;
 
   String mensagem;
   //root.printTo(mensagem);
   serializeJson(root,mensagem);
-  MqttSendMessage(MQTT_DATA,  mensagem);
+  MqttSendMessage(topico,  mensagem);
 
   for(int i=0; i<_bateria->getQuantidadeCelulas();i++){
     //Busca Objeto
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonDocument<300> doc;
+    StaticJsonDocument<200> doc;
     JsonObject root = doc.to<JsonObject>();
-    //Celulas
-    root["codigo"] = 1;
-    root["cel_num"] = i+1;
-    root["cel_vcel"] = obj_i.getLeituraTensao();
-    root["cel_per"] = obj_i.getPercentual();
-    root["cel_vmin"] = obj_i.getTensaoMinima();
-    root["cel_vmax"] = obj_i.getTensaoMaxima();
-    root["time"] = unix_time;
+    root["cd"] = 1;
+    root["nc"] = i+1;
+    root["vc"] = obj_i.getLeituraTensao();
+    root["pr"] = obj_i.getPercentual();
+    root["cn"] = obj_i.getTensaoMinima();
+    root["vm"] = obj_i.getTensaoMaxima();
+    root["tm"] = unix_time;
     String mensagem;
     //root.printTo(mensagem);
     serializeJson(root, mensagem);
-    MqttSendMessage(MQTT_DATA,  mensagem);
+    MqttSendMessage(topico,  mensagem);
   }
 }
-
-// ============== Subscription callback ========================================
-void Controle::processaMessage(MqttClient::MessageData& md) {
-  const MqttClient::Message& msg = md.message;
-  Serial.print("Topico recebido == ");
-  Serial.println(md.topicName.cstring);
-  Serial.print("Qos == ");
-  Serial.println(msg.qos);
-  char payload[msg.payloadLen + 1];
-  memcpy(payload, msg.payload, msg.payloadLen);
-  payload[msg.payloadLen] = '\0';
-  Serial.println("Mensagem Chegou");
-  Serial.print("Size = ");
-  Serial.println(msg.payloadLen);
-  Serial.print("Mensagem Subscribe = ");
-  Serial.println(payload);
-  //Deserializa Json
-  StaticJsonDocument<300> doc;
-  deserializeJson(doc,payload);
-  //Dados reescritos
-  long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<300> doc2;
-  JsonObject root = doc2.to<JsonObject>();
-  //Energia concessionaria
-  //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
-  //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
-  root["codigo"] = 2;
-  root["Time"] = doc["Time"];
-  root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
-  root["Total"] = doc["ENERGY"]["Total"];
-  root["Today"] = doc["ENERGY"]["Today"];
-  root["Period"] = doc["ENERGY"]["Period"];
-  root["Power"] = doc["ENERGY"]["Power"];
-  root["ApparentPower"] = doc["ENERGY"]["ApparentPower"];
-  root["ReactivePower"] = doc["ENERGY"]["ReactivePower"];
-  root["Factor"] = doc["ENERGY"]["Factor"];
-  root["Voltage"] = doc["ENERGY"]["Voltage"];
-  root["Current"] = doc["ENERGY"]["Current"];
-  root["time"] = unix_time;
-  String mensagem;
-  //root.printTo(mensagem);
-  serializeJson(root, mensagem);
-  MqttSendMessage(MQTT_DATA,  mensagem);
-}
-
 
 /*
 Envia Mensagem MQTT
@@ -373,12 +358,11 @@ Envia Mensagem MQTT
 void Controle::MqttSendMessage(String topico, String mensagem){
   //Verifica se esta OK.
   if(mqtt->isConnected()){
-    digitalWrite(LED_PLACA,HIGH);
-    Serial.print("Envia MSG  = ");
+    Serial.print("Mensagem  = ");
     Serial.println(mensagem);
     MqttClient::Message message;
     // Send and receive QoS 0 message
-    char buf[300];
+    char buf[100];
     strcpy(buf, mensagem.c_str());
     message.qos = MqttClient::QOS1;
     message.retained = false;
@@ -386,7 +370,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     message.payload = (void*)buf;
     message.payloadLen = strlen(buf);
     mqtt->publish(topico.c_str(), message);
-    digitalWrite(LED_PLACA,LOW);
+    //mqtt->yield(30000L);
   }
 }
 
@@ -396,14 +380,13 @@ tenta reconectar.
 */
 void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
-  if(!WiFi.isConnected()){
-    WiFi.reconnect();
-    // print your local IP address:
-    Serial.print("Endereco IP: ");
-    Serial.println(WiFi.localIP());
-    if(!mqtt->isConnected()){
-      ativaMQTT();
-    }
+  // print your local IP address:
+  Serial.print("Endereço IP: ");
+  Serial.println(Ethernet.localIP());
+  if(!mqtt->isConnected()){
+    Serial.print("Renew IP");
+    Ethernet.maintain();
+    ativaMQTT();
   }
   Serial.print("Atualiza Data e Hora = " );
   timeClient.forceUpdate();

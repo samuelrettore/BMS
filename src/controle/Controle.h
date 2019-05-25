@@ -13,7 +13,7 @@ public:
   Controle();
   void inicializaModulo(BancoBateria* bateria);
   void calibraInicio();
-  void ativaRedeWIFI();
+  void ativaRedeDHCP();
   void ativaMQTT();
   void configuraMQTT();
   void ciloProcessamento();
@@ -24,7 +24,7 @@ private:
   void atualizaDadosLeitura();
   void controlaSaidas();
   //static void MqttCallback();
-  static void MqttSendMessage(String topico, String mensagem);
+  void MqttSendMessage(String topico, String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
 };

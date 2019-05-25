@@ -1,11 +1,11 @@
 #include "Arduino.h"
 #include "ObjCelula.h"
 
-double ObjCelula::getLeituraTensao(){
+float ObjCelula::getLeituraTensao(){
   return _leitura_tensao;
 }
 
-void ObjCelula::setLeituraTensao(double leitura){
+void ObjCelula::setLeituraTensao(float leitura){
   //copia tensao anterior
   _tensao_anterior = _leitura_tensao;
   //Calcula percentual da celula.
@@ -21,7 +21,7 @@ void ObjCelula::setNumeroCelula(int numero_celula){
   _numero_celula = numero_celula;
 }
 
-double ObjCelula::getLeituraTensaoAnterior(){
+float ObjCelula::getLeituraTensaoAnterior(){
   return _tensao_anterior;
 }
 
@@ -45,18 +45,18 @@ int ObjCelula::getPercentual(){
   return _percentual;
 }
 
-void ObjCelula::setReferencia(double referencia){
+void ObjCelula::setReferencia(float referencia){
   _referencia = referencia;
 }
 
-double ObjCelula::getReferencia(){
+float ObjCelula::getReferencia(){
     return _referencia;
 }
 
-double ObjCelula::getTensaoMinima(){
+float ObjCelula::getTensaoMinima(){
   return _tensao_minima;
 }
 
-double ObjCelula::getTensaoMaxima(){
+float ObjCelula::getTensaoMaxima(){
   return _tensao_maxima;
 }
