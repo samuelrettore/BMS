@@ -99,9 +99,9 @@ void Controle::configuraMQTT(){
   MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
   MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
   //// Make 128 bytes send buffer
-  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<400>();
   //// Make 128 bytes receive buffer
-  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<300>();
+  MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<400>();
   //// Allow up to 2 subscriptions simultaneously
   MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
   //// Configure client options
@@ -283,7 +283,7 @@ Controla envio de dados da bateria ao MQTT via Json
 void Controle::MqttEnviaDados(){
 
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<300> doc;
+  StaticJsonDocument<440> doc;
   JsonObject root = doc.to<JsonObject>();
   //Bateria
   root["codigo"] = 0;
@@ -304,7 +304,7 @@ void Controle::MqttEnviaDados(){
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonDocument<300> doc;
+    StaticJsonDocument<400> doc;
     JsonObject root = doc.to<JsonObject>();
     //Celulas
     root["codigo"] = 1;
@@ -338,13 +338,13 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   Serial.print("Mensagem Subscribe = ");
   Serial.println(payload);
   //Deserializa Json
-  StaticJsonDocument<300> doc;
+  StaticJsonDocument<400> doc;
   DeserializationError err  = deserializeJson(doc,payload);
   if(err == DeserializationError::Ok){
     Serial.println("Deserializacao OK");
     //Dados reescritos
     long unix_time = timeClient.getEpochTime();
-    StaticJsonDocument<300> doc2;
+    StaticJsonDocument<400> doc2;
     JsonObject root = doc2.to<JsonObject>();
     Serial.println("Root inicio");
 
@@ -367,7 +367,8 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
 
     Serial.println("Root Criado");
     String mensagem;
-    serializeJson(root, mensagem);
+    serializeJsonPretty(root, mensagem);
+    Serial.println("Root Serializado");
     MqttSendMessage(MQTT_DATA,  mensagem);
   }else{
     Serial.print("Deserializacao ERROR");
@@ -386,7 +387,7 @@ void Controle::MqttSendMessage(String topico, String mensagem){
     Serial.println(mensagem);
     MqttClient::Message message;
     // Send and receive QoS 0 message
-    char buf[300];
+    char buf[400];
     strcpy(buf, mensagem.c_str());
     message.qos = MqttClient::QOS1;
     message.retained = false;

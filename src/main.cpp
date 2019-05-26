@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "controle/Controle.h"
 #include "objetos/BancoBateria.h"
+#include <MemoryFree.h>
 
 
 #define MQTTCLIENT_QOS2 1
@@ -23,8 +24,10 @@ void loop() {
     time_cliclo = millis();
     ctrl.ciloProcessamento();
     Serial.print("Contador loop = ");
-    Serial.println(contador);
+    Serial.print(contador);
     contador++;
+    Serial.print(", freeMemory() = ");
+    Serial.println(freeMemory());
   }
   //Atualiza dados no MQTT -> 10 segundos = 10000
   if(millis() > time_mqtt + 5000){
