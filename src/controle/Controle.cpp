@@ -339,31 +339,36 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   Serial.println(payload);
   //Deserializa Json
   StaticJsonDocument<300> doc;
-  deserializeJson(doc,payload);
-    Serial.print("Mensagem Subscribe = ");
-  //Dados reescritos
-  long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<300> doc2;
-  JsonObject root = doc2.to<JsonObject>();
-  //Energia concessionaria
-  //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
-  //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
-  root["codigo"] = 2;
-  root["Time"] = doc["Time"];
-  root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
-  root["Total"] = doc["ENERGY"]["Total"];
-  root["Today"] = doc["ENERGY"]["Today"];
-  root["Period"] = doc["ENERGY"]["Period"];
-  root["Power"] = doc["ENERGY"]["Power"];
-  root["ApparentPower"] = doc["ENERGY"]["ApparentPower"];
-  root["ReactivePower"] = doc["ENERGY"]["ReactivePower"];
-  root["Factor"] = doc["ENERGY"]["Factor"];
-  root["Voltage"] = doc["ENERGY"]["Voltage"];
-  root["Current"] = doc["ENERGY"]["Current"];
-  root["time"] = unix_time;
-  String mensagem;
-  serializeJson(root, mensagem);
-  MqttSendMessage(MQTT_DATA,  mensagem);
+  DeserializationError err  = deserializeJson(doc,payload);
+  if(err == DeserializationError::Ok){
+    Serial.print("Deserializacao OK");
+
+    //Dados reescritos
+    long unix_time = timeClient.getEpochTime();
+    StaticJsonDocument<300> doc2;
+    JsonObject root = doc2.to<JsonObject>();
+    //Energia concessionaria
+    //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
+    //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
+    root["codigo"] = 2;
+    root["Time"] = doc["Time"];
+    root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
+    root["Total"] = doc["ENERGY"]["Total"];
+    root["Today"] = doc["ENERGY"]["Today"];
+    root["Period"] = doc["ENERGY"]["Period"];
+    root["Power"] = doc["ENERGY"]["Power"];
+    root["ApparentPower"] = doc["ENERGY"]["ApparentPower"];
+    root["ReactivePower"] = doc["ENERGY"]["ReactivePower"];
+    root["Factor"] = doc["ENERGY"]["Factor"];
+    root["Voltage"] = doc["ENERGY"]["Voltage"];
+    root["Current"] = doc["ENERGY"]["Current"];
+    root["time"] = unix_time;
+    String mensagem;
+    serializeJson(root, mensagem);
+    MqttSendMessage(MQTT_DATA,  mensagem);
+  }else{
+    Serial.print("Deserializacao ERROR");
+  }
 }
 
 
