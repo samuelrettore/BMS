@@ -10,6 +10,7 @@ BancoBateria* bateria = new BancoBateria();
 unsigned long time_cliclo = 0;
 unsigned long time_mqtt = 0;
 unsigned long time_network = 0;
+unsigned long contador = 0;
 
 void setup() {
   ctrl.inicializaModulo(bateria);
@@ -21,6 +22,9 @@ void loop() {
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
+    Serial.print("Contador loop = ");
+    Serial.println(contador);
+    contador++;
   }
   //Atualiza dados no MQTT -> 10 segundos = 10000
   if(millis() > time_mqtt + 5000){

@@ -33,7 +33,6 @@ public:
   }
 };
 
-
 /**
 * Metodo inicialização do modulo
 */
@@ -69,7 +68,6 @@ void Controle::ativaRedeDHCP(){
     } else if (Ethernet.linkStatus() == LinkOFF) {
       Serial.println("Cabo Desconectado.");
     }
-
   }
   // print your local IP address:
   Serial.print("Endereco IP: ");
@@ -90,7 +88,6 @@ void Controle::ativaRedeDHCP(){
   Serial.print("##Data e Hora = ");
   Serial.println(timeClient.getFormattedTime());
   delay(2000);
-
 }
 
 /**
@@ -343,6 +340,7 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   //Deserializa Json
   StaticJsonDocument<300> doc;
   deserializeJson(doc,payload);
+    Serial.print("Mensagem Subscribe = ");
   //Dados reescritos
   long unix_time = timeClient.getEpochTime();
   StaticJsonDocument<300> doc2;
