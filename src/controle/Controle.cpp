@@ -341,12 +341,13 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   StaticJsonDocument<300> doc;
   DeserializationError err  = deserializeJson(doc,payload);
   if(err == DeserializationError::Ok){
-    Serial.print("Deserializacao OK");
-
+    Serial.println("Deserializacao OK");
     //Dados reescritos
     long unix_time = timeClient.getEpochTime();
     StaticJsonDocument<300> doc2;
     JsonObject root = doc2.to<JsonObject>();
+    Serial.println("Root inicio");
+
     //Energia concessionaria
     //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
     //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
@@ -363,6 +364,8 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
     root["Voltage"] = doc["ENERGY"]["Voltage"];
     root["Current"] = doc["ENERGY"]["Current"];
     root["time"] = unix_time;
+
+    Serial.println("Root Criado");
     String mensagem;
     serializeJson(root, mensagem);
     MqttSendMessage(MQTT_DATA,  mensagem);
