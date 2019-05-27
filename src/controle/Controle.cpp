@@ -21,6 +21,13 @@ int16_t utc = 3;
 //NTP CLient
 NTPClient timeClient(udp, NTPSERVER);
 
+
+//JsonDOcumens
+//StaticJsonDocument<400> doc;
+//StaticJsonDocument<400> doc2;
+DynamicJsonDocument doc(400);
+DynamicJsonDocument doc2(400);
+
 //Construtor
 Controle::Controle(){
 }
@@ -283,7 +290,7 @@ Controla envio de dados da bateria ao MQTT via Json
 void Controle::MqttEnviaDados(){
 
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<440> doc;
+  //StaticJsonDocument<440> doc;
   JsonObject root = doc.to<JsonObject>();
   //Bateria
   root["codigo"] = 0;
@@ -304,7 +311,7 @@ void Controle::MqttEnviaDados(){
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
     // //float tensao_i = obj_i.getLeituraTensao();
-    StaticJsonDocument<400> doc;
+    //StaticJsonDocument<400> doc;
     JsonObject root = doc.to<JsonObject>();
     //Celulas
     root["codigo"] = 1;
@@ -329,6 +336,8 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   Serial.println(md.topicName.cstring);
   Serial.print("Qos == ");
   Serial.println(msg.qos);
+  Serial.print("ID msg =  ");
+  Serial.println(msg.id);
   char payload[msg.payloadLen + 1];
   memcpy(payload, msg.payload, msg.payloadLen);
   payload[msg.payloadLen] = '\0';
@@ -338,13 +347,11 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
   Serial.print("Mensagem Subscribe = ");
   Serial.println(payload);
   //Deserializa Json
-  StaticJsonDocument<400> doc;
+
   DeserializationError err  = deserializeJson(doc,payload);
   if(err == DeserializationError::Ok){
     Serial.println("Deserializacao OK");
-    //Dados reescritos
-    long unix_time = timeClient.getEpochTime();
-    StaticJsonDocument<400> doc2;
+    //StaticJsonDocument<400> doc2;
     JsonObject root = doc2.to<JsonObject>();
     Serial.println("Root inicio");
 
@@ -363,7 +370,7 @@ void Controle::processaMessage(MqttClient::MessageData& md) {
     root["Factor"] = doc["ENERGY"]["Factor"];
     root["Voltage"] = doc["ENERGY"]["Voltage"];
     root["Current"] = doc["ENERGY"]["Current"];
-    root["time"] = unix_time;
+    root["time"] =  timeClient.getEpochTime();
 
     Serial.println("Root Criado");
     String mensagem;
