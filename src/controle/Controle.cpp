@@ -114,7 +114,7 @@ void Controle::configuraMQTT(){
   //// Configure client options
   MqttClient::Options mqttOptions;
   ////// Set command timeout to 10 seconds
-  mqttOptions.commandTimeoutMs = 20000;
+  mqttOptions.commandTimeoutMs = 5000;
   //// Make client object
   mqtt = new MqttClient (
     mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
@@ -140,7 +140,7 @@ void Controle::ativaMQTT(){
       String id = (String)ID_MQTT+MQTT_KEY;
       options.clientID.cstring = (char*)id.c_str();
       //options.cleansession = false;
-      options.keepAliveInterval = 15; // 15 seconds
+      options.keepAliveInterval = 10; // 15 seconds
       MqttClient::Error::type rc = mqtt->connect(options, connectResult);
       if (rc != MqttClient::Error::SUCCESS) {
         Serial.print("Connection error: ");
@@ -151,7 +151,7 @@ void Controle::ativaMQTT(){
 
     //Subscribe
     {
-      MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS0, processaMessage);
+      MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS1, processaMessage);
       Serial.print("RC = ");
       Serial.println(rc);
       if (rc != MqttClient::Error::SUCCESS) {

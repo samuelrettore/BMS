@@ -93,7 +93,8 @@ Dados MQTT
 #define BROKER_MQTT "mqtt.serhmatica.com.br"
 #define BROKER_PORT 1883
 #define ID_MQTT "ArduinoMQTT-v2-"
-// #define MQTT_VERSION MQTT_VERSION_3_1_1
+//Debug
+#define MQTT_LOG_ENABLED 1
 
 //Esta Chave deve ser criada peloAPP RTTHome e atualizada aqui para comunicação.
 #define MQTT_KEY "376f0d9743"
