@@ -102,8 +102,11 @@ void Controle::ativaMQTT(){
       delay(1000);
     }
     Serial.print("Conectado");
-    String topico = (String)MQTT_KEY+MQTT_SONOFF1;
-    mqtt.subscribe(topico, 1);
+    String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
+    mqtt.subscribe(sonoff1, 1);
+    String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
+    mqtt.subscribe(sonoff2, 1);
+
     delay(1000);
   }
 }
