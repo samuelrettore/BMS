@@ -324,7 +324,7 @@ void Controle::verificaRede(){
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
-  if(mqtt.connected()){
+  if(!mqtt.connected()){
     Serial.print("Renew IP");
     Ethernet.maintain();
     ativaMQTT();
