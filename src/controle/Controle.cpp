@@ -6,7 +6,6 @@
 #include <Ethernet.h>
 #include <Arduino.h>
 //MQTT
-//#include <MqttClient.h>
 #include <MQTT.h>
 
 //Json
@@ -23,26 +22,15 @@ int16_t utc = 3;
 NTPClient timeClient(udp, NTPSERVER);
 
 //--MQTT
-//MqttClient *mqtt = NULL;
 MQTTClient mqtt(350);
 
 //JsonDOcumens
-//StaticJsonDocument<400> doc;
-//StaticJsonDocument<400> doc2;
 DynamicJsonDocument doc(400);
 DynamicJsonDocument doc2(400);
 
 //Construtor
 Controle::Controle(){
 }
-
-// // ============== Object to supply system functions ================================
-// class System: public MqttClient::System {
-// public:
-//   unsigned long millis() const {
-//     return ::millis();
-//   }
-// };
 
 /**
 * Metodo inicialização do modulo
@@ -53,7 +41,6 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
   ativaRedeDHCP();
-  configuraMQTT();
   ativaMQTT();
   pinMode(LED_PLACA,OUTPUT);
   Serial.println("## -- Fim Setup -- ##");
@@ -63,8 +50,6 @@ void Controle::inicializaModulo(BancoBateria* bateria){
 * Ativa rede / DHCP
 */
 void Controle::ativaRedeDHCP(){
-  //pinMode(SDCARD_CS, OUTPUT);
-  //digitalWrite(SDCARD_CS, HIGH);
   Serial.println("Ativando DHCP");
   byte mac[] = {
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
@@ -101,35 +86,6 @@ void Controle::ativaRedeDHCP(){
   delay(2000);
 }
 
-/**
-* Configura MQTT
-*/
-void Controle::configuraMQTT(){
-  // // Setup MqttClient
-  // MqttClient::System *mqttSystem = new System;
-  // MqttClient::Logger *mqttLogger = new MqttClient::LoggerImpl<HardwareSerial>(Serial);
-  // MqttClient::Network *mqttNetwork = new MqttClient::NetworkClientImpl<Client>(netClient, *mqttSystem);
-  // //// Make 128 bytes send buffer
-  // MqttClient::Buffer *mqttSendBuffer = new MqttClient::ArrayBuffer<400>();
-  // //// Make 128 bytes receive buffer
-  // MqttClient::Buffer *mqttRecvBuffer = new MqttClient::ArrayBuffer<400>();
-  // //// Allow up to 2 subscriptions simultaneously
-  // MqttClient::MessageHandlers *mqttMessageHandlers = new MqttClient::MessageHandlersImpl<2>();
-  // //// Configure client options
-  // MqttClient::Options mqttOptions;
-  // ////// Set command timeout to 10 seconds
-  // mqttOptions.commandTimeoutMs = 5000;
-  // //// Make client object
-  // mqtt = new MqttClient (
-  //   mqttOptions, *mqttLogger, *mqttSystem, *mqttNetwork, *mqttSendBuffer,
-  //   *mqttRecvBuffer, *mqttMessageHandlers
-  // );
-
-
-
-
-}
-
 /*
 * Ativa MQTT
 */
@@ -150,46 +106,6 @@ void Controle::ativaMQTT(){
     mqtt.subscribe(topico, 1);
     delay(1000);
   }
-
-  // if(!mqtt->isConnected()){
-  //   netClient.stop();
-  //   netClient.connect(BROKER_MQTT, BROKER_PORT);
-  //   Serial.print("Conectando MQTT a ");
-  //   Serial.println(BROKER_MQTT);
-  //   MqttClient::ConnectResult connectResult;
-  //   //Conect
-  //   {
-  //     MQTTPacket_connectData options = MQTTPacket_connectData_initializer;
-  //     //4=3.1.1
-  //     options.MQTTVersion = 4;
-  //     String id = (String)ID_MQTT+MQTT_KEY;
-  //     options.clientID.cstring = (char*)id.c_str();
-  //     //options.cleansession = false;
-  //     options.keepAliveInterval = 10; // 15 seconds
-  //     MqttClient::Error::type rc = mqtt->connect(options, connectResult);
-  //     if (rc != MqttClient::Error::SUCCESS) {
-  //       Serial.print("Connection error: ");
-  //       Serial.println(rc);
-  //       return;
-  //     }
-  //   }
-  //
-  //   //Subscribe
-  //   {
-  //     MqttClient::Error::type rc = mqtt->subscribe(MQTT_SONOFF1, MqttClient::QOS1, processaMessage);
-  //     Serial.print("RC = ");
-  //     Serial.println(rc);
-  //     if (rc != MqttClient::Error::SUCCESS) {
-  //       Serial.print("Erro na Subscricao:");
-  //       Serial.println(rc);
-  //       Serial.println("Disconectando");
-  //       mqtt->disconnect();
-  //       return;
-  //     }
-  //   }
-  // }else{
-  //   mqtt->yield(30000L);
-  // }
 }
 
 /*
@@ -230,10 +146,6 @@ void Controle::calibraInicio(){
     Serial.print(obj.getPortaInput());
     Serial.print(" entrada --> porta de controle ");
     //Ativa Input
-
-    //Teste
-    //adcAttachPin(pinos_entrada[i]);
-    //analogSetClockDiv(255);
     pinMode(pinos_entrada[i], INPUT);
     Serial.print(obj.getPortaControle());
     Serial.println(" saida nivel baixo(LOW).");
@@ -334,8 +246,6 @@ void Controle::MqttEnviaDados(){
     //Busca Objeto
     ObjCelula obj_i = _bateria->getCelula(i);
     // //Coleta tensao eporta
-    // //float tensao_i = obj_i.getLeituraTensao();
-    //StaticJsonDocument<400> doc;
     JsonObject root = doc.to<JsonObject>();
     //Celulas
     root["codigo"] = 1;
@@ -386,89 +296,21 @@ void Controle::processaMessage(MQTTClient *client, char topic[], char payload[],
 
 }
 
-//
-// // ============== Subscription callback ========================================
-// void Controle::processaMessage(MqttClient::MessageData& md) {
-//   const MqttClient::Message& msg = md.message;
-//   Serial.print("Topico recebido == ");
-//   Serial.println(md.topicName.cstring);
-//   Serial.print("Qos == ");
-//   Serial.println(msg.qos);
-//   Serial.print("ID msg =  ");
-//   Serial.println(msg.id);
-//   char payload[msg.payloadLen + 1];
-//   memcpy(payload, msg.payload, msg.payloadLen);
-//   payload[msg.payloadLen] = '\0';
-//   Serial.println("Mensagem Chegou");
-//   Serial.print("Size = ");
-//   Serial.println(msg.payloadLen);
-//   Serial.print("Mensagem Subscribe = ");
-//   Serial.println(payload);
-//   //Deserializa Json
-//
-//   DeserializationError err  = deserializeJson(doc,payload);
-//   if(err == DeserializationError::Ok){
-//     Serial.println("Deserializacao OK");
-//     //StaticJsonDocument<400> doc2;
-//     JsonObject root = doc2.to<JsonObject>();
-//     Serial.println("Root inicio");
-//
-//     //Energia concessionaria
-//     //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
-//     //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
-//     root["codigo"] = 2;
-//     root["Time"] = doc["Time"];
-//     root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
-//     root["Total"] = doc["ENERGY"]["Total"];
-//     root["Today"] = doc["ENERGY"]["Today"];
-//     root["Period"] = doc["ENERGY"]["Period"];
-//     root["Power"] = doc["ENERGY"]["Power"];
-//     root["ApparentPower"] = doc["ENERGY"]["ApparentPower"];
-//     root["ReactivePower"] = doc["ENERGY"]["ReactivePower"];
-//     root["Factor"] = doc["ENERGY"]["Factor"];
-//     root["Voltage"] = doc["ENERGY"]["Voltage"];
-//     root["Current"] = doc["ENERGY"]["Current"];
-//     root["time"] =  timeClient.getEpochTime();
-//
-//     Serial.println("Root Criado");
-//     String mensagem;
-//     serializeJsonPretty(root, mensagem);
-//     Serial.println("Root Serializado");
-//     MqttSendMessage(MQTT_DATA,  mensagem);
-//   }else{
-//     Serial.print("Deserializacao ERROR");
-//   }
-// }
-
-
 /*
 Envia Mensagem MQTT
 */
 void Controle::MqttSendMessage(String mensagem){
   //Verifica se esta OK.
-  //if(mqtt->isConnected()){
-  //mqtt.loop();
   if(mqtt.connected()){
     digitalWrite(LED_PLACA,HIGH);
     Serial.print("Mensagem  = ");
     Serial.println(mensagem);
-    // MqttClient::Message message;
-    // // Send and receive QoS 0 message
-    // char buf[400];
-    // strcpy(buf, mensagem.c_str());
-    // message.qos = MqttClient::QOS1;
-    // message.retained = false;
-    // message.dup = false;
-    // message.payload = (void*)buf;
-    // message.payloadLen = strlen(buf);
-    // mqtt->publish(topico.c_str(), message);
     String topico = (String)MQTT_KEY+MQTT_DATA;
     if(mqtt.publish(topico, mensagem, false, 1)){
       Serial.println("Mensagem MQTT enviada");
     }else{
       Serial.println("--------->Mensagem MQTT NAO enviada");
     }
-    //delay(2000);
     digitalWrite(LED_PLACA,LOW);
   }
 }
@@ -482,7 +324,6 @@ void Controle::verificaRede(){
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
-  //if(!mqtt->isConnected()){
   if(mqtt.connected()){
     Serial.print("Renew IP");
     Ethernet.maintain();
