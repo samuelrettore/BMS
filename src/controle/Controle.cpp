@@ -138,7 +138,7 @@ void Controle::ativaMQTT(){
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     mqtt.begin(BROKER_MQTT, BROKER_PORT ,netClient);
-    mqtt.onMessage(processaMessage);
+    mqtt.onMessageAdvanced(processaMessage);
     mqtt.setOptions(15, false, 15000);
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
     while (!mqtt.connect(id_mqtt.c_str())) {
@@ -352,10 +352,10 @@ void Controle::MqttEnviaDados(){
   }
 }
 
-void Controle::processaMessage(String &topic, String &payload) {
-  Serial.println("incoming: " + topic + " - " + payload);
+void Controle::processaMessage(MQTTClient *client, char topic[], char payload[], int payload_length) {
+  Serial.println("Mensagem Recebida : " + String(topic) + " - " + String(payload)+" - "+payload_length);
   String topic_comp =  (String)MQTT_KEY+MQTT_SONOFF1;
-  if(topic == topic_comp){
+  if(String(topic) == topic_comp){
     DeserializationError err  = deserializeJson(doc,payload);
     if(err == DeserializationError::Ok){
       Serial.println("Deserializacao OK");

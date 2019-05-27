@@ -6,7 +6,7 @@
 #include "../objetos/BancoBateria.h"
 #include "../Config.h"
 #include "ControlaIO.h"
-#include <MqttClient.h>
+#include <MQTT.h>
 
 class Controle : public ControlaIO {
 public:
@@ -20,7 +20,8 @@ public:
   void MqttEnviaDados();
   void verificaRede();
   //static void processaMessage(MqttClient::MessageData& md);
-  static void processaMessage(String &topic, String &payload);
+  static void processaMessage(MQTTClient *client, char topic[], char payload[], int payload_length);
+
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
