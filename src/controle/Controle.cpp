@@ -101,13 +101,18 @@ void Controle::ativaMQTT(){
       Serial.print(".");
       delay(1000);
     }
-    Serial.print("Conectado");
+    Serial.println("Conectado");
     String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
+    Serial.print("Subscribe em ");
+    Serial.println(sonoff1);
+    //Subscribe sensor 1
     mqtt.subscribe(sonoff1, 1);
     String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
+    Serial.print("Subscribe em ");
+    Serial.println(sonoff2);
+    //Subscribe sensor 2
     mqtt.subscribe(sonoff2, 1);
-
-    delay(1000);
+    delay(3000);
   }
 }
 
@@ -268,15 +273,24 @@ void Controle::MqttEnviaDados(){
 void Controle::processaMessage(MQTTClient *client, char topic[], char payload[], int payload_length) {
   Serial.println("Mensagem Recebida : " + String(topic) + " - " + String(payload)+" - "+payload_length);
   String topic_comp =  (String)MQTT_KEY+MQTT_SONOFF1;
-  if(String(topic) == topic_comp){
+  String topic_comp2 =  (String)MQTT_KEY+MQTT_SONOFF2;
+  if(String(topic) == topic_comp ||
+  String(topic) == topic_comp2){
     DeserializationError err  = deserializeJson(doc,payload);
     if(err == DeserializationError::Ok){
+      bool codigo = false;
       Serial.println("Deserializacao OK");
       JsonObject root = doc2.to<JsonObject>();
       //Energia concessionaria
       //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
       //day":0.548,"Period":0,"Power":29,"ApparentPower":52,"ReactivePower":44,"Factor":0.56,"Voltage":219,"Current":0.239}}
-      root["codigo"] = 2;
+      if(String(topic) == topic_comp){
+        root["codigo"] = 2;
+        codigo = true;
+      }else if (String(topic) == topic_comp2){
+        root["codigo"] = 3;
+        codigo = true;
+      }
       root["Time"] = doc["Time"];
       root["TotalStartTime"] = doc["ENERGY"]["TotalStartTime"];
       root["Total"] = doc["ENERGY"]["Total"];
@@ -291,12 +305,16 @@ void Controle::processaMessage(MQTTClient *client, char topic[], char payload[],
       root["time"] =  timeClient.getEpochTime();
       String mensagem;
       serializeJsonPretty(root, mensagem);
-      MqttSendMessage(mensagem);
+      if(codigo){
+        MqttSendMessage(mensagem);
+      }else{
+        Serial.print("Erro ao determinar o Sensor");
+        delay(3000);
+      }
     }else{
       Serial.print("Deserializacao ERROR");
     }
   }
-
 }
 
 /*
