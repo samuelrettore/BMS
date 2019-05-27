@@ -19,12 +19,13 @@ public:
   void ciloProcessamento();
   void MqttEnviaDados();
   void verificaRede();
-  static void processaMessage(MqttClient::MessageData& md);
+  //static void processaMessage(MqttClient::MessageData& md);
+  static void processaMessage(String &topic, String &payload);
 private:
   void atualizaDadosLeitura();
   void controlaSaidas();
   //static void MqttCallback();
-  static void MqttSendMessage(String topico, String mensagem);
+  static void MqttSendMessage(String mensagem);
   BancoBateria* _bateria;
   int vbat_tensao = 0;
 };
