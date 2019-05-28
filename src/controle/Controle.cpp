@@ -19,7 +19,7 @@ EthernetUDP udp;
 //NTPClient
 int16_t utc = 3;
 //NTP CLient
-NTPClient timeClient(udp, NTPSERVER);
+NTPClient timeClient(udp);
 
 //--MQTT
 MQTTClient mqtt(350);
@@ -97,21 +97,19 @@ void Controle::ativaMQTT(){
     mqtt.onMessageAdvanced(processaMessage);
     mqtt.setOptions(15, false, 15000);
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
-    while (!mqtt.connect(id_mqtt.c_str())) {
-      Serial.print(".");
-      delay(1000);
+    if(mqtt.connect(id_mqtt.c_str())) {
+      Serial.println("Conectado");
+      String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
+      Serial.print("Subscribe em ");
+      Serial.println(sonoff1);
+      //Subscribe sensor 1
+      mqtt.subscribe(sonoff1, 1);
+      String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
+      Serial.print("Subscribe em ");
+      Serial.println(sonoff2);
+      //Subscribe sensor 2
+      mqtt.subscribe(sonoff2, 1);
     }
-    Serial.println("Conectado");
-    String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
-    Serial.print("Subscribe em ");
-    Serial.println(sonoff1);
-    //Subscribe sensor 1
-    mqtt.subscribe(sonoff1, 1);
-    String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
-    Serial.print("Subscribe em ");
-    Serial.println(sonoff2);
-    //Subscribe sensor 2
-    mqtt.subscribe(sonoff2, 1);
     delay(3000);
   }
 }
@@ -346,14 +344,17 @@ void Controle::verificaRede(){
   Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
   if(!mqtt.connected()){
-    Serial.print("Renew IP");
+    Serial.println("Renew IP");
+    mqtt.disconnect();
     Ethernet.maintain();
     ativaMQTT();
   }
-  Serial.print("Atualiza Data e Hora = " );
-  timeClient.forceUpdate();
-  Serial.println(timeClient.getFormattedTime());
-  delay(300);
+  if(mqtt.connected()){
+    Serial.print("Atualiza Data e Hora = " );
+    timeClient.forceUpdate();
+    Serial.println(timeClient.getFormattedTime());
+    delay(300);
+  }
 }
 
 /*

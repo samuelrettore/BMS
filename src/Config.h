@@ -106,7 +106,7 @@ Dados MQTT
 #define MQTT_SONOFF2 "/sonoff1/SENSOR"
 
 //NTP Server
-#define NTPSERVER "gps.ntp.br"
+#define NTPSERVER_1 "gps.ntp.br"
 
 /*
   Outros dados
