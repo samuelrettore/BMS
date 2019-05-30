@@ -113,7 +113,10 @@ Dados MQTT
 */
 //Configuracoes placa de rede.
 //#define W5100_CS  10
-#define SDCARD_CS 4
+//#define SDCARD_CS 4
+
+//Ativa DHCP se true, caso false usa ip estatico
+#define DHCP true
 
 //Velocidade Serial Arduino
 #define VELOCIDADE_SERIAL_ARDUINO 115200

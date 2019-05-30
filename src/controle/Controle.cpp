@@ -2,8 +2,8 @@
 #include "Controle.h"
 #include "../objetos/BancoBateria.h"
 //Placa de REde
-//#include <SPI.h>
 #include <Ethernet.h>
+#include <SPI.h>
 #include <Arduino.h>
 //MQTT
 #include <MQTT.h>
@@ -40,7 +40,7 @@ void Controle::inicializaModulo(BancoBateria* bateria){
   Serial.begin(VELOCIDADE_SERIAL_ARDUINO);
   Serial.println("## -- Iniciou Setup -- ##");
   calibraInicio();
-  ativaRedeDHCP();
+  ativaRede();
   ativaMQTT();
   pinMode(LED_PLACA,OUTPUT);
   Serial.println("## -- Fim Setup -- ##");
@@ -49,21 +49,35 @@ void Controle::inicializaModulo(BancoBateria* bateria){
 /*
 * Ativa rede / DHCP
 */
-void Controle::ativaRedeDHCP(){
-  Serial.println("Ativando DHCP");
+void Controle::ativaRede(){
+  Serial.println("Ativando Rede");
   byte mac[] = {
     0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02
   };
-  // start the Ethernet connection:
-  Serial.println("Inicializando Ethernet via DHCP:");
 
-  if (Ethernet.begin(mac) == 0) {
-    Serial.println("Falha ao configurar Ethernet usando DHCP");
-    if (Ethernet.hardwareStatus() == EthernetNoHardware) {
-      Serial.println("Ethernet Shield Error. :(");
-    } else if (Ethernet.linkStatus() == LinkOFF) {
-      Serial.println("Cabo Desconectado.");
+  //Testa se deve usar DHCP
+  if(DHCP){
+    // start the Ethernet connection:
+    Serial.println("Inicializando Ethernet via DHCP:");
+    if (Ethernet.begin(mac) == 0) {
+      Serial.println("Falha ao configurar Ethernet usando DHCP");
+      if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+        Serial.println("Ethernet Shield Error. :(");
+      } else if (Ethernet.linkStatus() == LinkOFF) {
+        Serial.println("Cabo Desconectado.");
+      }
     }
+  }else{
+    //Endereco IP
+    IPAddress ip(192, 168, 1, 199);
+    // DNS
+    IPAddress dnServer(192, 168, 1, 1);
+    // Roteador
+    IPAddress gateway(192, 168, 1, 1);
+    // Subrede
+    IPAddress subnet(255, 255, 255, 0);
+    //Cria Conexao
+    Ethernet.begin(mac, ip, dnServer, gateway, subnet);
   }
   // print your local IP address:
   Serial.print("Endereco IP: ");
@@ -72,6 +86,7 @@ void Controle::ativaRedeDHCP(){
   Serial.println(Ethernet.gatewayIP());
   Serial.print("Endereco DNS: ");
   Serial.println(Ethernet.dnsServerIP());
+
   Serial.println();
   Serial.println("Ajusta NTP ");
   timeClient.begin();
@@ -340,13 +355,16 @@ tenta reconectar.
 */
 void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
+  //Caso DHCP renova IP
+  if(DHCP){
+    Ethernet.maintain();
+  }
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
   if(!mqtt.connected()){
     Serial.println("Renew IP");
     mqtt.disconnect();
-    Ethernet.maintain();
     ativaMQTT();
   }
   if(mqtt.connected()){
