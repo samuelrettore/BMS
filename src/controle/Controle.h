@@ -18,6 +18,7 @@ public:
   void ciloProcessamento();
   void MqttEnviaDados();
   void verificaRede();
+  void forcaNTP();
   //static void processaMessage(MqttClient::MessageData& md);
   static void processaMessage(MQTTClient *client, char topic[], char payload[], int payload_length);
 

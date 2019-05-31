@@ -3,6 +3,7 @@
 #include "../objetos/BancoBateria.h"
 //Placa de REde
 #include <Ethernet.h>
+#include <EthernetUdp.h>
 #include <SPI.h>
 #include <Arduino.h>
 //MQTT
@@ -15,19 +16,18 @@
 
 //Global
 EthernetClient netClient;
-EthernetUDP udp;
+EthernetUDP Udp;
 //NTPClient
 int16_t utc = 3;
 //NTP CLient
-NTPClient timeClient(udp);
+//NTPClient timeClient(Udp);
+NTPClient timeClient(Udp,NTPSERVER_1,0,3600000); //intervalor 1 hora
 
 //--MQTT
 MQTTClient mqtt(350);
-
 //JsonDOcumens
 DynamicJsonDocument doc(400);
 DynamicJsonDocument doc2(400);
-
 //Construtor
 Controle::Controle(){
 }
@@ -69,11 +69,11 @@ void Controle::ativaRede(){
     }
   }else{
     //Endereco IP
-    IPAddress ip(192, 168, 1, 199);
+    IPAddress ip(192, 168, 0, 99);
     // DNS
-    IPAddress dnServer(192, 168, 1, 1);
+    IPAddress dnServer(192, 168, 0, 1);
     // Roteador
-    IPAddress gateway(192, 168, 1, 1);
+    IPAddress gateway(192, 168, 0, 1);
     // Subrede
     IPAddress subnet(255, 255, 255, 0);
     //Cria Conexao
@@ -367,12 +367,6 @@ void Controle::verificaRede(){
     mqtt.disconnect();
     ativaMQTT();
   }
-  if(mqtt.connected()){
-    Serial.print("Atualiza Data e Hora = " );
-    timeClient.forceUpdate();
-    Serial.println(timeClient.getFormattedTime());
-    delay(300);
-  }
 }
 
 /*
@@ -381,4 +375,16 @@ verifica referencias de leitura do calculo
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
   controlaSaidas();
+}
+
+/*
+verifica referencias de leitura do calculo
+*/
+void Controle::forcaNTP(){
+  if(mqtt.connected()){
+    Serial.print("Forca atualizacao Data e Hora = " );
+    timeClient.forceUpdate();
+    Serial.println(timeClient.getFormattedTime());
+    delay(3000);
+  }
 }

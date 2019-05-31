@@ -11,6 +11,7 @@ BancoBateria* bateria = new BancoBateria();
 unsigned long time_cliclo = 0;
 unsigned long time_mqtt = 0;
 unsigned long time_network = 0;
+unsigned long time_ntp = 0;
 unsigned long contador = 0;
 
 void setup() {
@@ -19,7 +20,7 @@ void setup() {
 
 void loop() {
   //Serial.println("Loop");
-  //Loop 1s -> 500ms
+  //Loop 1s -> 500ms (meio segundo)
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
@@ -39,4 +40,11 @@ void loop() {
     time_network = millis();
     ctrl.verificaRede();
   }
+
+  //Força NTP 1 hora = 3600000
+  if(millis()>time_ntp+3600000){
+    time_ntp = millis();
+    ctrl.forcaNTP();
+  }
+
 }
