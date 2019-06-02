@@ -109,8 +109,8 @@ void Controle::ativaMQTT(){
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     mqtt.begin(BROKER_MQTT, BROKER_PORT ,netClient);
-    mqtt.onMessageAdvanced(processaMessage);
     mqtt.setOptions(15, false, 15000);
+    mqtt.onMessageAdvanced(processaMessage);
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
     if(mqtt.connect(id_mqtt.c_str())) {
       Serial.println("Conectado");
