@@ -21,6 +21,7 @@ EthernetUDP Udp;
 int16_t utc = 3;
 //NTP CLient
 //NTPClient timeClient(Udp);
+//7200000 =  2 horas
 NTPClient timeClient(Udp,NTPSERVER_1,0,3600000); //intervalor 1 hora
 
 //--MQTT
@@ -366,6 +367,7 @@ void Controle::verificaRede(){
     mqtt.disconnect();
     ativaMQTT();
   }
+  //
 }
 
 /*
