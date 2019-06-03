@@ -95,7 +95,6 @@ void Controle::ativaRede(){
     Serial.println("Tentando Update Hora");
     timeClient.forceUpdate();
   }
-  timeClient.forceUpdate();
   Serial.print("##Data e Hora = ");
   Serial.println(timeClient.getFormattedTime());
   delay(2000);

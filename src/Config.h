@@ -116,7 +116,7 @@ Dados MQTT
 //#define SDCARD_CS 4
 
 //Ativa DHCP se true, caso false usa ip estatico
-#define DHCP false
+#define DHCP true
 
 //Velocidade Serial Arduino
 #define VELOCIDADE_SERIAL_ARDUINO 115200
