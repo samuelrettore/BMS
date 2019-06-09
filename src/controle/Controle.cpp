@@ -116,16 +116,21 @@ void Controle::ativaMQTT(){
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
     if(mqtt.connect(id_mqtt.c_str())) {
       Serial.println("Conectado");
+      #ifdef MQTT_SONOFF1
       String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
       Serial.print("Subscribe em ");
       Serial.println(sonoff1);
       //Subscribe sensor 1 - qos 0
       mqtt.subscribe(sonoff1, 0);
+      #endif
+
+      #ifdef MQTT_SONOFF2
       String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
       Serial.print("Subscribe em ");
       Serial.println(sonoff2);
       //Subscribe sensor 2 - qos 0
       mqtt.subscribe(sonoff2, 0);
+      #endif
     }
     delay(3000);
   }
@@ -355,7 +360,7 @@ void Controle::MqttSendMessage(String mensagem){
         Serial.println("--------->Mensagem MQTT NAO enviada");
       }
     }else{
-        Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
+      Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
     }
     digitalWrite(LED_PLACA,LOW);
   }
