@@ -29,8 +29,8 @@ NTPClient timeClient(Udp,NTPSERVER_1,0,3600000); //intervalor 1 hora
 //--MQTT
 MQTTClient mqtt(350);
 //JsonDOcumens
-DynamicJsonDocument doc(400);
-DynamicJsonDocument doc2(400);
+//DynamicJsonDocument doc(400);
+//DynamicJsonDocument doc2(400);
 //Construtor
 Controle::Controle(){
 }
@@ -119,13 +119,13 @@ void Controle::ativaMQTT(){
       String sonoff1 = (String)MQTT_KEY+MQTT_SONOFF1;
       Serial.print("Subscribe em ");
       Serial.println(sonoff1);
-      //Subscribe sensor 1
-      mqtt.subscribe(sonoff1, 1);
+      //Subscribe sensor 1 - qos 0
+      mqtt.subscribe(sonoff1, 0);
       String sonoff2 = (String)MQTT_KEY+MQTT_SONOFF2;
       Serial.print("Subscribe em ");
       Serial.println(sonoff2);
-      //Subscribe sensor 2
-      mqtt.subscribe(sonoff2, 1);
+      //Subscribe sensor 2 - qos 0
+      mqtt.subscribe(sonoff2, 0);
     }
     delay(3000);
   }
@@ -249,7 +249,7 @@ Controla envio de dados da bateria ao MQTT via Json
 void Controle::MqttEnviaDados(){
 
   long unix_time = timeClient.getEpochTime();
-  //StaticJsonDocument<440> doc;
+  StaticJsonDocument<440> doc;
   JsonObject root = doc.to<JsonObject>();
   //Bateria
   root["codigo"] = 0;
@@ -291,10 +291,13 @@ void Controle::processaMessage(MQTTClient *client, char topic[], char payload[],
   String topic_comp2 =  (String)MQTT_KEY+MQTT_SONOFF2;
   if(String(topic) == topic_comp ||
   String(topic) == topic_comp2){
-    DeserializationError err  = deserializeJson(doc,payload);
-    if(err == DeserializationError::Ok){
+    //DeserializationError err  = deserializeJson(doc,payload);
+    DynamicJsonDocument doc(400);
+    auto error = deserializeJson(doc,payload);
+    if(!error){
       bool codigo = false;
       Serial.println("Deserializacao OK");
+      DynamicJsonDocument doc2(400);
       JsonObject root = doc2.to<JsonObject>();
       //Energia concessionaria
       //{"Time":"2019-05-15T16:30:39","ENERGY":{"TotalStartTime":"2019-05-01T19:28:55","Total":8.191,"Yesterday":0.828,"To
