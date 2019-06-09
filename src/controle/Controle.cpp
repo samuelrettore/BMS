@@ -111,7 +111,7 @@ void Controle::ativaMQTT(){
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     mqtt.begin(BROKER_MQTT, BROKER_PORT ,netClient);
-    mqtt.setOptions(15, false, 15000);
+    mqtt.setOptions(10, false, 15000);
     mqtt.onMessageAdvanced(processaMessage);
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
     if(mqtt.connect(id_mqtt.c_str())) {
@@ -254,7 +254,7 @@ Controla envio de dados da bateria ao MQTT via Json
 void Controle::MqttEnviaDados(){
 
   long unix_time = timeClient.getEpochTime();
-  StaticJsonDocument<440> doc;
+  StaticJsonDocument<400> doc;
   JsonObject root = doc.to<JsonObject>();
   //Bateria
   root["codigo"] = 0;
