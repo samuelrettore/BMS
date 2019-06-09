@@ -319,7 +319,7 @@ void Controle::processaMessage(MQTTClient *client, char topic[], char payload[],
       root["Current"] = doc["ENERGY"]["Current"];
       root["time"] =  timeClient.getEpochTime();
       String mensagem;
-      serializeJsonPretty(root, mensagem);
+      serializeJson(root, mensagem);
       if(codigo){
         MqttSendMessage(mensagem);
       }else{
@@ -340,12 +340,19 @@ void Controle::MqttSendMessage(String mensagem){
   if(mqtt.connected()){
     digitalWrite(LED_PLACA,HIGH);
     Serial.print("Mensagem  = ");
-    Serial.println(mensagem);
-    String topico = (String)MQTT_KEY+MQTT_DATA;
-    if(mqtt.publish(topico, mensagem, false, 1)){
-      Serial.println("Mensagem MQTT enviada");
+    Serial.print(mensagem);
+    Serial.print(", tamanho ----> ");
+    unsigned int tamanho = mensagem.length();
+    Serial.println(tamanho);
+    if(tamanho > 80){
+      String topico = (String)MQTT_KEY+MQTT_DATA;
+      if(mqtt.publish(topico, mensagem, false, 1)){
+        Serial.println("Mensagem MQTT enviada");
+      }else{
+        Serial.println("--------->Mensagem MQTT NAO enviada");
+      }
     }else{
-      Serial.println("--------->Mensagem MQTT NAO enviada");
+        Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
     }
     digitalWrite(LED_PLACA,LOW);
   }
