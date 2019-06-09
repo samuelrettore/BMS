@@ -374,17 +374,16 @@ void Controle::verificaRede(){
   Serial.println("Verifica Rede 2 miutos");
   //Caso DHCP renova IP
   if(DHCP){
+    Serial.println("Renew IP");
     Ethernet.maintain();
   }
   // print your local IP address:
   Serial.print("Endereco IP: ");
   Serial.println(Ethernet.localIP());
   if(!mqtt.connected()){
-    Serial.println("Renew IP");
     mqtt.disconnect();
     ativaMQTT();
   }
-  //
 }
 
 /*
