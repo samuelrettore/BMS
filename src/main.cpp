@@ -19,6 +19,7 @@ void setup() {
 }
 
 void loop() {
+
   //Serial.println("Loop");
   //Loop 1s -> 500ms (meio segundo)
   if(millis() > time_cliclo + 500){
@@ -30,11 +31,13 @@ void loop() {
     Serial.print(", freeMemory() = ");
     Serial.println(freeMemory());
   }
+
   //Atualiza dados no MQTT -> 10 segundos = 10000
   if(millis() > time_mqtt + 5000){
     time_mqtt = millis();
     ctrl.MqttEnviaDados();
   }
+
   //Verifica Rede conexoes -> 2 minutos = 120000
   if(millis()>time_network+120000){
     time_network = millis();
