@@ -20,7 +20,6 @@ void setup() {
 
 void loop() {
 
-  //Serial.println("Loop");
   //Loop 1s -> 500ms (meio segundo)
   if(millis() > time_cliclo + 500){
     time_cliclo = millis();
