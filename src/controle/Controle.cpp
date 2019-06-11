@@ -402,6 +402,5 @@ void Controle::forcaNTP(){
     Serial.print("Forca atualizacao Data e Hora = " );
     timeClient.forceUpdate();
     Serial.println(timeClient.getFormattedTime());
-    delay(3000);
   }
 }
