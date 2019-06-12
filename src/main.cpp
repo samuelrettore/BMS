@@ -21,7 +21,7 @@ void setup() {
 void loop() {
 
   //Loop 1s -> 500ms (meio segundo)
-  if(millis() > time_cliclo + 500){
+  if(millis() > time_cliclo + 100){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
     Serial.print("Contador loop = ");
@@ -44,10 +44,10 @@ void loop() {
     ctrl.verificaRede();
   }
 
-  //Força NTP 2 horas = 7200000
-  // 2 minutos = 120000
-  if(millis()>time_ntp+120000){
-    time_ntp = millis();
-    ctrl.forcaNTP();
-  }
+  // //Força NTP 2 horas = 7200000
+  // // 2 minutos = 120000
+  // if(millis()>time_ntp+120000){
+  //   time_ntp = millis();
+  //   ctrl.forcaNTP();
+  // }
 }

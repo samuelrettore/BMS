@@ -391,7 +391,7 @@ verifica referencias de leitura do calculo
 */
 void Controle::ciloProcessamento(){
   atualizaDadosLeitura();
-  controlaSaidas();
+  //controlaSaidas();
 }
 
 /*

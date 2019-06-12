@@ -45,7 +45,7 @@ O sistema ira definir a porta A14 para o leitor de tensão da celula 7 e o 43 ac
 Abaixo pré definido sistema de 7S ou 7 celulas
 */
 //Aqui define o tamanho do seu banco em celulas ou S
-#define QUANTIDADE_CELULAS 1
+#define QUANTIDADE_CELULAS 7
 
 
 //Pinos entrada
