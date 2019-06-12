@@ -29,6 +29,7 @@ void loop() {
     contador++;
     Serial.print(", freeMemory() = ");
     Serial.println(freeMemory());
+
   }
 
   //Atualiza dados no MQTT -> 10 segundos = 10000
