@@ -400,7 +400,8 @@ verifica referencias de leitura do calculo
 void Controle::forcaNTP(){
   if(mqtt.connected()){
     Serial.print("Forca atualizacao Data e Hora = " );
-    timeClient.forceUpdate();
+    //timeClient.forceUpdate();
+    timeClient.update();
     Serial.println(timeClient.getFormattedTime());
   }
 }
