@@ -352,16 +352,16 @@ void Controle::MqttSendMessage(String mensagem){
     Serial.print(", tamanho ----> ");
     unsigned int tamanho = mensagem.length();
     Serial.println(tamanho);
-    if(tamanho > 80){
-      String topico = (String)MQTT_KEY+MQTT_DATA;
-      if(mqtt.publish(topico, mensagem, false, 1)){
-        Serial.println("Mensagem MQTT enviada");
-      }else{
-        Serial.println("--------->Mensagem MQTT NAO enviada");
-      }
+    // if(tamanho > 80){
+    String topico = (String)MQTT_KEY+MQTT_DATA;
+    if(mqtt.publish(topico, mensagem, false, 1)){
+      Serial.println("Mensagem MQTT enviada");
     }else{
-      Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
+      Serial.println("--------->Mensagem MQTT NAO enviada");
     }
+    // }else{
+    //   Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
+    // }
     digitalWrite(LED_PLACA,LOW);
   }
 }
