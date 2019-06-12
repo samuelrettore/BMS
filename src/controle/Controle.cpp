@@ -24,7 +24,7 @@ int16_t utc = 3;
 //3600000 = 1 hora
 //7200000 =  2 horas
 //10800000 = 3 horas
-NTPClient timeClient(Udp,NTPSERVER_1,0,3600000); //intervalor 1 hora
+NTPClient timeClient(Udp,NTPSERVER_1,0,10800000);
 
 //--MQTT
 MQTTClient mqtt(350);
