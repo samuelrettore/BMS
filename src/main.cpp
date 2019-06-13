@@ -21,7 +21,7 @@ void setup() {
 void loop() {
 
   //Loop 1s -> 500ms (meio segundo)
-  if(millis() > time_cliclo + 100){
+  if(millis() > time_cliclo + 0){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
     Serial.print("Contador loop = ");

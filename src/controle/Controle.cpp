@@ -330,9 +330,10 @@ void Controle::processaMessage(MQTTClient *client, char topic[], char payload[],
       serializeJson(root, mensagem);
       if(codigo){
         MqttSendMessage(mensagem);
+        delay(10);
       }else{
         Serial.print("Erro ao determinar o Sensor");
-        delay(3000);
+        delay(1000);
       }
     }else{
       Serial.print("Deserializacao ERROR");
