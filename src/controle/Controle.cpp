@@ -111,7 +111,7 @@ void Controle::ativaMQTT(){
     Serial.print("Conectando MQTT a ");
     Serial.println(BROKER_MQTT);
     mqtt.begin(BROKER_MQTT, BROKER_PORT ,netClient);
-    mqtt.setOptions(10, false, 15000);
+    mqtt.setOptions(15, false, 15000);
     mqtt.onMessageAdvanced(processaMessage);
     String id_mqtt = (String)ID_MQTT+MQTT_KEY;
     if(mqtt.connect(id_mqtt.c_str())) {
@@ -352,16 +352,16 @@ void Controle::MqttSendMessage(String mensagem){
     Serial.print(", tamanho ----> ");
     unsigned int tamanho = mensagem.length();
     Serial.println(tamanho);
-    // if(tamanho > 80){
-    String topico = (String)MQTT_KEY+MQTT_DATA;
-    if(mqtt.publish(topico, mensagem, false, 1)){
-      Serial.println("Mensagem MQTT enviada");
+    if(tamanho > 80){
+      String topico = (String)MQTT_KEY+MQTT_DATA;
+      if(mqtt.publish(topico, mensagem, false, 1)){
+        Serial.println("Mensagem MQTT enviada");
+      }else{
+        Serial.println("--------->Mensagem MQTT NAO enviada");
+      }
     }else{
-      Serial.println("--------->Mensagem MQTT NAO enviada");
+      Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
     }
-    // }else{
-    //   Serial.println("--------->Mensagem MQTT NAO enviada, muito pequena");
-    // }
     digitalWrite(LED_PLACA,LOW);
   }
 }
