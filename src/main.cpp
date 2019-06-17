@@ -44,10 +44,11 @@ void loop() {
     ctrl.verificaRede();
   }
 
-  // //Força NTP 2 horas = 7200000
-  // // 2 minutos = 120000
-  // if(millis()>time_ntp+120000){
-  //   time_ntp = millis();
-  //   ctrl.forcaNTP();
-  // }
+  //Força NTP 2 horas = 7200000
+  // 2 minutos = 120000
+  //3 horas = 10800000
+  if(millis()>time_ntp+10800000){
+    time_ntp = millis();
+    ctrl.forcaNTP();
+  }
 }

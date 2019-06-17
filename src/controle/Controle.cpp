@@ -24,7 +24,8 @@ int16_t utc = 3;
 //3600000 = 1 hora
 //7200000 =  2 horas
 //10800000 = 3 horas
-NTPClient timeClient(Udp,NTPSERVER_1,0,10800000);
+//NTPClient timeClient(Udp,NTPSERVER_1,0,10800000);
+NTPClient timeClient(Udp,NTPSERVER_1);
 
 //--MQTT
 MQTTClient mqtt(350);
@@ -401,8 +402,8 @@ verifica referencias de leitura do calculo
 void Controle::forcaNTP(){
   if(mqtt.connected()){
     Serial.print("Forca atualizacao Data e Hora = " );
-    //timeClient.forceUpdate();
-    timeClient.update();
+    timeClient.forceUpdate();
+    //timeClient.update();
     Serial.println(timeClient.getFormattedTime());
   }
 }
