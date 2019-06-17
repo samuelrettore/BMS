@@ -21,7 +21,7 @@ void setup() {
 void loop() {
 
   //Loop 1s -> 500ms (meio segundo)
-  if(millis() > time_cliclo + 0){
+  //if(millis() > time_cliclo + 100){
     time_cliclo = millis();
     ctrl.ciloProcessamento();
     Serial.print("Contador loop = ");
@@ -30,7 +30,7 @@ void loop() {
     Serial.print(", freeMemory() = ");
     Serial.println(freeMemory());
 
-  }
+  //}
 
   //Atualiza dados no MQTT -> 10 segundos = 10000
   if(millis() > time_mqtt + 5000){
