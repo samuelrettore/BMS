@@ -47,7 +47,6 @@ Abaixo pré definido sistema de 7S ou 7 celulas
 //Aqui define o tamanho do seu banco em celulas ou S
 #define QUANTIDADE_CELULAS 7
 
-
 //Pinos entrada
 #define INPUT_PORT {A8, A9, A10, A11, A12, A13, A14}
 //Pinos de Saida PWM
