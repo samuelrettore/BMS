@@ -19,7 +19,6 @@ void setup() {
 }
 
 void loop() {
-
   //Loop 1s -> 500ms (meio segundo)
   //if(millis() > time_cliclo + 100){
     time_cliclo = millis();
