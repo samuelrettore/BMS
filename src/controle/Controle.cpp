@@ -104,7 +104,6 @@ void Controle::ativaRede(){
   delay(2000);
 }
 
-
 /*
 * Ativa MQTT
 */
