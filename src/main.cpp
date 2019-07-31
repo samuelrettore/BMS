@@ -4,7 +4,7 @@
 #include <MemoryFree.h>
 
 
-#define MQTTCLIENT_QOS2 1
+//#define MQTTCLIENT_QOS2 1
 //Objeto Controle
 Controle ctrl;
 BancoBateria* bateria = new BancoBateria();
@@ -28,7 +28,6 @@ void loop() {
     contador++;
     Serial.print(", freeMemory() = ");
     Serial.println(freeMemory());
-
   //}
 
   //Atualiza dados no MQTT -> 10 segundos = 10000

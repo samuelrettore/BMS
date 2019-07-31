@@ -104,6 +104,7 @@ void Controle::ativaRede(){
   delay(2000);
 }
 
+
 /*
 * Ativa MQTT
 */
@@ -132,6 +133,7 @@ void Controle::ativaMQTT(){
       //Subscribe sensor 2 - qos 0
       mqtt.subscribe(sonoff2, 0);
       #endif
+
     }
     delay(3000);
   }
